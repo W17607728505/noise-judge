@@ -1,0 +1,14 @@
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Cache-Control = "no-cache"
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200

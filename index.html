@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="噪音判官：基于生态环境法典第547条与2026版治安管理处罚法的噪声维权互动判案游戏，24起案件，随身维权手册与判官学院。">
+<title>噪音判官 · 上线版 v7</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--card2:#273449;--line:#334155;--txt:#e2e8f0;--sub:#94a3b8;--acc:#38bdf8;--ok:#34d399;--warn:#fbbf24;--bad:#f87171}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:linear-gradient(160deg,#0f172a,#111827);color:var(--txt);min-height:100vh}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:#0b1220;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;flex-wrap:wrap;gap:8px;box-shadow:0 2px 12px rgba(2,6,23,.5)}
+  header h1{font-size:18px;font-weight:700;letter-spacing:1px}
+  header h1 span{color:var(--acc)}
+  .stats{display:flex;gap:14px;align-items:center;font-size:13px}
+  .stat b{color:var(--acc);font-size:15px}
+  .bar{width:110px;height:8px;background:#334155;border-radius:5px;overflow:hidden}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#34d399,#38bdf8);width:60%}
+  .wrap{display:flex;max-width:1100px;margin:18px auto;gap:18px;padding:0 16px}
+  aside{width:215px;flex:none}
+  aside h3{font-size:12px;color:var(--sub);margin:4px 0 8px;text-transform:uppercase}
+  .scene-btn{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:9px 11px;border-radius:9px;margin-bottom:7px;cursor:pointer;font-size:13px;transition:.15s}
+  .scene-btn:hover{border-color:var(--acc)}
+  .scene-btn.active{background:var(--card2);border-color:var(--acc);color:#fff}
+  .scene-btn small{display:block;color:var(--sub);font-size:11px;margin-top:2px}
+  .scene-btn .dot{float:right;color:var(--ok);font-size:11px}
+  .side-btns{margin:0 0 12px;display:flex;flex-direction:column;gap:6px}
+  .side-btns button{background:transparent;border:1px solid var(--line);color:var(--sub);border-radius:8px;padding:7px;cursor:pointer;font-size:12px}
+  .side-btns button:hover{border-color:var(--acc);color:var(--acc)}
+  main{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;min-height:600px}
+  .step{display:inline-block;font-size:12px;color:var(--acc);border:1px solid var(--acc);padding:3px 10px;border-radius:20px;margin-bottom:12px}
+  h2{font-size:17px;margin-bottom:4px}
+  .cat{color:var(--sub);font-size:12px;margin-bottom:14px}
+  .card{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin-bottom:12px;line-height:1.6;font-size:14px}
+  .npc{display:flex;gap:10px;margin-bottom:10px}
+  .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#818cf8);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:#0f172a;font-weight:700}
+  .bubble{background:#0f172a;border:1px solid var(--line);padding:9px 12px;border-radius:10px;font-size:14px}
+  .bubble b{color:var(--acc)}
+  .bubble.branch{border-color:var(--warn);color:var(--warn)}
+  .q{font-size:14px;margin:10px 0 6px;color:var(--txt)}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+  .opt{background:#0f172a;border:1px solid var(--line);color:var(--txt);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;transition:.15s}
+  .opt:hover{border-color:var(--acc)}
+  .opt.done{border-color:var(--ok);color:var(--ok)}
+  .opt.branch{border-color:var(--warn)}
+  .evi{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;font-size:12px}
+  .tag{background:#0f172a;border:1px solid var(--line);padding:4px 9px;border-radius:6px;color:var(--sub)}
+  .tag.on{border-color:var(--ok);color:var(--ok)}
+  .toolbar{display:flex;gap:10px;margin:10px 0 0;flex-wrap:wrap}
+  .tbtn{background:transparent;border:1px solid var(--acc);color:var(--acc);padding:7px 13px;border-radius:8px;cursor:pointer;font-size:13px}
+  .tbtn:hover{background:var(--acc);color:#0f172a}
+  .tbtn.used{background:var(--acc);color:#0f172a}
+  .nxt{margin-top:16px;background:linear-gradient(90deg,#0ea5e9,#38bdf8);color:#0f172a;border:none;padding:10px 22px;border-radius:9px;font-weight:700;cursor:pointer;font-size:14px}
+  .nxt:disabled{opacity:.4;cursor:not-allowed}
+  .verdict{background:#0f172a;border-left:3px solid var(--acc);padding:12px 14px;border-radius:8px;margin:8px 0;font-size:14px;line-height:1.6}
+  .fb{margin-top:10px;padding:11px 14px;border-radius:9px;font-size:14px;line-height:1.6}
+  .fb.ok{background:rgba(52,211,153,.12);border:1px solid var(--ok);color:var(--ok)}
+  .fb.warn{background:rgba(251,191,36,.12);border:1px solid var(--warn);color:var(--warn)}
+  .fb.bad{background:rgba(248,113,113,.12);border:1px solid var(--bad);color:var(--bad)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .modal.show{display:flex}
+  .mbox{background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:680px;width:100%;max-height:86vh;overflow:auto;padding:22px}
+  .mbox h3{color:var(--acc);margin-bottom:10px;font-size:16px}
+  .mbox p,.mbox li{font-size:13.5px;line-height:1.7;color:var(--txt)}
+  .mbox ul{padding-left:18px;margin:6px 0}
+  .close{float:right;background:none;border:1px solid var(--line);color:var(--sub);border-radius:6px;padding:3px 10px;cursor:pointer}
+  .tree-scene{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px;background:var(--card2)}
+  .tree-scene h4{color:var(--acc);font-size:14px;margin-bottom:6px}
+  .tree-node{font-size:12.5px;line-height:1.7;color:var(--sub);padding-left:10px;border-left:2px solid var(--line);margin:4px 0}
+  .tree-node b{color:var(--txt)}
+  .center{text-align:center;padding:50px 20px}
+  .center h2{font-size:22px;margin-bottom:10px}
+  .center p{color:var(--sub);margin-bottom:14px;line-height:1.7}
+  .ending{text-align:center}
+  .ending .persona{font-size:26px;font-weight:800;margin:10px 0;color:var(--acc)}
+  .ending .desc{color:var(--sub);line-height:1.8;max-width:520px;margin:0 auto 18px}
+  .hint{font-size:12px;color:var(--warn);margin:6px 0 0}
+  .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .tab{background:#0f172a;border:1px solid var(--line);color:var(--sub);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px}
+  .tab.active{background:var(--acc);color:#0f172a;border-color:var(--acc)}
+  .tab.news{border-color:#f59e0b;color:#f59e0b}
+  .tab.news.active{background:#f59e0b;color:#0f172a;border-color:#f59e0b}
+  .panel{display:none}
+  .panel.active{display:block}
+  .newsbox{background:rgba(245,158,11,.08);border:1px solid #f59e0b;border-radius:10px;padding:12px 14px;margin-bottom:10px;line-height:1.7}
+  .newsbox b{color:#f59e0b}
+  .acad .tip{background:var(--card2);border-left:3px solid var(--acc);padding:8px 12px;border-radius:6px;color:var(--sub);margin-top:8px}
+  .acad h3{color:var(--acc);font-size:15px;margin:14px 0 6px}
+  .acad table{width:100%;border-collapse:collapse;margin:6px 0 10px;font-size:13px}
+  .acad th,.acad td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+  .acad th{background:var(--card2);color:var(--acc)}
+  .acad ul{margin:4px 0 8px;padding-left:18px}
+  .qa{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;background:var(--card2)}
+  .qa .q{margin:0 0 6px;font-weight:600}
+  .qa .a{color:var(--ok);font-size:13px;display:none}
+  .qa .a.show{display:block}
+  .quiz-q{border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin-bottom:12px;background:var(--card2)}
+  .quiz-q .opts{margin-top:8px}
+  .quiz-q .opt.correct,.qa .opt.correct,.opt.correct{border-color:var(--ok);color:var(--ok);background:rgba(52,211,153,.08)}
+  .quiz-q .opt.wrong,.qa .opt.wrong,.opt.wrong{border-color:var(--bad);color:var(--bad);background:rgba(248,113,113,.08)}
+  .opt.sel,.opt.multi.sel{border-color:var(--acc);color:var(--acc);background:rgba(56,189,248,.12);box-shadow:0 0 0 1px var(--acc) inset}
+  /* ===== 学院 v7：统一分类/检索/卡片 ===== */
+  .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;overflow-x:auto;scrollbar-width:thin}
+  .toolbar-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;
+    background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+  .toolbar-row input[type=search],.toolbar-row select{background:#0b1220;border:1px solid var(--line);
+    color:var(--txt);border-radius:7px;padding:6px 10px;font-size:13px;font-family:inherit}
+  .toolbar-row input[type=search]{flex:1 1 180px;min-width:130px}
+  .fbtn{background:#0f172a;border:1px solid var(--line);color:var(--sub);padding:5px 11px;border-radius:20px;
+    cursor:pointer;font-size:12px;white-space:nowrap;transition:.15s}
+  .fbtn:hover{border-color:var(--acc);color:var(--txt)}
+  .fbtn.on{background:var(--acc);color:#0f172a;border-color:var(--acc);font-weight:600}
+  .fbtn .cnt{opacity:.65;margin-left:4px;font-size:11px}
+  .grp-h{display:flex;align-items:center;gap:8px;margin:16px 0 8px;padding-bottom:5px;border-bottom:1px dashed var(--line)}
+  .grp-h .ic{font-size:17px}
+  .grp-h .nm{color:var(--acc);font-weight:700;font-size:14px}
+  .grp-h .sc{color:var(--sub);font-size:12px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+  .kcard{border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:var(--card2);
+    border-left:3px solid var(--acc);transition:.15s}
+  .kcard:hover{border-color:var(--acc);box-shadow:0 3px 14px rgba(56,189,248,.08)}
+  .kcard .kid{color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.4px}
+  .kcard .kt{font-weight:700;font-size:13.5px;margin:3px 0 6px;line-height:1.5}
+  .kcard .kb{color:var(--sub);font-size:12.5px;line-height:1.65}
+  .kcard .ktags{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px}
+  .ktag{font-size:10.5px;padding:2px 7px;border-radius:12px;border:1px solid var(--line);color:var(--sub)}
+  .ktag.hot{border-color:#f59e0b;color:#f59e0b}
+  .ktag.law{border-color:#34d399;color:#34d399}
+  .qtype{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;margin-right:6px;font-weight:700}
+  .qtype.s{background:rgba(56,189,248,.16);color:#38bdf8}
+  .qtype.m{background:rgba(167,139,250,.16);color:#a78bfa}
+  .qtype.j{background:rgba(52,211,153,.16);color:#34d399}
+  .qtype.c{background:rgba(245,158,11,.16);color:#f59e0b}
+  .qtype.o{background:rgba(244,114,182,.16);color:#f472b6}
+  .qtype.q{background:rgba(148,163,184,.16);color:#94a3b8}
+  .opt.multi{cursor:pointer}
+  .opt.multi.sel{border-color:var(--acc);color:var(--acc);background:rgba(56,189,248,.08)}
+  .opt.tf{padding:10px 12px}
+  .tfbox{display:flex;gap:8px;margin-top:8px}
+  .tfbox .opt{flex:1;text-align:center}
+  .ordlist{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+  .ordrow{display:flex;align-items:center;gap:8px;background:#0b1220;border:1px solid var(--line);
+    border-radius:7px;padding:7px 10px;font-size:12.5px;cursor:pointer}
+  .ordrow .no{width:20px;height:20px;border-radius:50%;background:var(--acc);color:#0f172a;display:flex;
+    align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 auto}
+  .ordrow.done .no{background:var(--ok)}
+  .ordrow .ord{font-size:10.5px;color:var(--sub);margin-left:auto;white-space:nowrap}
+  .accordion{border:1px solid var(--line);border-radius:9px;margin-bottom:8px;overflow:hidden;background:var(--card2)}
+  .accordion .ahead{padding:11px 13px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px}
+  .accordion .ahead .ar{margin-left:auto;color:var(--sub);transition:.2s}
+  .accordion.open .ahead .ar{transform:rotate(90deg)}
+  .accordion .abody{display:none;padding:0 13px 13px;border-top:1px solid var(--line)}
+  .accordion.open .abody{display:block}
+  .ptitle{font-weight:700;font-size:13px;color:var(--acc);margin:11px 0 3px}
+  .pdesc{color:var(--sub);font-size:12.5px;line-height:1.7}
+  .lawart{border-left:3px solid #34d399;padding:8px 12px;margin:8px 0;background:var(--card2);border-radius:0 8px 8px 0}
+  .lawart .an{color:#34d399;font-weight:700;font-size:12.5px}
+  .lawart .at{font-size:12.5px;line-height:1.7;margin:4px 0;color:var(--txt)}
+  .lawart .anote{font-size:12px;color:var(--warn);line-height:1.6}
+  .empty{color:var(--sub);text-align:center;padding:26px 10px;font-size:13px}
+  @media(max-width:860px){
+    .cards{grid-template-columns:1fr}
+    .tabs{flex-wrap:nowrap}
+  }
+  .err{background:rgba(248,113,113,.12);border:1px solid var(--bad);color:var(--bad);padding:12px;border-radius:8px;font-size:13px;line-height:1.6;margin:10px 0}
+  .vwarn{background:rgba(245,158,11,.12);border:1px solid #f59e0b;color:#fbbf24;padding:12px 14px;border-radius:8px;font-size:13px;line-height:1.7;margin-top:10px}
+
+  /* ===== 视觉增强与动效 ===== */
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;border:1px solid var(--line);color:var(--sub)}
+  .badge.low{color:#c4b5fd;border-color:#7c3aed;background:rgba(124,58,237,.1)}
+  .badge.new{color:#fbbf24;border-color:#f59e0b;background:rgba(245,158,11,.1)}
+  .badge.high{color:#f472b6;border-color:#f472b6;background:rgba(244,114,182,.1)}
+  .scene-btn{transition:transform .12s,box-shadow .12s,border-color .12s}
+  .scene-btn:hover{transform:translateX(2px);box-shadow:0 3px 12px rgba(56,189,248,.12)}
+  .tbtn.route{border-color:var(--warn);color:var(--warn)}
+  .tbtn.route:hover{background:var(--warn);color:#0f172a}
+  .tag{transition:all .2s}
+  .tag.on{background:rgba(52,211,153,.12);box-shadow:0 0 0 1px var(--ok) inset}
+  .npc{animation:slideIn .28s ease both}
+  @keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .verdict.flash{animation:flash .6s ease}
+  @keyframes flash{0%{background:rgba(56,189,248,.22)}100%{background:#0f172a}}
+  .fb{animation:pop .3s ease both}
+  @keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+  .nxt{transition:transform .12s,filter .12s}
+  .nxt:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.08)}
+  .step{animation:fadeDown .25s ease both}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .progress-dots{display:flex;gap:6px;margin-bottom:12px}
+  .progress-dots i{height:4px;flex:1;border-radius:3px;background:var(--line)}
+  .progress-dots i.on{background:linear-gradient(90deg,#34d399,#38bdf8)}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0f172a;border:1px solid var(--acc);color:var(--txt);padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;z-index:80;transition:.25s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ===== 移动端适配 ===== */
+  @media(max-width:860px){
+    header{padding:10px 14px}
+    header h1{font-size:16px}
+    .stats{gap:8px;font-size:12px;width:100%;justify-content:space-between}
+    .bar{width:70px}
+    .wrap{flex-direction:column;margin:10px auto;gap:12px;padding:0 10px}
+    aside{width:100%;order:2}
+    aside h3{margin-top:6px}
+    #sceneList{display:grid;grid-template-columns:repeat(auto-fill,minmax(0,1fr));gap:6px}
+    .scene-btn{margin-bottom:0;font-size:12px;padding:8px 9px;min-width:0;overflow:hidden}
+    .side-btns{flex-direction:row;flex-wrap:wrap}
+    .side-btns button{flex:1 1 44%;font-size:12px}
+    main{order:1;min-height:0;padding:15px}
+    .mbox{padding:16px;max-height:92vh}
+    .acad table{font-size:12px;display:block;overflow-x:auto;white-space:nowrap}
+    .acad th,.acad td{padding:6px 8px}
+  }
+  @media(max-width:480px){
+    #sceneList{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .scene-btn small{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .scene-btn{white-space:nowrap;text-overflow:ellipsis}
+    .opt{padding:7px 10px;font-size:12.5px}
+    .card{padding:11px 12px;font-size:13px}
+    .bubble{font-size:13px}
+    h2{font-size:16px}
+    .nxt{width:100%;padding:11px}
+    .toolbar .tbtn{flex:1 1 45%}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>噪音<span>判官</span> · 上线版 v7</h1>
+  <div class="stats">
+    <div class="stat">和谐度 <div class="bar"><i id="harmBar"></i></div></div>
+    <div class="stat">数值 <b id="harmVal">60</b></div>
+    <div class="stat">声望 <b id="repVal">0</b></div>
+    <button class="tbtn" onclick="openManual()">维权手册</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside>
+    <div class="side-btns">
+      <button onclick="openAcademy()">判官学院 · 学习考核</button>
+      <button onclick="showEnding()">查看通关结局</button>
+      <button onclick="openTree()">分支对话树总览</button>
+      <button onclick="resetProgress()">重置进度</button>
+    </div>
+    <h3>案件列表（点击体验）</h3>
+    <div id="sceneList"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<div class="modal" id="manual"><div class="mbox">
+  <button class="close" onclick="closeModal('manual')">关闭</button>
+  <h3>维权手册（随身查）</h3>
+  <p><b>第一步·自判类型</b>：工业 / 建筑施工 / 交通运输 / 社会生活（家庭·宠物·装修·商铺·公共活动·设施设备）/ 小区公用设备（电梯·水泵）。</p>
+  <p><b>第二步·主管部门</b>：统一热线 <b>12345</b>。<br>工业·施工·商业固定设备·公用设备 → 生态环境部门；夜间无证施工 → 生态环境+住建/城管；鸣笛/道路 → 公安交管(122)；音响/宠物/家庭/公共 → 公安(110)+社区；小区公用设备 → 物业(首)→生态环境/住建。</p>
+  <p><b>第三步·取证五步</b>：日志 → 录音/文字 → 排查锁定 → 证人 → 沟通留痕。</p>
+  <p><b>第四步·处罚触发</b>：调解/处理优先，拒不改正方处罚。<br>《治安管理处罚法》(2025修订·2026-01-01施行) <b>第88条</b>：社会生活噪声，经基层自治组织/业委会/物业/有关部门劝阻、调解、处理未能制止，继续干扰他人正常生活、工作和学习的，处五日以下拘留或一千元以下罚款；情节严重处五日以上十日以下拘留，可并一千元以下罚款。<br><b>第89条</b>：饲养动物干扰他人正常生活，处警告；警告后不改正处一千元以下罚款。<br>生态环境法典：超标或未尽防控且干扰 → 责令改正；拒改/严重 → 罚款。</p>
+  <p><b>第五步·部门不作为</b>：12345督办 → 行政复议/诉讼(履职之诉) → 检察公益监督 → 纪检监察。</p>
+  <p style="color:var(--warn)">⚠ 分贝仪数据仅作参考，不作为法定取证依据。</p>
+</div></div>
+
+<div class="modal" id="trouble"><div class="mbox">
+  <button class="close" onclick="closeModal('trouble')">关闭</button>
+  <h3>噪音源排查七步</h3>
+  <ul>
+    <li>① 记录现象：时段、频率、音色、强度。</li>
+    <li>② 划定空间：上 / 下 / 侧 / 外。</li>
+    <li>③ 时间维度：固定=人为；夜间增强=结构性传声；随机=偶发/宠物。</li>
+    <li>④ 排除验证：关设备、离家、邻里同步听。</li>
+    <li>⑤ 工具定位：分贝仪(参考)、录音、震动手触/杯水、管道听诊。</li>
+    <li>⑥ 区分传声：空气传声(音响/人声)→声源房间；固体传声(撞击/震动)→经楼板/管道放大。</li>
+    <li>⑦ 确认来源：时间+位置+声学特征+对方确认，形成证据链。</li>
+  </ul>
+</div></div>
+
+<div class="modal" id="pathway"><div class="mbox">
+  <button class="close" onclick="closeModal('pathway')">关闭</button>
+  <h3>本案维权路径 · 定制指引</h3>
+  <div id="pathwayBody"></div>
+</div></div>
+
+<div class="modal" id="tree"><div class="mbox">
+  <button class="close" onclick="closeModal('tree')">关闭</button>
+  <h3>分支对话树总览（设计检视）</h3>
+  <p style="color:var(--sub);margin-bottom:10px">带分支场景：先「执行排查/核实」→ 再选「沟通方式（共情/生硬）」→ 解锁最佳处置项。共情 + 排查双满足时，额外的最佳处置项出现。</p>
+  <div id="treeBody"></div>
+</div></div>
+
+<!-- 内置数据：以 JS 对象形式直接解析（file:// 双击也能用，无需 JSON.parse） -->
+<script>
+const EMBEDDED = [
+ {"id":"S1","title":"邻里晚间电视音响","cat":"社会生活·家庭场所","target":70,"intro":"302 室投诉 402 室电视声致孩童无法入睡，未实测分贝。","dialogue":[{"who":"302妈妈","text":"每晚 22:30 后电视声超大，孩子惊醒哭，我也神经衰弱。"},{"who":"402住户","text":"我就正常看，没违法。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响（睡觉/工作/学习被打断）？","opts":[["是，孩子每晚惊醒",true],["无，只是嫌吵",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["测得超标",true],["未测/未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施（如拒绝限时降音量）？","opts":[["402拒绝限时降音量",true],["愿意配合调低",false]]}],"path":"条件：受扰成立时，超标(A) 或 拒限时段(B) 任一即构成","sentences":[{"t":"劝导夜间限时段 + 降音量","ok":true,"fb":"正确：受扰成立且路径A/B满足，调解优先，结案成功。","h":12,"r":10},{"t":"直接罚款","ok":false,"kind":"warn","fb":"过当：未先经调解/处理即处罚，违反第88条调解优先原则。","h":-4,"r":-8},{"t":"不予受理","ok":false,"kind":"bad","fb":"误判：受扰成立即应处理，不得驳回。","h":-10,"r":-12}],"truth":"第547条：超标∧干扰 或 未防控∧干扰 任一即构成。本案受扰成立，若拒限时段则路径B成立。","branch":{"troubleAction":"核实受影响时段与分贝（与302同步确认）","troubleLine":"判官与302同步记录：22:30–23:30 确有持续电视声，孩童被惊醒，干扰成立。","empathyOptions":[{"t":"共情：理解您爱看电视，但孩子睡眠重要，咱约个时段","flag":"empathy"},{"t":"生硬：你超标扰民，必须降音量","flag":"cold"}],"empathyLine":"402（缓和）：「那我23点后调小声、戴耳机。」","coldLine":"402（抵触）：「我家电视凭啥关，你管得宽。」","bonusSentence":{"t":"协助装隔音 + 约定23点后静音 + 限时降音量","ok":true,"fb":"最佳：共情+核实+约定，邻里互谅。","h":16,"r":14,"bonus":true}}},
+ {"id":"S2","title":"装修电钻无防震","cat":"建筑施工 / 装修","target":70,"intro":"工作日 14:00 电钻连续，物业称分贝未超但无任何防震垫。","dialogue":[{"who":"楼下办公族","text":"午休都被钻，根本没法休息，头疼。"},{"who":"装修方","text":"没超分贝凭啥管我？"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，午休被吵无法休息",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["测得超标",true],["未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施？","opts":[["无任何防震垫(没减震)",true],["已加防震垫",false]]}],"path":"路径B：受扰 ∧ 未防控(没减震)","sentences":[{"t":"责令限时施工 + 加防震垫","ok":true,"fb":"正确：路径B成立，责令改正优先。","h":12,"r":10},{"t":"仅口头劝，不要求整改","ok":false,"kind":"warn","fb":"不足：未落实防控措施，问题会反复。","h":-4,"r":-6},{"t":"直接重罚停工","ok":false,"kind":"bad","fb":"过当：应先责令整改，处罚为后手。","h":-6,"r":-8}],"truth":"受扰成立且无防震(未防控) → 路径B构成。分贝未超不影响路径B成立。","branch":{"troubleAction":"核查防震措施（现场确认是否铺设防震垫）","troubleLine":"判官现场确认：地面无任何防震垫，电钻震动直传楼下。","empathyOptions":[{"t":"共情：理解您赶工期，但午休邻居受不了，错峰+减震","flag":"empathy"},{"t":"生硬：你违法施工，立刻停","flag":"cold"}],"empathyLine":"装修方（缓和）：「那我午休停钻，加个垫。」","coldLine":"装修方（抵触）：「工期紧你负责？」","bonusSentence":{"t":"协调错峰施工时段 + 强制防震垫 + 物业监督","ok":true,"fb":"最佳：共情+核查+监督，长效。","h":16,"r":14,"bonus":true}}},
+ {"id":"S3","title":"广场舞高音音响","cat":"社会生活·公共活动","target":70,"intro":"小区广场 19:00 音响震耳，居民开窗清晰可闻，分贝疑似超标。","dialogue":[{"who":"居民","text":"每天 19–21 点像开演唱会，老人孩子都受不了。"},{"who":"舞队队长","text":"我们锻炼，又没碍谁。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，失眠、婴儿惊哭",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["疑似超标",true],["未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施？","opts":[["外放无时限/无限量",true],["已限时降量",false]]}],"path":"A∩B：超标∧干扰 且 未防控∧干扰","sentences":[{"t":"引导至指定区 + 限时20:00前 + 降音量","ok":true,"fb":"正确：双路径成立，调解优先。","h":12,"r":10},{"t":"直接报警驱散","ok":false,"kind":"warn","fb":"过当：应先行引导调解。","h":-4,"r":-8},{"t":"劝一次了事","ok":false,"kind":"bad","fb":"不足：未形成约束，易反复。","h":-6,"r":-6}],"truth":"受扰成立 + 疑似超标(线索) + 外放无控 → A∩B 双成立。","branch":{"troubleAction":"现场测分贝 + 确认声源","troubleLine":"判官现场实测超标，声源确为广场音响外放，非临街商铺。","empathyOptions":[{"t":"共情：锻炼是好事，但别影响老人孩子休息，咱挪个地儿","flag":"empathy"},{"t":"生硬：你们扰民了，必须马上停","flag":"cold"}],"empathyLine":"队长（缓和）：「那我们移到地下车库去。」","coldLine":"队长（抵触）：「你管得着吗，又没违法。」","bonusSentence":{"t":"居委会牵头签《广场活动公约》+ 限时降量","ok":true,"fb":"最佳：共情+核实+公约，健身与安宁兼顾。","h":16,"r":14,"bonus":true}}},
+ {"id":"S4","title":"宠物犬夜间吠叫","cat":"社会生活·宠物","target":70,"intro":"租户犬只夜间频吠，主人称已关窗仍传声。","dialogue":[{"who":"邻居","text":"半夜狗叫把我吓醒，心脏突突的。"},{"who":"主人","text":"我关窗了呀。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，惊醒、心悸",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["超标",true],["未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施？","opts":[["未训导/未隔音",true],["已训导隔音",false]]}],"path":"路径B：受扰 ∧ 未防控(未训导/未隔音)","sentences":[{"t":"劝导训导 + 止吠器 + 隔音","ok":true,"fb":"正确：路径B成立，先调解。","h":12,"r":10},{"t":"没收犬只","ok":false,"kind":"bad","fb":"过当：措施明显过度。","h":-8,"r":-10},{"t":"让邻居忍","ok":false,"kind":"bad","fb":"误判：受扰成立应处理。","h":-10,"r":-12}],"truth":"关窗≠防控，未训导/未隔音即未防控，受扰成立 → 路径B。拒改依治安法第89条（警告；不改正处一千元以下罚款）。","branch":{"troubleAction":"核查犬只来源（确认是否该户拴养犬）","troubleLine":"判官核查确认：吠叫来自该户拴养犬只，非流浪犬，可锁定责任。","empathyOptions":[{"t":"共情：理解您喜欢宠物，但邻居休息权也要兼顾","flag":"empathy"},{"t":"生硬：养狗不能扰民，必须处理","flag":"cold"}],"empathyLine":"主人（缓和）：「你说得对，我试试训导。」","coldLine":"主人（抵触）：「又没人受伤，至于吗。」","bonusSentence":{"t":"协助联系宠物训导师 + 加装隔音 + 签文明养犬承诺","ok":true,"fb":"最佳：共情+核实+训导，邻里与爱犬兼顾。","h":16,"r":14,"bonus":true}}},
+ {"id":"S5","title":"老旧楼板脚步拖拽","cat":"社会生活·家庭场所（固体传声核心）","target":70,"intro":"301 投诉 401 孩童奔跑拖拽，老旧楼板无隔音，分贝未超。","dialogue":[{"who":"张阿姨","text":"拖椅子像砸头顶，半夜惊醒头晕。"},{"who":"小李","text":"孩子活泼，地板本来就薄。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，睡眠受扰、具体可证",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["超标",true],["未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施？","opts":[["未铺地垫/无静音约定(没减震没限时段)",true],["已铺地垫并约定",false]]}],"path":"路径B（边界，偏调解）：受扰 ∧ 未防控","sentences":[{"t":"协调铺隔音地垫 + 约定21:00后静音","ok":true,"fb":"正确：路径B成立，调解优先。","h":12,"r":10},{"t":"直接报警罚款","ok":false,"kind":"warn","fb":"过当：未先经调解/处理即处罚，应先调解。","h":-4,"r":-8},{"t":"认定建筑缺陷、不予受理","ok":false,"kind":"bad","fb":"误判：路径B要件齐全，不得驳回。","h":-10,"r":-12}],"truth":"分贝未超(A不成立)，但未铺地垫/无限时段(未防控)+受扰 → 路径B构成。","branch":{"troubleAction":"执行排查验证（放水杯于天花板墙面）","troubleLine":"判官放水杯于天花板墙面，杯中水随楼上拖拽明显涟漪——固体传声确认来自401起居区，非管道。","empathyOptions":[{"t":"共情：阿姨您心脏不好，这声音确实折磨人，咱想办法解决","flag":"empathy"},{"t":"生硬：按规章你这就是噪声污染，必须改","flag":"cold"}],"empathyLine":"张阿姨（缓和）：「你这话在理，我也不想闹僵，能解决就好。」","coldLine":"张阿姨（抵触）：「你凶什么，又不是我家的错！」","extra":[{"speaker":"小李","need":"empathy","text":"小李：妹子/大哥说得在理，我让孩子睡前别跑，也铺个垫。"},{"speaker":"小李","need":"cold","text":"小李：你凶什么，小孩活泼能咋办。"},{"speaker":"物业","need":"empathy","text":"物业：那我帮忙拟个静音时段公约，大家签字。"},{"speaker":"物业","need":"cold","text":"物业：你们自己协调吧，我们不好强压。"},{"speaker":"物业","need":"trouble","text":"物业：排查清楚了，确是传声问题，我们可协助做减震建议。"}],"bonusSentence":{"t":"联合物业签订《静音时段公约》+ 铺地垫","ok":true,"fb":"最佳：共情+排查+公约，邻里关系与和谐度双高。","h":16,"r":14,"bonus":true}}},
+ {"id":"S6","title":"商铺高音喇叭促销","cat":"社会生活·商业经营","target":70,"intro":"沿街店 9:00–21:00 循环喇叭，分贝明显偏高。","dialogue":[{"who":"周边住户","text":"喇叭吵得开窗都不行，电话都听不清。"},{"who":"店主","text":"做生意嘛，不响谁知道？"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，全天受扰",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["明显偏高(超标)",true],["未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施？","opts":[["外置喇叭无控",true],["已改室内/降量",false]]}],"path":"A∩B：超标∧干扰 且 未防控∧干扰","sentences":[{"t":"立即关停外置喇叭，逾期依第88条处拘留或罚款","ok":true,"fb":"正确：A∩B成立，及时制止。","h":12,"r":10},{"t":"仅提醒","ok":false,"kind":"warn","fb":"不足：未制止外置喇叭，问题持续。","h":-5,"r":-6},{"t":"直接查封店铺","ok":false,"kind":"bad","fb":"过当：应先责令改正并限期，处罚为后手。","h":-8,"r":-10}],"truth":"分贝超标(线索)+外置无控+受扰 → A∩B。依治安法第88条。","branch":{"troubleAction":"现场测分贝 + 确认喇叭位置","troubleLine":"判官实测超标，喇叭朝外置放，确为店外传播。","empathyOptions":[{"t":"共情：理解做生意要吆喝，但居民也得住，改室内/降量","flag":"empathy"},{"t":"生硬：你喇叭违法，立马拆","flag":"cold"}],"empathyLine":"店主（缓和）：「那我改室内广播。」","coldLine":"店主（抵触）：「不响谁买啊。」","bonusSentence":{"t":"引导改室内电子屏 + 限时降量 + 签文明经营承诺","ok":true,"fb":"最佳：共情+核实+转型，经营安宁两得。","h":16,"r":14,"bonus":true}}},
+ {"id":"S7","title":"工地夜间无证浇筑","cat":"建筑施工","target":70,"intro":"22:00 后无证夜间施工，砼车作业，居民集体投诉。","dialogue":[{"who":"居民代表","text":"半夜轰隆隆，整栋都震，孩子考试前夕全没睡。"},{"who":"施工方","text":"工期紧，没办法。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，集体失眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["超标",true],["未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施/许可？","opts":[["无夜间许可、无任何措施",true],["有许可且防控",false]]}],"path":"路径B：受扰 ∧ 未防控(无许可无措)","sentences":[{"t":"责令停工整改 + 申报许可","ok":true,"fb":"正确：路径B成立，先责令整改。","h":12,"r":10},{"t":"直接重罚","ok":false,"kind":"warn","fb":"过当：应先责令停止。","h":-4,"r":-8},{"t":"归物业管","ok":false,"kind":"bad","fb":"误判：施工噪声主管为生态环境/住建。","h":-8,"r":-10}],"truth":"集体受扰 + 无证无措(未防控) → 路径B。夜间施工须许可+防控。","branch":{"troubleAction":"核查夜间施工许可与防控措施","troubleLine":"判官核查：无夜间施工许可，无围挡减噪措施。","empathyOptions":[{"t":"共情：理解赶工期，但居民要休息，办许可+减噪","flag":"empathy"},{"t":"生硬：无证施工，重罚","flag":"cold"}],"empathyLine":"施工方（缓和）：「那我们去补许可、降噪。」","coldLine":"施工方（抵触）：「工期谁赔？」","bonusSentence":{"t":"协助办夜间许可 + 限时作业 + 减噪整改","ok":true,"fb":"最佳：共情+核查+合规，治本。","h":16,"r":14,"bonus":true}}},
+ {"id":"S8","title":"禁鸣区机动车鸣笛","cat":"交通运输·道路","target":70,"intro":"小区出入口车辆长按喇叭，多次惊醒婴儿。","dialogue":[{"who":"婴儿家长","text":"一声喇叭孩子吓醒大哭，心脏都疼。"},{"who":"车主","text":"前面不动我按一下怎么了？"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，婴儿受惊",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["超标",true],["鸣笛未必超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施（违反禁鸣规定）？","opts":[["禁鸣区鸣笛=未依法防控",true],["非禁鸣区",false]]}],"path":"路径B：受扰 ∧ 未依法防控(违禁鸣)","sentences":[{"t":"劝导 + 向交管反映禁鸣区处罚","ok":true,"fb":"正确：路径B成立，归交管处理。","h":12,"r":10},{"t":"罚车主刑责","ok":false,"kind":"bad","fb":"过当：鸣笛非刑责，走行政处罚。","h":-6,"r":-8},{"t":"以分贝未必超标为由不予受理","ok":false,"kind":"bad","fb":"误判：违禁鸣本身即未依法防控，不得以分贝为由驳回（关键区分点）。","h":-12,"r":-14}],"truth":"禁鸣区鸣笛=未依法防控，受扰成立 → 路径B。属交通运输噪声。","branch":{"troubleAction":"核实禁鸣区标识与鸣笛事实","troubleLine":"判官核实现场：入口确有禁鸣标志，车主长按喇叭属实。","empathyOptions":[{"t":"共情：理解您着急，但禁鸣区有孩子，下次别按","flag":"empathy"},{"t":"生硬：禁鸣区鸣笛违法，罚","flag":"cold"}],"empathyLine":"车主（缓和）：「哦我没注意，以后不按了。」","coldLine":"车主（抵触）：「按一下咋了。」","bonusSentence":{"t":"劝导 + 向交管备案禁鸣提示牌 + 车主承诺","ok":true,"fb":"最佳：共情+核实+提示，长效。","h":16,"r":14,"bonus":true}}},
+ {"id":"S9","title":"空调外机低频震动","cat":"社会生活·设施设备 / 可能公用","target":70,"intro":"502 外机正对 402 卧室，低频共振致墙震，分贝不高。需先判定外机归属。","dialogue":[{"who":"402住户","text":"每晚23:00后墙嗡嗡像心跳，老婆怀孕睡不了。"},{"who":"502住户","text":"空调新的，又没超分贝，凭什么怪我？"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，孕期失眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["超标",true],["分贝不高",false]]},{"key":"未防控","q":"③ 是否未采取防护措施？","opts":[["未减振/未做隔振",true],["已加减振",false]]}],"path":"路径B：受扰 ∧ 未防控(未减振)","sentences":[{"t":"责令加装减振垫 / 外机移位","ok":true,"fb":"正确：路径B成立，民用外机归社会生活-设施设备。","h":12,"r":10},{"t":"认定达标不构罪","ok":false,"kind":"bad","fb":"误判：漏\"未防控\"要件B，达标≠不违规。","h":-10,"r":-12},{"t":"直接重罚","ok":false,"kind":"warn","fb":"过当：应先责令整改。","h":-4,"r":-8}],"truth":"分贝不高(A不成立)，但未减振(未防控)+受扰 → 路径B。若为楼栋公用则归\"小区公用设备\"。","branch":{"troubleAction":"执行震动定位（手触墙 + 放水杯）","troubleLine":"开机时墙面涟漪、关机消失，确认低频经墙体传导自502外机，非楼道。","empathyOptions":[{"t":"共情：孕期休息重要，咱一起想办法解决","flag":"empathy"},{"t":"生硬：你外机违规，必须改","flag":"cold"}],"empathyLine":"502（缓和）：「那我配合加个减振垫。」","coldLine":"502（抵触）：「你凶也没用，我找物业扯。」","bonusSentence":{"t":"物业协调 + 双方签设备维护约定 + 减振整改","ok":true,"fb":"最佳：共情+定位+约定，长效解决。","h":16,"r":14,"bonus":true}}},
+ {"id":"S10","title":"居家直播/乐器练习","cat":"社会生活·公共活动","target":70,"intro":"20:00 后主播高声带货/练琴，邻居沟通无果。","dialogue":[{"who":"邻居","text":"每晚喊到22点，我备考全废了。"},{"who":"主播","text":"我在自己家，凭啥管？"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，学习受扰(备考)",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["超标",true],["未超",false]]},{"key":"未防控","q":"③ 是否未采取防护措施？","opts":[["无吸音/无限时段",true],["已隔音限时",false]]}],"path":"路径B：受扰 ∧ 未防控(无吸音/无限时段)","sentences":[{"t":"限时 + 隔音，拒不改则依第88条","ok":true,"fb":"正确：路径B成立，调解优先。","h":12,"r":10},{"t":"禁播","ok":false,"kind":"warn","fb":"过当：限制过严，应先限时隔音。","h":-4,"r":-8},{"t":"告知邻居自行忍受即可","ok":false,"kind":"bad","fb":"误判：受扰成立且未防控，应责令改正而非要求他人忍受。","h":-12,"r":-14}],"truth":"受扰(学习)+无吸音/无限时段(未防控) → 路径B。属新兴生活噪声，同样适用。","branch":{"troubleAction":"核查隔音与时段","troubleLine":"判官核查：无任何吸音措施，20–22点高声外传。","empathyOptions":[{"t":"共情：理解您直播/练琴，但邻居备考，限时+隔音","flag":"empathy"},{"t":"生硬：你扰民，禁播","flag":"cold"}],"empathyLine":"主播（缓和）：「那我加隔音、22点前结束。」","coldLine":"主播（抵触）：「我自家事。」","bonusSentence":{"t":"协助装吸音棉 + 约定22点前 + 拒不改报治安法第88条","ok":true,"fb":"最佳：共情+核查+约束，兼顾兴趣与安宁。","h":16,"r":14,"bonus":true}}},
+ {"id":"S11","title":"工厂设备边界噪声","cat":"工业（路径B排查+维权双核心）","target":70,"intro":"工业区机械夜间运转，边界监测达标，但住户诉低频嗡鸣致失眠。重点：达标≠不构罪。","dialogue":[{"who":"陈先生","text":"每晚22:00–凌晨机器响，整夜睡不着，误工两周。"},{"who":"厂方","text":"我们边界都达标了，法律上没问题。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，失眠、误工",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["超标",true],["边界达标(未超)",false]]},{"key":"未防控","q":"③ 是否未依法采取防控措施？","opts":[["无夜间限产/减振不足",true],["已尽法定防控",false]]}],"path":"路径B（标杆）：达标≠不构罪，受扰 ∧ 未防控","sentences":[{"t":"查防控证据，缺失则责令补减震/夜间限产+期限","ok":true,"fb":"正确：路径B成立，责令改正优先。","h":12,"r":12},{"t":"仅因达标直接驳回","ok":false,"kind":"bad","fb":"误判：路径B要件齐全，不得仅以达标驳回（关键区分点）。","h":-12,"r":-14},{"t":"直接重罚停业","ok":false,"kind":"warn","fb":"过当：应先责令改正。","h":-4,"r":-8}],"truth":"边界达标(A不成立)，但无夜间限产/减振不足(未防控)+受扰 → 路径B构成。此案为\"达标不免责\"标杆。","branch":{"troubleAction":"核查厂方防控措施证据","troubleLine":"核查发现：厂方无夜间限产记录、减振基础不足，证实未依法防控。","empathyOptions":[{"t":"共情：理解生产压力，但居民健康也得保","flag":"empathy"},{"t":"生硬：达标不免责，立刻整改","flag":"cold"}],"empathyLine":"厂方（缓和）：「我们补措施，配合整改。」","coldLine":"厂方（抵触）：「你吓唬谁，达标就行。」","bonusSentence":{"t":"生态环境部门介入 + 厂方签整改时限书 + 居民监测反馈机制","ok":true,"fb":"最佳：共情+核查+长效机制，治本。","h":16,"r":16,"bonus":true}}}
+];
+/* 扩充案件 S12–S24：公共区域设备低频为核心，兼及商业/交通/工业/施工。
+   保持与 EMBEDDED 完全相同的数据模型，便于统一校验与导出 game-data.json。 */
+const EMBEDDED_EXTRA = [
+ {"id":"S12","title":"电梯井道低频振动","cat":"小区公用设备·电梯（低频/结构传声）","target":70,"intro":"高层住宅 15 楼，电梯井紧邻卧室，夜间运行传来低频嗡鸣与井道振动，住户心悸失眠。物业称「电梯年检合格、分贝达标」。","dialogue":[{"who":"15楼住户","text":"晚上电梯一运行，墙壁就嗡嗡震，孩子心慌睡不着，测了分贝却说没超。"},{"who":"物业工程","text":"电梯年检合格，分贝也达标，我们没办法。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，夜间心悸失眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["A计权达标(低频未计入)",false],["低频倍频带超标(线索)",true]]},{"key":"未防控","q":"③ 是否未采取减振隔振措施？","opts":[["导轨无减振、机房无隔振",true],["已加装导轨减振与机房隔振",false]]}],"path":"路径B：受扰 ∧ 未防控（A计权达标不免责）","sentences":[{"t":"责令物业加装导轨减振+机房隔振，限期整改","ok":true,"fb":"正确：低频案看结构传声与减振措施，A计权达标≠不违规；共用设备物业首责。","h":12,"r":10},{"t":"仅以「年检合格」劝回住户","ok":false,"kind":"warn","fb":"不足：年检合格只说明安全，未回应低频振动与减振缺失。","h":-5,"r":-6},{"t":"认定分贝达标、不属噪声污染，驳回","ok":false,"kind":"bad","fb":"误判：漏「未防控」要件B，达标不免责，不得驳回（关键区分点）。","h":-12,"r":-14}],"truth":"电梯属小区共用设备；低频振动须按结构传声与倍频带判断，A计权达标不等于无污染。未减振+受扰 → 路径B。达标不免责。","branch":{"troubleAction":"手触井道壁 + 开关电梯对比测试","troubleLine":"判官手触井道壁：电梯运行时明显振动，停运后消失，确认低频经结构传导自井道，非室外交通。","empathyOptions":[{"t":"共情：您睡不着是真受罪，我们查清原因让物业整改","flag":"empathy"},{"t":"生硬：达标你还投诉什么，别没事找事","flag":"cold"}],"empathyLine":"住户（缓和）：「谢谢你认真查，我以为没人管。」","coldLine":"住户（抵触）：「分贝达标我就不能睡了？」","bonusSentence":{"t":"物业牵头加装导轨减振+机房隔振，约定夜间检修时段并公示","ok":true,"fb":"最佳：共情+定位+减振整改，治本且化解对立。","h":16,"r":14,"bonus":true}}},
+ {"id":"S13","title":"二次供水泵房低频共振","cat":"小区公用设备·水泵房（低频共振）","target":70,"intro":"二次供水泵房紧邻住户卧室，夜间启停时墙体低频「咚咚」共振。物业称「水泵正常运行、没超标」。","dialogue":[{"who":"业主","text":"水泵一启动，床头墙就跟着震，像有东西在敲，整夜没法睡。"},{"who":"物业","text":"水泵都是好的，正常运行，哪有噪声？"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，墙体共振致失眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["普通声级计未超",false],["低频倍频带明显超标",true]]},{"key":"未防控","q":"③ 是否采取了减振与软连接？","opts":[["无减振基础、管道无软连接",true],["已装减振基础+软连接",false]]}],"path":"路径B：受扰 ∧ 未防控（低频共振）","sentences":[{"t":"责令加弹簧减振基础+管道软连接，调整夜间启停策略","ok":true,"fb":"正确：低频共振靠减振与软连接治理，先责令改正。","h":12,"r":10},{"t":"只在口头向业主解释「设备正常」","ok":false,"kind":"warn","fb":"不足：未解决共振源，问题会持续。","h":-5,"r":-6},{"t":"直接对物业处以重罚","ok":false,"kind":"bad","fb":"过当：应先责令限期整改，处罚为后手。","h":-8,"r":-10}],"truth":"水泵属共用设备，低频经管道与建筑结构传导。无减振基础/软连接即未防控，受扰成立 → 路径B。主管：物业首接，生态环境/住建督导。","branch":{"troubleAction":"启停对比 + 管道听诊定位","troubleLine":"判官在水泵启停瞬间用听诊棒贴管道：振动随启停同步出现，确认来自泵房与供水立管。","empathyOptions":[{"t":"共情：夜里被震醒最折磨人，我们推动物业做减振","flag":"empathy"},{"t":"生硬：你们设备不合格，马上停","flag":"cold"}],"empathyLine":"物业（缓和）：「那我们安排加减振垫和软接头。」","coldLine":"物业（抵触）：「停水了你负责吗？」","bonusSentence":{"t":"物业出资减振改造 + 优化夜间启停 + 业主代表验收","ok":true,"fb":"最佳：共情+定位+业主验收，长效且透明。","h":16,"r":14,"bonus":true}}},
+ {"id":"S14","title":"地下车库排风机低频","cat":"小区公用设备·排风/风机","target":70,"intro":"地下车库排风机 22:00 定时启动，低频经楼板传至一层住户，伴轻微嗡鸣。物业称「按消防要求必须开」。","dialogue":[{"who":"一层住户","text":"一到晚上十点，地板就嗡嗡响，像有个大机器在脚下。"},{"who":"物业","text":"消防要求必须通风，我们不能关。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，持续低频扰眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["分贝不高",false],["低频倍频带超标",true]]},{"key":"未防控","q":"③ 是否未加减振/消声/限时？","opts":[["无消声器、无减振吊架、不限时",true],["已消声减振并优化时段",false]]}],"path":"路径B：受扰 ∧ 未防控","sentences":[{"t":"责令加消声器+减振吊架，并将运行时段避开夜间休息","ok":true,"fb":"正确：消防要求不等于可免防控；加消声减振+错峰即可兼顾。","h":12,"r":10},{"t":"以消防需要为由要求住户忍让","ok":false,"kind":"warn","fb":"不足：未采取任何降噪措施，忽视居民安宁权。","h":-5,"r":-6},{"t":"直接勒令车库停用","ok":false,"kind":"bad","fb":"过当：停用涉及消防与全体业主利益，应责令整改而非一刀切。","h":-8,"r":-10}],"truth":"风机低频经楼板传导；消防需要不免除噪声防控义务。未消声减振+受扰 → 路径B；处置须兼顾消防安全。","branch":{"troubleAction":"楼板振动测试 + 核对风机启停时刻","troubleLine":"判官核对：楼板振动与风机22:00启动完全同步，确认声源为排风机而非水泵。","empathyOptions":[{"t":"共情：理解消防安全，也理解您夜里被吵，咱两者兼顾","flag":"empathy"},{"t":"生硬：消防比你的睡眠重要，忍着","flag":"cold"}],"empathyLine":"物业（缓和）：「那我们加消声器，把时间往前挪。」","coldLine":"住户（抵触）：「照你这么说我就该天天失眠？」","bonusSentence":{"t":"加消声减振 + 调整至20:00前运行 + 向业主公示消防通风安排","ok":true,"fb":"最佳：兼顾消防与安宁，公示消除误解。","h":16,"r":14,"bonus":true}}},
+ {"id":"S15","title":"配电房变压器低频嗡鸣","cat":"小区公用设备·配电房（工频嗡鸣）","target":70,"intro":"小区配电房与住宅一墙之隔，变压器 50Hz 嗡鸣夜间格外清晰。供电与物业称「电磁检测合格」。","dialogue":[{"who":"居民","text":"夜里耳边一直嗡嗡，像耳鸣，尤其安静时更明显。"},{"who":"供电运维","text":"我们的电磁场检测都合格，没有问题。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，夜间嗡鸣致失眠",true],["无",false]]},{"key":"超标","q":"② 噪声是否超标？","opts":[["工频声压低频突出",true],["未测/不超",false]]},{"key":"未防控","q":"③ 是否未采取隔声减振措施？","opts":[["配电房无隔声屏障、设备无减振",true],["已装隔声屏障与减振",false]]}],"path":"路径B：受扰 ∧ 未防控（电磁合格≠噪声合格）","sentences":[{"t":"联合供电/住建核查，责令加隔声屏障与设备减振，必要时调整位置","ok":true,"fb":"正确：电磁达标与噪声达标是两回事，低频嗡鸣仍须防控。","h":12,"r":10},{"t":"以「电磁检测合格」直接驳回","ok":false,"kind":"bad","fb":"误判：混淆电磁环境与噪声两个法律概念，漏未防控要件。","h":-12,"r":-14},{"t":"要求立即停电搬迁","ok":false,"kind":"warn","fb":"过当：涉及整个小区供电，应责令整改并论证方案，不可一刀切停电。","h":-8,"r":-10}],"truth":"工频嗡鸣属低频噪声；电磁场检测合格不豁免噪声防控义务。无隔声减振+受扰 → 路径B，须联合供电、住建协同处理。","branch":{"troubleAction":"分时段测听 + 区分电磁与声源","troubleLine":"判官夜间贴墙测听：嗡鸣随变压器负载变化，确认是工频结构传声，非电磁感应噪声。","empathyOptions":[{"t":"共情：安静时嗡嗡最磨人，我们推动专业整改","flag":"empathy"},{"t":"生硬：供电设备谁让你吵人，赶紧搬","flag":"cold"}],"empathyLine":"供电运维（缓和）：「我们评估加装隔声和减振。」","coldLine":"供电运维（抵触）：「停电你负责？」","bonusSentence":{"t":"供电+物业联合加装隔声减振 + 委托第三方噪声复测 + 结果公示","ok":true,"fb":"最佳：专业复测消除争议，公示安抚业主。","h":16,"r":14,"bonus":true}}},
+ {"id":"S16","title":"商场冷却塔低频扰民","cat":"商业固定设备·冷却塔/中央空调","target":70,"intro":"商场屋顶冷却塔夜间运行，低频传到相邻住宅。生态环境部门监测厂界达标，居民仍诉室内低频轰鸣。","dialogue":[{"who":"相邻居民","text":"关窗也能感觉到低频在胸口压着，测出来又说达标。"},{"who":"商场工程","text":"环保监测都达标了，我们设备是合规的。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，室内低频轰鸣致失眠",true],["无",false]]},{"key":"超标","q":"② 厂界监测是否超标？","opts":[["厂界达标(未超)",false],["厂界超标",true]]},{"key":"未防控","q":"③ 是否未尽防控义务？","opts":[["无隔声屏障、无减振、夜间仍高负荷",true],["已隔声减振并限时运行",false]]}],"path":"路径B（标杆）：厂界达标不免责，受扰 ∧ 未防控","sentences":[{"t":"查防控证据，责令加隔声减振+夜间降负荷并限期","ok":true,"fb":"正确：与 S11 同为「达标不免责」标杆，商业固定设备归生态环境部门。","h":12,"r":12},{"t":"仅因厂界达标直接驳回","ok":false,"kind":"bad","fb":"误判：达标≠免责，漏未防控要件（关键区分点）。","h":-12,"r":-14},{"t":"直接责令商场停业","ok":false,"kind":"warn","fb":"过当：应先责令限期整改，停业非首选。","h":-5,"r":-8}],"truth":"冷却塔属商业固定设备，主管部门为生态环境部门。厂界达标不能免除防控义务，室内低频+未隔声减振 → 路径B。","branch":{"troubleAction":"厂界+室内同步复测 + 查防控设施","troubleLine":"判官同步监测：厂界A计权达标，但居民室内低频突出；现场无隔声屏障与减振基座。","empathyOptions":[{"t":"共情：达标也难受，我们按室内感受查防控","flag":"empathy"},{"t":"生硬：达标你还闹什么","flag":"cold"}],"empathyLine":"商场工程（缓和）：「那我们加隔声屏、夜里降负荷。」","coldLine":"商场工程（抵触）：「监测单在这，你爱告告去。」","bonusSentence":{"t":"生态环境部门督办 + 商场加隔声减振并夜间降负荷 + 居民室内复测反馈","ok":true,"fb":"最佳：行政督办+技术改造+居民反馈，治本。","h":16,"r":16,"bonus":true}}},
+ {"id":"S17","title":"沿街酒吧夜间低音炮","cat":"社会生活·商业经营（夜间低音炮）","target":70,"intro":"22 点后沿街酒吧低音炮震动楼板，居民多次投诉，社区已调解两次仍未制止。","dialogue":[{"who":"住户","text":"低音炮震得玻璃都在响，孩子考试前根本没法复习。"},{"who":"酒吧经理","text":"做生意放点音乐怎么了，隔壁自己隔音差。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，失眠、学习受扰",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["明显超标",true],["未测",false]]},{"key":"未防控","q":"③ 是否未隔音、不限时？","opts":[["无隔音、无时限",true],["已隔音并限时",false]]}],"path":"A∩B：超标∧干扰 且 未防控∧干扰；第88条调解前置","sentences":[{"t":"社区调解未制止后报警，依第88条处拘留或罚款","ok":true,"fb":"正确：已有调解未制止证据，符合第88条处罚前置要件。","h":12,"r":10},{"t":"不经调解直接上门罚款","ok":false,"kind":"warn","fb":"过当：第88条要求先经劝阻、调解、处理未能制止。","h":-5,"r":-8},{"t":"劝一次就结案，不留记录","ok":false,"kind":"bad","fb":"不足：无调解留痕，后续无法满足第88条前置要件。","h":-8,"r":-8}],"truth":"社会生活噪声适用第88条：须经基层组织/业委会/物业/部门劝阻调解处理未能制止，继续干扰方可处罚。本案已调解两次未果，要件齐备。","branch":{"troubleAction":"调取社区调解记录 + 现场测分贝","troubleLine":"判官取得两次社区调解记录，现场实测超标，低音炮经楼板传导，「未能制止」证据闭环。","empathyOptions":[{"t":"共情：理解经营，但居民备考要紧，限时加隔音","flag":"empathy"},{"t":"生硬：你们噪音扰民，立刻关","flag":"cold"}],"empathyLine":"酒吧经理（缓和）：「那我们22点后改轻音乐、加隔音。」","coldLine":"酒吧经理（抵触）：「关了你赔我营业额？」","bonusSentence":{"t":"酒吧装隔音+22点后降量 + 社区签经营公约 + 调解记录留档","ok":true,"fb":"最佳：经营与安宁兼顾，且留档满足第88条要件。","h":16,"r":14,"bonus":true}}},
+ {"id":"S18","title":"夜市摊贩高声叫卖","cat":"社会生活·公共活动（夜市摊贩）","target":70,"intro":"夜市 22 点后仍有摊贩高声叫卖与音响促销，周边居民楼开窗清晰可闻，多次反映无果。","dialogue":[{"who":"居民","text":"每天喊到半夜，两位老人都神经衰弱了。"},{"who":"摊贩","text":"做点小生意，不喊谁买啊。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，持续干扰休息",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["实测超标",true],["未测",false]]},{"key":"未防控","q":"③ 是否有音量/时段约束？","opts":[["无固定时段、无音量限制",true],["已划区限时降量",false]]}],"path":"路径B：受扰 ∧ 未防控；联合城管/社区，第88条兜底","sentences":[{"t":"联合城管/社区划定区域与时段，调解未制止再依第88条处理","ok":true,"fb":"正确：多部门协同+调解前置，兼顾民生与安宁。","h":12,"r":10},{"t":"一律驱赶所有摊贩","ok":false,"kind":"warn","fb":"过当：忽视民生生计，应规范而非取缔。","h":-6,"r":-8},{"t":"以「摆摊自由」不予处理","ok":false,"kind":"bad","fb":"误判：受扰成立且无约束，应处理。","h":-10,"r":-12}],"truth":"夜市叫卖属社会生活噪声，同时涉城市管理。无固定时段/音量限制即未防控，受扰成立 → 路径B；处罚仍需第88条调解前置。","branch":{"troubleAction":"连续三晚记录叫卖时段 + 走访受影响住户","troubleLine":"判官连续记录：22:30 后叫卖与音响持续，多户居民证实长期失眠，形成证据链。","empathyOptions":[{"t":"共情：生计不易，但夜里得给邻居留安宁，咱划个时段","flag":"empathy"},{"t":"生硬：不准喊，影响别人休息","flag":"cold"}],"empathyLine":"摊贩（缓和）：「那我们22点收摊、音箱调小。」","coldLine":"摊贩（抵触）：「不许喊还让不让人活？」","bonusSentence":{"t":"城管划固定区域与22点时限 + 社区设《夜市文明公约》+ 居民轮值监督","ok":true,"fb":"最佳：规范而非取缔，多方共治。","h":16,"r":14,"bonus":true}}},
+ {"id":"S19","title":"居民楼麻将馆通宵喧哗","cat":"社会生活·商业经营（棋牌室/家庭场所）","target":70,"intro":"居民楼内麻将馆通宵营业，搓牌与人声经楼板传出，隔音极差。邻居称「每夜两三点还有人喊」。","dialogue":[{"who":"邻居","text":"凌晨两三点还哗啦哗啦，我第二天要上班，快崩溃了。"},{"who":"经营者","text":"在自家屋里打牌，别人管得着吗？"}],"path":"路径B：受扰 ∧ 未防控；第88条调解前置","evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，通宵干扰睡眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["夜间实测超标",true],["未测",false]]},{"key":"未防控","q":"③ 是否未隔音、不限时？","opts":[["无隔音、通宵营业",true],["已隔音且23点前结束",false]]}],"sentences":[{"t":"调解未果后报警，依第88条处理，并核查经营资质","ok":true,"fb":"正确：住改商经营亦须守安宁义务，调解前置后依法处置。","h":12,"r":10},{"t":"直接破门查处","ok":false,"kind":"warn","fb":"过当：须先调解并依法定程序，不得擅自处置。","h":-6,"r":-8},{"t":"认定「自家打牌」不予受理","ok":false,"kind":"bad","fb":"误判：经营性场所扰民应处理，住宅亦不得侵害相邻安宁。","h":-10,"r":-12}],"truth":"住改商经营不免除噪声防控义务。无隔音、通宵营业属未防控，受扰成立 → 路径B；处罚适用第88条调解前置。","branch":{"troubleAction":"夜间实地走访 + 核实是否经营场所","troubleLine":"判官夜间走访：确有多人聚集搓牌喧哗，营业性质明确，非普通家庭娱乐。","empathyOptions":[{"t":"共情：理解经营，但深夜必须收声，咱约个时限","flag":"empathy"},{"t":"生硬：你们违规经营，马上关","flag":"cold"}],"empathyLine":"经营者（缓和）：「那我们23点前散场、加个隔音。」","coldLine":"经营者（抵触）：「关你什么事。」","bonusSentence":{"t":"社区调解定23点前散场 + 加装隔音 + 核查住改商登记","ok":true,"fb":"最佳：时限+隔音+合规核查，标本兼治。","h":16,"r":14,"bonus":true}}},
+ {"id":"S20","title":"清晨婚庆礼炮与高音喇叭","cat":"社会生活·公共活动（婚庆礼炮）","target":70,"intro":"小区内清晨 6 点婚庆放礼炮并使用高音喇叭，多位老人与夜班住户被惊醒，物业劝阻无效。","dialogue":[{"who":"夜班住户","text":"我刚下班睡下，一炮把我震醒，心脏受不了。"},{"who":"婚庆主家","text":"办喜事热闹一下，早上放炮是规矩。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，惊醒、心悸",true],["无",false]]},{"key":"超标","q":"② 是否超标/违反禁放规定？","opts":[["礼炮声级高且违禁放时段",true],["合规时段且未超",false]]},{"key":"未防控","q":"③ 是否未采取约束措施？","opts":[["清晨6点、无告知、无时长控制",true],["已避开休息时段并告知邻里",false]]}],"path":"路径B：受扰 ∧ 未防控；习俗自由不得侵害他人安宁","sentences":[{"t":"劝导并依地方烟花爆竹管理规定由公安/城管处理，社区协调改时段","ok":true,"fb":"正确：尊重习俗但守安宁底线，先劝导后依法处理。","h":12,"r":10},{"t":"直接对主家重罚","ok":false,"kind":"warn","fb":"过当：应先劝导调解，兼顾民俗。","h":-6,"r":-8},{"t":"以「办喜事」为由不管","ok":false,"kind":"bad","fb":"误判：习俗不能凌驾于他人休息权与禁放规定。","h":-10,"r":-12}],"truth":"婚庆礼炮属社会生活噪声，并受地方烟花爆竹管理规范约束。清晨无告知、违禁放时段属未防控，受扰成立 → 路径B；处置兼顾民俗。","branch":{"troubleAction":"核查地方禁放规定 + 走访受惊吓住户","troubleLine":"判官查明当地禁放时段与区域，清晨6点燃放不合规定；多名住户（含心脏病患者）受惊。","empathyOptions":[{"t":"共情：喜事值得祝贺，但清晨放炮老人受不了，咱换个时段","flag":"empathy"},{"t":"生硬：违规放炮，立刻停","flag":"cold"}],"empathyLine":"主家（缓和）：「是我们没注意，改到上午八点后，不放炮了。」","coldLine":"主家（抵触）：「你扫我兴是吧？」","bonusSentence":{"t":"改至8点后 + 停用高音喇叭 + 主家向邻里致歉 + 物业提前告知机制","ok":true,"fb":"最佳：留住喜气也守住安宁，致歉修复关系。","h":16,"r":14,"bonus":true}}},
+ {"id":"S21","title":"高架桥夜间车辆轰鸣与振动","cat":"交通运输·城市道路（高架）","target":70,"intro":"高架桥距居民楼不足 10 米，夜间货车通行轰鸣，桥体振动传至室内，路段未设隔声屏障。","dialogue":[{"who":"临桥住户","text":"大车一过窗子都抖，戴耳塞也没用，整夜睡不踏实。"},{"who":"交通运维","text":"道路是合规建的，车流我们管不了。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，长期睡眠障碍",true],["无",false]]},{"key":"超标","q":"② 临街声环境是否超标？","opts":[["超标",true],["未测",false]]},{"key":"未防控","q":"③ 是否未设隔声屏障/未限行？","opts":[["无隔声屏、无夜间限行",true],["已设声屏障并限行",false]]}],"path":"路径B：受扰 ∧ 未防控（交通噪声，主管非物业）","sentences":[{"t":"向交通/生态环境部门反映，要求加装隔声屏+夜间限行货车","ok":true,"fb":"正确：交通运输噪声主管为交通/生态环境，措施针对设施与车流管理。","h":12,"r":10},{"t":"归物业负责处理","ok":false,"kind":"bad","fb":"误判：高架属市政交通设施，物业无管辖权（主管识别考点）。","h":-10,"r":-12},{"t":"直接处罚过路车主","ok":false,"kind":"warn","fb":"过当：个体车主非设施责任主体，应推动设施与管理措施。","h":-6,"r":-8}],"truth":"高架属交通运输噪声，主管为交通/生态环境部门而非物业。未设声屏障、无夜间限行属未防控，受扰成立 → 路径B；处罚个人车主非对症。","branch":{"troubleAction":"同步测临街声级 + 记录夜间车流构成","troubleLine":"判官实测夜间临街超标，记录显示22点后货车占比高，桥体无隔声屏障。","empathyOptions":[{"t":"共情：临桥住户最苦，我们推动隔声屏和限行","flag":"empathy"},{"t":"生硬：公路早就在那，你自己搬走","flag":"cold"}],"empathyLine":"交通运维（缓和）：「我们评估加声屏障和夜间限货。」","coldLine":"住户（抵触）：「路先建的我活该倒霉？」","bonusSentence":{"t":"交通部门加装隔声屏 + 夜间货车限行 + 定期声环境公示","ok":true,"fb":"最佳：工程+管理双管齐下，长效改善。","h":16,"r":14,"bonus":true}}},
+ {"id":"S22","title":"物流园夜间货车进出鸣笛","cat":"交通运输·道路（货车/鸣笛）","target":70,"intro":"物流园夜间货车频繁进出，发动机轰鸣与鸣笛扰民。居民已向物业反映，被告知「不归我们管」。","dialogue":[{"who":"居民","text":"半夜货车一辆接一辆，还按喇叭，孩子天天被吓醒。"},{"who":"园区保安","text":"车是别人的，我们也没办法。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，惊醒、失眠",true],["无",false]]},{"key":"超标","q":"② 是否违反禁鸣/限行规定？","opts":[["禁鸣区鸣笛且夜间通行",true],["合规通行",false]]},{"key":"未防控","q":"③ 是否未采取限时限鸣措施？","opts":[["无夜间进出限制、无禁鸣管理",true],["已限时段并执行禁鸣",false]]}],"path":"路径B：受扰 ∧ 未防控；交管主责，园区配合","sentences":[{"t":"向交管反映禁鸣/限行，并督促园区调整夜间进出与装卸时段","ok":true,"fb":"正确：鸣笛归交管（122），园区配合管理，主管识别准确。","h":12,"r":10},{"t":"继续找物业解决","ok":false,"kind":"warn","fb":"不足：物业非主管，应转交管与园区管理方。","h":-6,"r":-8},{"t":"要求追究司机刑事责任","ok":false,"kind":"bad","fb":"误判：鸣笛属行政违法，非刑责。","h":-8,"r":-10}],"truth":"货车鸣笛属交通运输噪声，主管为公安交管（122）。禁鸣区鸣笛=未依法防控，叠加夜间无进出限制，受扰成立 → 路径B。","branch":{"troubleAction":"核实禁鸣标志 + 夜间进出时段记录","troubleLine":"判官核实入口禁鸣标志清晰，夜间进出记录密集，鸣笛与轰扰事实成立。","empathyOptions":[{"t":"共情：理解物流作息，但夜里得给邻居留静，咱限时禁鸣","flag":"empathy"},{"t":"生硬：货车全给我停了","flag":"cold"}],"empathyLine":"园区管理（缓和）：「我们排班到22点前，门口贴禁鸣。」","coldLine":"司机（抵触）：「不按喇叭你让我怎么进？」","bonusSentence":{"t":"交管设禁鸣与限行标识 + 园区22点前进出 + 装卸区远离居民楼","ok":true,"fb":"最佳：执法+管理+布局三管齐下。","h":16,"r":14,"bonus":true}}},
+ {"id":"S23","title":"石材加工作坊夜间切割","cat":"工业（石材/金属加工）","target":70,"intro":"城郊石材作坊夜间切割，尖啸声刺耳，厂界监测明显超标。作坊主称「白天接单，只能晚上干」。","dialogue":[{"who":"附近村民","text":"那声音像指甲刮黑板，从晚上一直刮到凌晨。"},{"who":"作坊主","text":"白天有客户来，吵，只能夜里加工。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，多户无法入睡",true],["无",false]]},{"key":"超标","q":"② 厂界噪声是否超标？","opts":[["厂界明显超标",true],["达标",false]]},{"key":"未防控","q":"③ 是否未采取隔声减震/限时？","opts":[["车间无隔声、设备无减振、夜间作业",true],["已隔声减振且仅白天作业",false]]}],"path":"路径A：超标 ∧ 干扰（工业噪声）","sentences":[{"t":"生态环境部门责令停用高噪设备+限期治理+禁止夜间作业","ok":true,"fb":"正确：工业案厂界超标+干扰走路径A，责令改正优先。","h":12,"r":10},{"t":"归物业或居委会处理","ok":false,"kind":"warn","fb":"不足：工业噪声主管为生态环境部门。","h":-6,"r":-8},{"t":"仅口头劝其小声","ok":false,"kind":"bad","fb":"不足：超标明确，须责令限期治理。","h":-8,"r":-10}],"truth":"工业噪声以厂界监测为准；厂界超标+干扰 → 路径A。主管为生态环境部门，先责令限期治理，拒改/严重再罚。","branch":{"troubleAction":"厂界监测 + 查作业时间与治理设施","troubleLine":"判官现场监测厂界超标，车间无隔声、切割机无减振，夜间作业记录明确。","empathyOptions":[{"t":"共情：理解订单压力，但夜间必须停，咱谈整改期限","flag":"empathy"},{"t":"生硬：违法排放，马上查封","flag":"cold"}],"empathyLine":"作坊主（缓和）：「那我申请限期，装隔声、白天干。」","coldLine":"作坊主（抵触）：「查封了我吃什么？」","bonusSentence":{"t":"生态环境部门定整改期限 + 加装隔声减振 + 承诺仅白天作业+复查","ok":true,"fb":"最佳：给期限也守底线，复查闭环。","h":16,"r":14,"bonus":true}}},
+ {"id":"S24","title":"凌晨打桩无夜间许可","cat":"建筑施工（桩基/夜间施工）","target":70,"intro":"工地凌晨 2 点仍在打桩，整栋楼震动。居民反映该工地无夜间施工许可，也未设减噪措施。","dialogue":[{"who":"居民代表","text":"凌晨两点还在打桩，杯子在桌上直跳，全楼没睡。"},{"who":"施工方","text":"桩基必须连续作业，停下来工期就废了。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，全楼集体失眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["明显超标",true],["未测",false]]},{"key":"未防控","q":"③ 是否有夜间许可与减噪措施？","opts":[["无夜间许可、无减噪围挡",true],["许可齐全且有减噪措施",false]]}],"path":"路径B：受扰 ∧ 未防控（夜间施工须许可+防控）","sentences":[{"t":"责令立即停止夜间打桩，补办许可并落实减噪后复工","ok":true,"fb":"正确：夜间施工须许可+防控，先停止再整改。","h":12,"r":10},{"t":"仅罚款允许继续打桩","ok":false,"kind":"warn","fb":"不足：未制止持续侵害，罚款不能替代停止侵害。","h":-6,"r":-8},{"t":"归公安处理","ok":false,"kind":"bad","fb":"误判：施工噪声主管为生态环境部门，夜间无证涉住建/城管。","h":-8,"r":-10}],"truth":"夜间（22:00–6:00）施工须有许可并采取减噪措施。无许可无措施+集体受扰 → 路径B；主管生态环境部门，涉住建/城管。","branch":{"troubleAction":"核查夜间施工许可公示 + 现场减噪措施","troubleLine":"判官核查：现场未公示夜间施工许可，打桩机无减振与围挡，违规事实明确。","empathyOptions":[{"t":"共情：理解抢工期，但凌晨打桩全楼遭罪，先停再补手续","flag":"empathy"},{"t":"生硬：无证施工，立刻停","flag":"cold"}],"empathyLine":"施工方（缓和）：「那我们停夜间，改白天并补手续。」","coldLine":"施工方（抵触）：「停工谁赔工期？」","bonusSentence":{"t":"立即停夜间打桩 + 补办许可 + 加临时减振围挡 + 向居民公示工期","ok":true,"fb":"最佳：停工、合规、减噪、公示四步到位。","h":16,"r":14,"bonus":true}}},
+ {"id":"S25","title":"KTV深夜高分贝串音","cat":"社会生活·商业经营（KTV·高频人声）","target":72,"intro":"居民楼下 KTV 每晚营业至凌晨，歌声与鼓点穿墙可闻对话，楼上住户整夜无法入睡。经营者称「包厢在负一层，隔音绝对达标」。","dialogue":[{"who":"楼上住户","text":"晚上十点后跟人在耳边唱歌一样，敲墙都能听见，孩子整夜不睡。"},{"who":"KTV店长","text":"包厢在负一层，做了隔音处理，环保检测都合格。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，隔墙可闻对话、整夜失眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["实测超标(中高频突出)",true],["未测",false]]},{"key":"未防控","q":"③ 是否未采取隔音/限时措施？","opts":[["无隔音门、营业至凌晨、无时段限制",true],["已加隔音且限时至22点",false]]}],"path":"A∩B：超标∧干扰 且 未防控∧干扰","sentences":[{"t":"责令限时并加装隔音门，逾期依第88条处拘留或罚款","ok":true,"fb":"正确：商业固定声源，A∩B成立，先责令改正+限期，拒改再处罚。","h":12,"r":11},{"t":"以「环保检测合格」为由驳回","ok":false,"kind":"bad","fb":"误判：达标不免责，漏未防控要件（关键区分点）。","h":-12,"r":-14},{"t":"直接吊销营业执照","ok":false,"kind":"warn","fb":"过当：超出噪声处置权限，应先责令改正并限期。","h":-6,"r":-8}],"truth":"KTV属商业经营高频声源，隔音达标不免除防控义务。无隔音+无限时+超标受扰 → A∩B；先责令改正，拒不改正再依第88条处罚，并可依《娱乐场所管理条例》核营业时间。","branch":{"troubleAction":"隔墙听辨 + 营业时间现场核查","troubleLine":"判官贴墙听辨：清晰可辨点唱声与人声对话，指向负一层 KTV 音区；现场核查发现营业至凌晨两点且未设隔音门。","empathyOptions":[{"t":"共情：知道您做生意要赚钱，但整夜歌声邻居受不了，咱限时加隔音","flag":"empathy"},{"t":"生硬：吵成这样，立刻关停","flag":"cold"}],"empathyLine":"KTV店长（缓和）：「那我们限到22点，门口加隔音门。」","coldLine":"KTV店长（抵触）：「关了门我喝西北风？」","bonusSentence":{"t":"KTV加装隔音门+营业限时+音量上限 + 物业与居委见证约定","ok":true,"fb":"最佳：共情+定位+限时隔音+第三方见证，长效可控。","h":16,"r":15,"bonus":true}}},
+ {"id":"S26","title":"培训机构声乐课穿墙","cat":"社会生活·商业经营（教育培训·高频人声）","target":72,"intro":"居民楼内艺术培训机构开设声乐一对一课程，学员高声练歌，物业多次提醒后仍在晚间开课。","dialogue":[{"who":"居民","text":"晚上八点后楼上一直吊嗓子，那声音又尖又高，孩子根本没法写作业。"},{"who":"机构负责人","text":"我们课时是跟学员协商的，学员愿意付钱我们总不能不教吧。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，学习受扰、失眠",true],["无",false]]},{"key":"超标","q":"② 分贝是否超标？","opts":[["实测超标(人声高频突出)",true],["未测",false]]},{"key":"未防控","q":"③ 是否未做隔音/未限时段？","opts":[["未做隔音、晚间照常开课",true],["已装隔音吸音且调至白天",false]]}],"path":"A∩B：商业经营声源，高频人声穿透","sentences":[{"t":"联合居委与物业责令限时至20点前并加装隔音，拒不改正依第88条处理","ok":true,"fb":"正确：先经居委/物业劝阻调解留痕，确属未能制止再依第88条处罚。","h":12,"r":11},{"t":"立即上门没收教学设备","ok":false,"kind":"warn","fb":"过当：须先劝阻调解并依法定程序，处罚有前置要件。","h":-6,"r":-9},{"t":"认为学员自愿付费即可放任","ok":false,"kind":"bad","fb":"误判：付费自愿不构成排除相邻安宁的理由，受扰+未防控成立。","h":-11,"r":-13}],"truth":"培训机构属商业经营，营业自由不豁免噪声防控义务。隔音未做+晚间开课+超标受扰 → A∩B；处罚须满足第88条「劝阻调解处理未能制止」前置。","branch":{"troubleAction":"分时段实测 + 核对课程表与隔音现状","troubleLine":"判官晚间实测人声高频段明显超标，核对课程表显示每晚19:30–21:30 声乐课，教室墙面无任何吸音处理。","empathyOptions":[{"t":"共情：教学要保障，但楼上邻居要睡觉，咱挪到白天并做隔音","flag":"empathy"},{"t":"生硬：扰民就停课","flag":"cold"}],"empathyLine":"机构负责人（缓和）：「声乐课调到白天，墙加吸音棉。」","coldLine":"机构负责人（抵触）：「我按合约办事，凭什么停？」","bonusSentence":{"t":"声乐课移至白天+教室加吸音隔音+与居委会签静音公约","ok":true,"fb":"最佳：共情+实测+改时段+公约，兼顾教学与安宁。","h":16,"r":15,"bonus":true}}},
+ {"id":"S27","title":"售楼处夜间扩音促销","cat":"社会生活·商业经营（房地产营销·高频扩音）","target":72,"intro":"楼盘营销中心每晚用大功率扩音喇叭循环播放促销口号，锣鼓与礼炮齐鸣，持续到深夜。","dialogue":[{"who":"周边居民","text":"晚上八点后喇叭震得窗户嗡嗡响，喊麦声刺耳，根本睡不着。"},{"who":"营销负责人","text":"现在是楼市淡季，不吆喝就没有客户，这是营销需要。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，整夜受扰、无法入睡",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标",true],["未测",false]]},{"key":"未防控","q":"③ 是否未控音量/未限时？","opts":[["未设音量上限、播至23点后",true],["已限时限量并设围挡",false]]}],"path":"A∩B：商业营销高频扩音","sentences":[{"t":"责令立即停播并限时限量，拒不改正依第88条处理","ok":true,"fb":"正确：商业经营高频扩音，责令改正优先，处罚为后手。","h":12,"r":11},{"t":"以「楼市困难需要营销」为由默许","ok":false,"kind":"bad","fb":"误判：商业理由不能凌驾居民休息权，受扰+未防控成立。","h":-12,"r":-14},{"t":"要求业主自行关闭窗户","ok":false,"kind":"warn","fb":"过当：措施应指向声源控制，而非转嫁住户。","h":-6,"r":-8}],"truth":"售楼处夜间扩音属商业经营噪声营销，超标+未控音量限时且受扰 → A∩B。处置先责令停止与限时限量；同时可依房地产广告与夜间扰民相关规定反映。","branch":{"troubleAction":"夜间现场实测 + 核验播音时段与设备参数","troubleLine":"判官夜间实测扩音喇叭声压级明显超标，播音清单显示至23:30，设备未设音量限值。","empathyOptions":[{"t":"共情：理解楼市压力，改用白天与静音物料同样能获客","flag":"empathy"},{"t":"生硬：扰民就停播","flag":"cold"}],"empathyLine":"营销负责人（缓和）：「白天播，晚上我们换成围挡展板。」","coldLine":"营销负责人（抵触）：「广告不响谁看房？」","bonusSentence":{"t":"停夜间扩音+改围挡静音宣传+昼间定时播放+结果回访","ok":true,"fb":"最佳：共情+实测+替客户想替代方案，处置可持续。","h":16,"r":15,"bonus":true}}},
+ {"id":"S28","title":"广场舞音响升级移至架空层","cat":"社会生活·公共活动（广场舞·升级矛盾·高频）","target":72,"intro":"原 S3 案的升级版：舞队更换大功率音响，并将音响移至居民楼架空层正下方，声波经楼板孔洞直灌。","dialogue":[{"who":"低层住户","text":"音响搬到架空层下面了，声音直接冲上来，床都跟着晃。"},{"who":"舞队队长","text":"换了新音响效果好多了，楼上的邻居怎么就受不了呢。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，低层住户整夜受扰",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标",true],["未测",false]]},{"key":"未防控","q":"③ 是否未控音量/未限位/未限时？","opts":[["未设音量上限、未限时、音箱置于架空层下",true],["已限时并移位至远离住宅处",false]]}],"path":"A∩B：声源升级与位置转移，需重新取证与沟通","sentences":[{"t":"联合社区重新协商位置与时段，责令限音量限时","ok":true,"fb":"正确：声源升级后须重新取证与协商，兼顾锻炼需求与居民安宁。","h":12,"r":11},{"t":"沿用旧结论直接认定违规并取缔","ok":false,"kind":"warn","fb":"过当：情况已变化，应先重新协商，避免简单粗暴。","h":-6,"r":-8},{"t":"认为锻炼是基本权利，居民必须忍受","ok":false,"kind":"bad","fb":"误判：健身权与安宁权需平衡，超标且未控措施仍应处置。","h":-11,"r":-13}],"truth":"本案是 S3 的演进：声源功率升级+位置转移造成新的侵扰，须重新取证并重新协商。既不能沿用旧结论机械取缔，也不能以锻炼权为由放任超标。","branch":{"troubleAction":"实测声级 + 复核音响功率与架设位置","troubleLine":"判官实测超标，复核发现音响功率由原 200W 升至 800W，且移至 3 号楼架空层正下方，孔洞无任何遮挡。","empathyOptions":[{"t":"共情：锻炼是好事，咱们换个位置、调小音量、错开时段","flag":"empathy"},{"t":"生硬：不让跳锻炼你们养闲人吗？","flag":"cold"}],"empathyLine":"舞队队长（缓和）：「那我们挪到中心广场，音量调小，八点半收。」","coldLine":"舞队队长（抵触）：「不让跳锻炼你们养闲人吗？」","bonusSentence":{"t":"舞队移至中心广场+限音量+八点半前结束+社区备案+居民代表见证","ok":true,"fb":"最佳：共情+重新协商+备案见证，矛盾化解且可持续。","h":16,"r":15,"bonus":true}}},
+ {"id":"S29","title":"地库寻车广播与倒车提示音","cat":"小区公用设备·地库（高频提示音·全天）","target":72,"intro":"地库寻车机全日循环播报「您的车辆已停放…」，倒车雷达高频蜂鸣贯穿全天，夜间仍未降低音量。","dialogue":[{"who":"住户","text":"凌晨一点车库还在喊那个女声，滴滴声也停不下来，太折磨人了。"},{"who":"物业工程","text":"寻车机是厂家装的，我们也没有办法关掉。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，夜间广播与蜂鸣扰眠",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["未超但夜间尖锐刺耳",false],["实测超标",true]]},{"key":"未防控","q":"③ 是否未设音量上限/未限时/未夜间静音？","opts":[["无音量上限、无夜间静音或降噪",true],["已夜间静音并限音量",false]]}],"path":"路径B：受扰 ∧ 未防控（共用设备，未控音量与时段）","sentences":[{"t":"责令物业夜间静音、调低音量并加装限流装置","ok":true,"fb":"正确：共用设备未控音量时段即未防控，先责令改正。","h":12,"r":10},{"t":"以「厂家设备无法调整」为由不处理","ok":false,"kind":"bad","fb":"误判：设备可静音/可调/可改时段，未尽防控义务即成立。","h":-12,"r":-14},{"t":"要求住户自行适应","ok":false,"kind":"warn","fb":"过当：应向设备管理与物业追责，不可转嫁住户。","h":-6,"r":-8}],"truth":"地库寻车广播与倒车提示音属小区共用设备声源。分贝未必超标，但未设音量上限、未夜间静音降噪即属未防控，受扰成立 → 路径B；物业首责。","branch":{"troubleAction":"夜间分时段录音 + 核对设备音量与时段设置","troubleLine":"判官夜间录音：寻车播报间隔 40 秒一轮、倒车蜂鸣持续，物业后台显示无夜间静音策略、无音量上限设置。","empathyOptions":[{"t":"共情：夜里确实折磨人，我们让物业晚上静音并调低音量","flag":"empathy"},{"t":"生硬：吵就自己戴耳机","flag":"cold"}],"empathyLine":"物业工程（缓和）：「我们设夜间静音，音量降到60分贝。」","coldLine":"物业工程（抵触）：「厂家设定我们改不了。」","bonusSentence":{"t":"物业设置夜间静音时段+限音量+加装消声壳+向业主公示","ok":true,"fb":"最佳：措施具体且可执行，公示增强信任。","h":16,"r":14,"bonus":true}}},
+ {"id":"S30","title":"农贸市场剁肉声与电子叫卖","cat":"社会生活·商业经营（农贸市场·复合声源）","target":72,"intro":"清晨 4 点起菜市场剁肉撞击声与电子喇叭叫卖声叠加，居民楼一墙之隔，睡眠与晨练均受扰。","dialogue":[{"who":"居民","text":"四点多就开始剁肉，咚咚咚加喇叭，什么都听不清，老人根本睡不熟。"},{"who":"市场管理员","text":"菜场五点就得开市讨生活，声音大点也是没办法。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，凌晨即受扰、睡眠不足",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标(剁肉撞击突出)",true],["未测",false]]},{"key":"未防控","q":"③ 是否未分源管控/未限时/未隔振？","opts":[["剁肉区无隔振台面、喇叭无音量限制、凌晨即作业",true],["已隔振并限时静音",false]]}],"path":"A∩B：复合声源，须分源取证","sentences":[{"t":"责令市场限期整改：剁肉台加隔振垫、喇叭限时限量，并错峰作业","ok":true,"fb":"正确：复合声源须分源定性，分别责令整改与限时。","h":12,"r":11},{"t":"要求居民接受市场营业时间","ok":false,"kind":"bad","fb":"误判：营业需要不免除防控义务，凌晨作业无隔振无控量。","h":-11,"r":-13},{"t":"直接取缔整个市场","ok":false,"kind":"warn","fb":"过当：应分源限期整改，保障民生同时控噪。","h":-6,"r":-9}],"truth":"本案为复合声源（撞击声+电子叫卖）。取证须分源分别测量定性，处置亦须分源：撞击声→隔振减震台面；叫卖声→时段与音量限制。营业需要不免除防控义务。","branch":{"troubleAction":"分源实测（撞击/叫卖分别测量）+ 核验营业与作业时间","troubleLine":"判官分源实测：剁肉台面处撞击声级明显超标且台下无任何隔振垫；电子喇叭音量无上限，凌晨 4 点即开始叫卖。","empathyOptions":[{"t":"共情：早起讨生活不容易，咱们把剁肉挪到里面并加垫子，喇叭限时","flag":"empathy"},{"t":"生硬：这么吵还开什么市","flag":"cold"}],"empathyLine":"市场管理员（缓和）：「剁肉台加垫子，喇叭五点后再响。」","coldLine":"市场管理员（抵触）：「不叫怎么卖菜？」","bonusSentence":{"t":"剁肉台全面加装隔振垫+移入半封闭棚+喇叭限时限量+与周边社区签约定","ok":true,"fb":"最佳：分源治理+兼顾生计+书面约定，标本兼治。","h":16,"r":15,"bonus":true}}},
+ {"id":"S31","title":"小区清晨公共广播","cat":"小区公用设备·公共广播（高频·时段失控）","target":72,"intro":"物业每日 6:30 用室外大喇叭播放音乐与通知，音量穿透整栋楼，业主多次投诉后仅调低一档。","dialogue":[{"who":"业主","text":"每天六点半喇叭一响，全楼都醒了，孩子上学会迟到。"},{"who":"物业主管","text":"通知总得让大家听到吧，音量已经调小过两次了。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，全楼住户晨间受扰",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["未超但穿透性强、指向明确",false],["实测超标",true]]},{"key":"未防控","q":"③ 是否未限定时段/未分区/未用定向设备？","opts":[["6:30即播、音量穿透、无定向与分区控制",true],["已改静音通知与分时分区",false]]}],"path":"路径B：受扰 ∧ 未防控（共用设施时段失控）","sentences":[{"t":"责令物业限时、减量并改用定向广播与静音通知","ok":true,"fb":"正确：共用广播设施未控时段音量即未防控，责令改正优先。","h":12,"r":10},{"t":"以「必须通知到人」为由维持现状","ok":false,"kind":"bad","fb":"误判：可改定向、分时、静音通知，义务未尽不可豁免。","h":-12,"r":-14},{"t":"由业主委员会投票决定是否保留","ok":false,"kind":"warn","fb":"过当：应先责令改正并提供替代方案，再行民主协商。","h":-6,"r":-8}],"truth":"小区室外广播属共用设施声源。通知必要性可通过定时、定向、分区、静音告示牌实现，不构成豁免。未控时段与音量+受扰 → 路径B；物业首责，业委会可监督。","branch":{"troubleAction":"记录连续7日广播时段 + 核验设备功率与安装方式","troubleLine":"判官连续 7 日记录显示每日 6:28 起播放、时长 18 分钟；设备为 60W 无指向室外喇叭，音量可覆盖三栋楼。","empathyOptions":[{"t":"共情：通知确实要传到，改成定向+定时+微信推送，效果一样更好","flag":"empathy"},{"t":"生硬：扰民就关掉别播了","flag":"cold"}],"empathyLine":"物业主管（缓和）：「那改到晚上7点，换定向喇叭。」","coldLine":"物业主管（抵触）：「不播通知谁看？」","bonusSentence":{"t":"物业换定向喇叭+改晚间时段+补微信群推送+年度复评","ok":true,"fb":"最佳：替代方案+技术改造+复评机制，长期可行。","h":16,"r":14,"bonus":true}}},
+ {"id":"S32","title":"装修电锤锤击穿墙","cat":"建筑施工·装修（高频冲击·瞬时峰值）","target":72,"intro":"楼上装修用电锤锤击承重墙，瞬时冲击声尖锐刺耳，白天也令人心悸，且未约定作业时段。","dialogue":[{"who":"楼下住户","text":"电锤一敲，整个屋子都在抖，最响那下我心脏受不了。"},{"who":"装修方","text":"不敲墙贴不了砖，物业也没说不能用啊。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，心悸惊跳、白天亦受扰",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标(冲击峰值突出)",true],["未测",false]]},{"key":"未防控","q":"③ 是否未限时/未减震/未限制锤击？","opts":[["未约定时段、未限锤击部位、无减震措施",true],["已定时段并限定非承重墙",false]]}],"path":"A∩B：施工高频冲击声，超标且未控时段与部位","sentences":[{"t":"责令约定作业时段、限非承重墙并加隔震，违规按合同与规定处理","ok":true,"fb":"正确：装修案先定规则（时段+部位+减震），拒不配合再上报。","h":12,"r":11},{"t":"以「装修自由」为由不予约束","ok":false,"kind":"bad","fb":"误判：装修自由附随相邻安宁义务，超标且未控措施成立。","h":-11,"r":-13},{"t":"立即查封全部装修材料","ok":false,"kind":"warn","fb":"过当：先责令改正，处罚与查封非首选。","h":-6,"r":-8}],"truth":"电锤锤击属高频冲击声，瞬时峰值突出。装修须约定作业时段、限制锤击部位（禁打承重墙）、采取隔震措施；未约定即属未防控。超标+受扰 → A∩B。","branch":{"troubleAction":"峰值声级实测 + 核验作业时段与承重墙情况","troubleLine":"判官实测锤击瞬时声压级显著超标且伴明显结构振动；现场核实无任何作业时段约定，锤击点位于承重墙附近。","empathyOptions":[{"t":"共情：赶工期理解，但敲墙得守规矩，定时段、避承重墙、垫隔音","flag":"empathy"},{"t":"生硬：这么吵你还让不让人住","flag":"cold"}],"empathyLine":"装修方（缓和）：「那我们定周一到周五上午，避开承重墙。」","coldLine":"装修方（抵触）：「不敲我房子怎么弄？」","bonusSentence":{"t":"装修方签作业时段承诺书+禁锤承重墙+铺移动隔震毯+物业巡查","ok":true,"fb":"最佳：共情+明确规则+书面承诺+巡查闭环。","h":16,"r":15,"bonus":true}}},
+ {"id":"S33","title":"直播间音响与主播喊麦叠加","cat":"社会生活·商业经营（电商直播·多声源叠加）","target":72,"intro":"居民楼内直播间同时外放背景音乐与主播喊麦，BGM 高频刺耳，多间房同时开播形成叠加声。","dialogue":[{"who":"邻居","text":"隔壁一到晚上就又吵又尖，像好几个直播间一起开，玻璃都在振。"},{"who":"主播","text":"我们靠声音吸引人，不喊麦没人下单，赚不到钱怎么办。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，学习与睡眠双重受扰",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标(BGM高频突出)",true],["未测",false]]},{"key":"未防控","q":"③ 是否未隔音/未限时/未限并发？","opts":[["未做隔音、未限时段、多间同时开播",true],["已隔音限时且限并发",false]]}],"path":"A∩B：多声源叠加，须分源测量并合并评价","sentences":[{"t":"责令分源整改：加隔音、限时段、限制同时开播数量","ok":true,"fb":"正确：叠加声源须分源取证并分别限制作出治理措施。","h":12,"r":11},{"t":"要求所有直播间立即停止营业","ok":false,"kind":"warn","fb":"过当：先责令限期整改并给出替代经营方案。","h":-6,"r":-9},{"t":"以「直播是就业」为由放任","ok":false,"kind":"bad","fb":"误判：就业与居住安宁需平衡，不能成为免于防控的理由。","h":-11,"r":-13}],"truth":"电商直播为新兴业态，同址多直播间叠加会形成远超单一源的高频暴露。取证须分源测量后合并评价；处置须分别落实隔音、时段与并发数量限制。","branch":{"troubleAction":"分源测量各直播间 + 核对开播时段与并发数","troubleLine":"判官逐间测量：3 间直播间同时开播，BGM 人声高频段叠加后楼道内明显超标；核查发现无任何隔音与时段、并发限制。","empathyOptions":[{"t":"共情：直播确实靠声音，我们帮你做隔音、限时段和房间数","flag":"empathy"},{"t":"生硬：吵死了，全给我关了","flag":"cold"}],"empathyLine":"主播（缓和）：「我们加隔音棉，最多开一间到十点。」","coldLine":"主播（抵触）：「不直播我吃不上饭。」","bonusSentence":{"t":"直播方装隔音+限同时开播数+设静音时段+与居委会签公约","ok":true,"fb":"最佳：共情+分源治理+公约+兼顾生计。","h":16,"r":15,"bonus":true}}},
+ {"id":"S34","title":"电动车改装高音喇叭","cat":"社会生活·设备改装（非机动车·高频警示音）","target":72,"intro":"居民改装电动自行车安装高分贝气喇叭，电梯厅内频繁试鸣，尖啸声刺耳且突然。","dialogue":[{"who":"老人住户","text":"电梯里突然一声尖叫，我心脏受不了，耳朵嗡好几天。"},{"who":"车主","text":"装个响的喇叭别人才让路，路上不安全。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，惊吓、耳鸣不适",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标(高频尖锐)",true],["未测",false]]},{"key":"未防控","q":"③ 是否改装违规/未限时？","opts":[["擅自改装且无时段与音量约束",true],["原车未改装",false]]}],"path":"A∩B：改装违规 + 未控音量时段","sentences":[{"t":"责令拆除改装并向交管反映，噪声部分依第88条调解处理","ok":true,"fb":"正确：车辆改装归交管，噪声扰民依第88条，先责令改正。","h":12,"r":11},{"t":"当场扣车并处以高额罚款","ok":false,"kind":"warn","fb":"过当：须依法定程序，且应先责令拆除改装。","h":-6,"r":-9},{"t":"认为喇叭响只是习惯问题","ok":false,"kind":"bad","fb":"误判：擅自改装且超标扰民，构成未防控，须处理。","h":-11,"r":-13}],"truth":"擅自改装车辆并高频鸣笛属双重问题：改装部分由公安交管依车辆管理规定处理；噪声部分属社会生活噪声，依第88条先经劝阻调解处理。","branch":{"troubleAction":"现场查看改装件 + 记录试鸣频次与时段","troubleLine":"判官现场查看确认加装分贝气喇叭并拆除了原提示器；记录显示近一周在电梯厅试鸣 9 次，多在夜间。","empathyOptions":[{"t":"共情：喇叭是为你安全，但高分贝太吓人，咱们换个低音量的","flag":"empathy"},{"t":"生硬：拆了，不拆就扣车","flag":"cold"}],"empathyLine":"车主（缓和）：「那我换回原装的。」","coldLine":"车主（抵触）：「不响谁让路？」","bonusSentence":{"t":"拆除改装喇叭+更换合规提示音+向交管备案+楼道文明用车提示","ok":true,"fb":"最佳：安全诉求被接住，规则被落实。","h":16,"r":15,"bonus":true}}},
+ {"id":"S35","title":"无人机低空训练扰民","cat":"交通运输·航空（低空飞行·高频啸叫）","target":72,"intro":"郊外训练基地无人机在居民区上空低空飞行，旋翼高频啸叫盘旋不去，物业多次反映无果。","dialogue":[{"who":"住户","text":"头顶嗡嗡像直升机，尖得很，风一吹更吵，老人孩子受不了。"},{"who":"物业经理","text":"我们反映过几次，对方说是训练任务，我们管不了。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，持续高频干扰、无法休息",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标(旋翼啸叫突出)",true],["未测",false]]},{"key":"未防控","q":"③ 是否未避让居民区/未限高/未审批？","opts":[["低空穿越居民区、无避让与高度限制",true],["已划定禁飞区并合规申报",false]]}],"path":"A∩B：航空噪声，主管非物业","sentences":[{"t":"向公安与民航部门反映，要求避开居民区并规范飞行申报","ok":true,"fb":"正确：航空噪声主管为公安与民航/空管，物业无管辖权。","h":12,"r":11},{"t":"要求物业强制禁止其飞行","ok":false,"kind":"warn","fb":"不足：物业无管辖权，应向主管部门反映。","h":-6,"r":-8},{"t":"组织居民围堵机场跑道","ok":false,"kind":"bad","fb":"过当：危及公共安全与航空秩序，绝不可取。","h":-14,"r":-16}],"truth":"低空飞行噪声属交通运输（航空）噪声，主管部门为公安机关与民航主管部门，物业仅能协助反映。飞行须符合适飞空域与申报要求；无避让居民区属未防控。","branch":{"troubleAction":"记录飞行高度与频次 + 核验飞行申报","troubleLine":"判官连续记录显示无人机在居民区上空 30–50 米盘旋，单次超 10 分钟；核查未见任何飞行活动申报记录。","empathyOptions":[{"t":"共情：训练任务重要，我们帮你把反映渠道走对，一起协商避让","flag":"empathy"},{"t":"生硬：再飞就把它们打下来","flag":"cold"}],"empathyLine":"物业经理（缓和）：「我们帮业主统一向公安和民航报材料。」","coldLine":"住户（抵触）：「说了一堆还是没人管。」","bonusSentence":{"t":"业主联名材料+公安/民航核查+划定禁飞区+训练时段避让居民区","ok":true,"fb":"最佳：合法渠道+材料齐备+实质避让，路径清晰。","h":16,"r":15,"bonus":true}}},
+ {"id":"S36","title":"商场网红直播外放揽客","cat":"社会生活·商业经营（新业态·直播引流）","target":72,"intro":"商业综合体中庭设置网红直播带货点，多支团队同时外放音响与喊麦招揽顾客，引来围观噪音。","dialogue":[{"who":"商场住户","text":"中庭天天像赶集，有人唱歌有人喊麦，在家都能听见吵闹声。"},{"who":"直播负责人","text":"没有我们这些直播间商场哪来客流，吵一点才有人逛。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，楼上住户与顾客双重受扰",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["实测超标(多源叠加)",true],["未测",false]]},{"key":"未防控","q":"③ 是否无固定点位/无音量上限/无限时？","opts":[["无固定区域、无音量上限、无时段限制",true],["已划定静音时段与限音量",false]]}],"path":"A∩B：公共场所经营噪声，商场管理方负首接责任","sentences":[{"t":"责令商场划定区域、限音量限时并规范直播点位","ok":true,"fb":"正确：管理方负首接责任，先责令改正并规范经营。","h":12,"r":11},{"t":"要求居民自行避开直播时段","ok":false,"kind":"bad","fb":"误判：应向经营方与管理者求偿并规范，不可转嫁住户。","h":-11,"r":-13},{"t":"直接封停所有直播间","ok":false,"kind":"warn","fb":"过当：应先限期规范，执法需有法定依据与程序。","h":-6,"r":-9}],"truth":"商业综合体为经营场所，引入直播引流造成噪声扰民，管理方负首接与规范责任。处置以划区、限时、限音量为主，拒不改正再依第88条。","branch":{"troubleAction":"多点位实测 + 核对商场招商与直播管理规则","troubleLine":"判官在中庭三个点位分别实测，叠加声级超标；核查商场招商协议中无任何直播噪声管理条款。","empathyOptions":[{"t":"共情：直播能带客流，咱们把它挪到指定区并限时限量","flag":"empathy"},{"t":"生硬：太吵了，全撤走","flag":"cold"}],"empathyLine":"直播负责人（缓和）：「我们移到B区，晚上九点后不外放。」","coldLine":"直播负责人（抵触）：「撤了我去哪儿播？」","bonusSentence":{"t":"商场设直播专区+音量上限+22点静音+纳入招商管理条款","ok":true,"fb":"最佳：源头治理+合同条款化，长效不反弹。","h":16,"r":15,"bonus":true}}},
+ {"id":"S37","title":"电梯轿厢广告有声外放","cat":"小区公用设备·电梯（轿厢广告·密闭空间高频）","target":72,"intro":"物业将电梯轿厢改为广告屏并开启有声播放，密闭轿厢内音量无处衰减，候梯乘客被持续强灌。","dialogue":[{"who":"住户","text":"电梯里躲都躲不掉，那个广告一直在响，耳朵嗡嗡的。"},{"who":"物业主管","text":"广告是免费的，能补贴物业开支，我们只是播放。"}],"evi":[{"key":"受扰","q":"① 是否有人受影响？","opts":[["是，候梯与乘梯时被迫聆听",true],["无",false]]},{"key":"超标","q":"② 是否超标？","opts":[["未超但密闭空间主观强度大",false],["实测超标",true]]},{"key":"未防控","q":"③ 是否可静音却未静音/未限时？","opts":[["未设静音开关、无音量上限、无时段限制",true],["已设静音与限音量",false]]}],"path":"路径B：受扰 ∧ 未防控（共用设施未控音量时段）","sentences":[{"t":"责令物业关闭有声播放或加装静音开关与音量上限","ok":true,"fb":"正确：共用设施可静音而未静音即属未防控，责令改正优先。","h":12,"r":10},{"t":"以「广告补贴物业开支」为由保留","ok":false,"kind":"bad","fb":"误判：商业收益不构成对安宁权的豁免，未控音量时段成立。","h":-12,"r":-14},{"t":"要求居民乘梯时戴耳机","ok":false,"kind":"warn","fb":"过当：措施应指向声源控制，不可转嫁乘客。","h":-6,"r":-8}],"truth":"电梯轿厢广告有声播放属共用设施声源。密闭空间削弱声压级不代表无侵扰；关键看是否可静音/限音量/限时而未做。物业首责，广告收益不豁免义务。","branch":{"troubleAction":"轿厢内实测 + 核对广告设备设置项","troubleLine":"判官实测轿厢内声级虽未超标但主观强度明显；核查设备后台显示无静音开关、无音量上限、无时段策略。","empathyOptions":[{"t":"共情：广告补贴物业不容易，给乘客一个静音键就行","flag":"empathy"},{"t":"生硬：电梯是我的，播什么是我的事","flag":"cold"}],"empathyLine":"物业主管（缓和）：「加个静音按钮，音量上限也设一下。」","coldLine":"物业主管（抵触）：「那广告收益就少了。」","bonusSentence":{"t":"物业加装静音键+音量上限+夜间静音+将静音条款写入广告合同","ok":true,"fb":"最佳：兼顾物业收益与乘客安宁，条款化防反弹。","h":16,"r":14,"bonus":true}}}
+];
+</script>
+
+<script>
+/* ===== 状态 ===== */
+let scenes = [];
+let harm=60, rep=0, cur=null, step=0, eviState={}, eviDone={}, pickedSentence=null;
+let branchFlags={}, branchUsedTrouble=false, branchDone=false;
+let finished={};
+const SAVE_KEY='noise_judge_v6', OLD_SAVE_KEY='noise_judge_v5';
+
+/* HTML 转义：所有数据字段插入 innerHTML 前统一转义，防 XSS */
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* 安全的本地存储（file:// 下部分浏览器会抛错，做兜底） */
+function safeGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function safeSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function save(){ safeSet(SAVE_KEY, JSON.stringify({harm,rep,finished})); }
+function load(){
+  try{
+    let raw=safeGet(SAVE_KEY);
+    if(!raw){ const old=safeGet(OLD_SAVE_KEY); if(old){ raw=old; safeSet(SAVE_KEY,old); } }
+    const s=JSON.parse(raw||'null');
+    if(s){
+      const clamp=v=>Number.isFinite(+v)?Math.max(0,Math.min(100,+v)):60;
+      harm=clamp(s.harm??60);
+      rep=Number.isFinite(+(s.rep))?+s.rep:0;
+      finished=(s.finished&&typeof s.finished==='object')?s.finished:{};
+    }
+  }catch(e){ console.warn('存档读取失败，已按新档继续',e); }
+}
+function resetProgress(){
+  try{ localStorage.removeItem(SAVE_KEY); localStorage.removeItem(OLD_SAVE_KEY); }catch(e){}
+  harm=60; rep=0; finished={}; updateStats(); renderList(); goHome(); toast('进度已重置');
+}
+
+/* 数据：内置优先（原11案 + 扩充13案），若以 http 打开且有 game-data.json 则覆盖 */
+function validScenes(arr){
+  if(!Array.isArray(arr) || !arr.length) return false;
+  const ids=new Set();
+  return arr.every(s=>s && typeof s.id==='string' && typeof s.title==='string' &&
+    typeof s.cat==='string' && typeof s.intro==='string' && !ids.has(s.id) && ids.add(s.id) &&
+    Array.isArray(s.dialogue) && Array.isArray(s.evi) && s.evi.length===3 &&
+    Array.isArray(s.sentences) && s.sentences.length>=2 && typeof s.truth==='string');
+}
+async function initData(){
+  const base=(typeof EMBEDDED!=='undefined'?EMBEDDED:[]).concat(typeof EMBEDDED_EXTRA!=='undefined'?EMBEDDED_EXTRA:[]);
+  scenes = validScenes(base) ? base : [];
+  // file:// 下数据全部内置，跳过 fetch 以免浏览器产生 CORS 报错
+  if(location.protocol==='file:') return;
+  try{
+    const res=await fetch('game-data.json',{cache:'no-store'});
+    if(res.ok){
+      const d=await res.json();
+      if(d&&validScenes(d.scenes)) scenes=d.scenes;
+      else console.warn('game-data.json 结构校验未通过，继续使用内置数据');
+    }
+  }catch(e){ /* file:// 用内置，无需处理 */ }
+}
+
+/* ===== 渲染 ===== */
+const LOW_FREQ_IDS=new Set(['S12','S13','S14','S15','S16','S21','S22']);
+const HIGH_FREQ_IDS=new Set(['S25','S26','S27','S28','S29','S30','S31','S32','S33','S34','S35','S36','S37']);
+function renderList(){
+  const el=document.getElementById('sceneList'); el.innerHTML='';
+  scenes.forEach(s=>{
+    const b=document.createElement('button');
+    const done=finished[s.id]?`<span class="dot">✓</span>`:'';
+    const badge = LOW_FREQ_IDS.has(s.id) ? '<span class="badge low">低频</span>' :
+                  HIGH_FREQ_IDS.has(s.id) ? '<span class="badge high">高频</span>' :
+                  (/工业|施工|交通|商业/.test(s.cat)?'<span class="badge">专项</span>':'');
+    const c=CAT_MAP[catKey(s.cat)];
+    b.className='scene-btn'+(cur&&cur.id===s.id?' active':'');
+    b.innerHTML=`${esc(s.id)} ${esc(s.title)}${badge}<small>${c?c.icon+' '+esc(c.name):esc(s.cat)}</small>${done}`;
+    b.onclick=()=>startScene(s.id);
+    el.appendChild(b);
+  });
+}
+function progressHTML(){
+  return '<div class="progress-dots">'+[1,2,3,4,5].map(i=>`<i class="${i<=step?'on':''}"></i>`).join('')+'</div>';
+}
+function updateStats(){
+  document.getElementById('harmVal').textContent=harm;
+  document.getElementById('repVal').textContent=rep;
+  document.getElementById('harmBar').style.width=Math.max(0,Math.min(100,harm))+'%';
+}
+let toastTimer=null;
+function toast(msg){
+  let t=document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast'; t.className='toast'; document.body.appendChild(t); }
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),1800);
+}
+function startScene(id){
+  cur=scenes.find(s=>s.id===id);
+  if(!cur){ showErr('未找到场景 '+id+'，数据可能未加载。'); return; }
+  step=0; eviState={}; eviDone={}; pickedSentence=null;
+  branchFlags={}; branchUsedTrouble=false; branchDone=false;
+  renderList(); renderStep();
+}
+function renderBranchHTML(){
+  if(!cur.branch) return '';
+  let h='';
+  if(branchUsedTrouble) h+=`<div class="npc"><div class="av">🔍</div><div class="bubble branch">${esc(cur.branch.troubleLine)}</div></div>`;
+  if(branchDone){
+    if(branchFlags.empathy!=null){
+      h+=`<div class="npc"><div class="av">👂</div><div class="bubble branch">${esc(branchFlags.empathy?cur.branch.empathyLine:cur.branch.coldLine)}</div></div>`;
+    }
+    if(cur.branch.extra){
+      cur.branch.extra.forEach(ex=>{
+        const show = ex.need==='always' || (ex.need==='empathy'&&branchFlags.empathy) || (ex.need==='cold'&&!branchFlags.empathy) || (ex.need==='trouble'&&branchUsedTrouble);
+        if(show) h+=`<div class="npc"><div class="av">${esc(ex.speaker[0])}</div><div class="bubble branch"><b>${esc(ex.speaker)}：</b>${esc(ex.text)}</div></div>`;
+      });
+    }
+  } else {
+    h+=`<div class="q">沟通方式（影响对方配合度）：</div><div class="opts">`;
+    cur.branch.empathyOptions.forEach((o,i)=>{ h+=`<div class="opt branch" onclick="pickBranch(${i})">${esc(o.t)}</div>`; });
+    h+=`</div>`;
+  }
+  return h;
+}
+function renderStep(){
+  const m=document.getElementById('main');
+  if(step===0){
+    m.innerHTML=`${progressHTML()}<div class="step">阶段 ① 接案</div><h2>${esc(cur.id)} · ${esc(cur.title)}</h2>
+      <div class="cat">${esc(cur.cat)} ｜ 目标和谐度 ${esc(cur.target)}</div>
+      <div class="card">${esc(cur.intro)}</div>
+      <div class="toolbar"><button class="tbtn" id="tbT" onclick="doTrouble()">${esc(cur.branch?cur.branch.troubleAction:'引导排查')}</button><button class="tbtn route" onclick="openPathway()">本案维权路径</button></div>
+      <button class="nxt" onclick="next()">开始咨询 →</button>`;
+  }
+  else if(step===1){
+    let d='';
+    cur.dialogue.forEach(n=>{d+=`<div class="npc"><div class="av">${esc(n.who[0])}</div><div class="bubble"><b>${esc(n.who)}：</b>${esc(n.text)}</div></div>`;});
+    let eq='';
+    cur.evi.forEach((e,i)=>{
+      eq+=`<div class="q">${esc(e.q)}</div><div class="opts" data-k="${esc(e.key)}">`;
+      e.opts.forEach((o,j)=>{ const done=eviDone[e.key]===j; eq+=`<div class="opt ${done?'done':''}" onclick="pickEvi('${esc(e.key)}',${j},${i})">${esc(o[0])}</div>`; });
+      eq+=`</div>`;
+    });
+    let tags=`<div class="evi">`;
+    ['受扰','超标','未防控'].forEach(k=>{ const v=eviState[k]; tags+=`<span class="tag ${v===true?'on':''}">${k}：${v===true?'成立':v===false?'否':'待查'}</span>`; });
+    tags+=`</div>`;
+    const tbLabel = cur.branch ? (branchUsedTrouble?cur.branch.troubleAction+' ✓':cur.branch.troubleAction) : '引导排查';
+    m.innerHTML=`${progressHTML()}<div class="step">阶段 ② 咨询 · 取证三问</div><h2>${esc(cur.id)} · ${esc(cur.title)}</h2>
+      <div class="card">${d}${renderBranchHTML()}</div>${eq}${tags}
+      <div class="toolbar">
+        <button class="tbtn ${branchUsedTrouble?'used':''}" id="tbT" onclick="doTrouble()">${esc(tbLabel)}</button>
+        <button class="tbtn route" onclick="openPathway()">本案维权路径</button>
+      </div>
+      ${cur.branch?'<div class="hint">提示：先「执行排查/核实」再选「沟通方式」，可解锁更好结局。</div>':''}
+      <button class="nxt" onclick="next()">进入研判 →</button>`;
+  }
+  else if(step===2){
+    const a=eviState['受扰'], b=eviState['超标'], c=eviState['未防控'];
+    let verdict, mine;
+    if(a!==true){ verdict='受扰不成立 → <b>不构成</b>噪声污染（干扰是两条路径的共同必备件）。'; mine='N'; }
+    else if(b===true&&c===true){ verdict='受扰成立 + 超标 + 未依法防控 → <b>A∩B 双路径构成</b>。'; mine='AB'; }
+    else if(b===true){ verdict='受扰成立 + 超标 → <b>路径A 构成</b>。'; mine='A'; }
+    else if(c===true){ verdict='受扰成立 + 未依法防控 → <b>路径B 构成</b>。'; mine='B'; }
+    else { verdict='受扰成立，但超标与未防控均未确认 → <b>不构成噪声污染</b>（相邻纠纷仍可协商调解）。'; mine='N'; }
+
+    /* 将本案应然路径解析为统一代码，用于比对玩家取证结论，避免出现"不构成"与"构成"并排打架 */
+    const p=String(cur.path||'');
+    const expect=/A∩B/.test(p)?'AB':(/路径\s*A/.test(p)?'A':(/路径\s*B/.test(p)?'B':'N'));
+    const LABEL={A:'路径A 构成',B:'路径B 构成',AB:'A∩B 双路径构成',N:'不构成噪声污染'};
+    let warn='';
+    if(expect!=='N' && mine!==expect){
+      const hints=[];
+      if(a!==true) hints.push('第①问「是否有人受影响」');
+      if((expect==='AB'||expect==='A') && b!==true) hints.push('第②问「分贝是否超标」');
+      if((expect==='AB'||expect==='B') && c!==true) hints.push('第③问「是否未采取防护措施」');
+      warn=`<div class="vwarn"><b>⚠ 取证结论与案卷事实不一致</b>：你判定为「${esc(LABEL[mine])}」，本案应认定为「${esc(LABEL[expect])}」。`+
+           (hints.length?`请返回复核：${hints.map(esc).join('、')}。`:'请回到咨询阶段重新核对取证三问。')+
+           `<br><span style="color:var(--sub)">提示：选项描述要与案卷事实对照，不能只看"听起来合理"。</span></div>`;
+    }
+    const actions=warn
+      ? `<button class="tbtn" onclick="backToEvidence()" style="margin-top:10px">← 返回复核取证三问</button>
+         <button class="nxt" onclick="next()" style="margin-top:10px">仍要继续宣判 →</button>`
+      : `<button class="nxt" onclick="next()">进行宣判 →</button>`;
+    m.innerHTML=`${progressHTML()}<div class="step">阶段 ③ 研判</div><h2>${esc(cur.id)} · ${esc(cur.title)}</h2>
+      <div class="cat">取证结论（依据第547条）</div>
+      <div class="verdict flash"><b>你的判定：</b>${verdict}</div>
+      ${warn}
+      <div class="cat" style="margin-top:10px"><b>本案应然：</b>${esc(cur.path)}</div>
+      <div style="margin-top:12px">${actions}</div>`;
+  }
+  else if(step===3){
+    let opts='';
+    cur.sentences.forEach((s,i)=>{opts+=`<div class="opt" onclick="pickSentence(${i},event)">${esc(s.t)}</div>`;});
+    if(cur.branch && branchFlags.empathy===true && branchUsedTrouble){
+      const bs=cur.branch.bonusSentence;
+      opts+=`<div class="opt branch" onclick="pickSentence('bonus',event)">${esc(bs.t)}</div>`;
+    }
+    m.innerHTML=`${progressHTML()}<div class="step">阶段 ④ 宣判 / 调解</div><h2>${esc(cur.id)} · ${esc(cur.title)}</h2>
+      <div class="q">请选择处置方式：</div><div class="opts">${opts}</div>
+      <button class="nxt" id="finBtn" disabled onclick="finish()">结案结算 →</button>`;
+  }
+  else if(step===4){
+    const s=(pickedSentence==='bonus'&&cur.branch) ? cur.branch.bonusSentence : (cur.sentences[pickedSentence]||cur.sentences[0]);
+    let cls=s.ok?'ok':(s.kind==='warn'?'warn':'bad');
+    m.innerHTML=`${progressHTML()}<div class="step">阶段 ⑤ 结算</div><h2>${esc(cur.id)} · ${esc(cur.title)}</h2>
+      <div class="fb ${cls}"><b>你的处置：</b>${esc(s.t)}<br>${esc(s.fb)}</div>
+      <div class="verdict"><b>真相卡：</b>${esc(cur.truth)}</div>
+      <div class="cat" style="margin-top:10px">本轮和谐度 ${harm} ｜ 声望 ${rep} ｜ 已结案 ${Object.keys(finished).length}/${scenes.length}</div>
+      <button class="nxt" onclick="afterFinish()">${Object.keys(finished).length>=scenes.length?'查看通关结局 →':'返回案件列表 / 下一案 →'}</button>`;
+  }
+}
+function pickEvi(key,j,idx){ eviState[key]=cur.evi[idx].opts[j][1]; eviDone[key]=j; renderStep(); }
+function pickBranch(i){
+  branchFlags.empathy = (cur.branch.empathyOptions[i].flag==='empathy');
+  branchDone=true; renderStep();
+}
+function doTrouble(){
+  openModal('trouble');
+  if(cur.branch){ branchUsedTrouble=true; renderStep(); }
+}
+function pickSentence(i,evt){
+  pickedSentence=i;
+  document.querySelectorAll('#main .opt').forEach(o=>o.classList.remove('done'));
+  if(evt && evt.currentTarget) evt.currentTarget.classList.add('done');
+  document.getElementById('finBtn').disabled=false;
+}
+function next(){ if(step<4) step++; renderStep(); }
+function backToEvidence(){ step=1; renderStep(); }
+function finish(){
+  const s=(pickedSentence==='bonus'&&cur.branch) ? cur.branch.bonusSentence : (cur.sentences[pickedSentence]||cur.sentences[0]);
+  harm=Math.max(0,Math.min(100,harm+(s.h||0)));
+  rep+=s.r||0;
+  finished[cur.id] = s.ok?'ok':(s.kind==='warn'?'warn':'bad');
+  updateStats(); save(); step=4; renderStep();
+  toast(s.ok?'处置得当，和谐度 +'+(s.h||0):'处置待改进，和谐度 '+(s.h||0));
+}
+function afterFinish(){
+  if(Object.keys(finished).length>=scenes.length){ showEnding(); }
+  else { step=0; cur=null; renderList(); goHome(); }
+}
+function showEnding(){
+  const total=Object.keys(finished).length;
+  let ok=0,warn=0,bad=0;
+  Object.values(finished).forEach(v=>{ if(v==='ok')ok++; else if(v==='warn')warn++; else bad++; });
+  let persona,desc;
+  if(total<scenes.length){
+    persona='判官修行中';
+    desc=`你已完成 ${total}/${scenes.length} 起案件。继续体验剩余案件，才能解锁最终人设结局。`;
+  } else if(ok>=Math.ceil(scenes.length*0.8) && harm>=75){
+    persona='模范判官';
+    desc='你既守法理又重人情，取证扎实、处置得当，社区和谐度与声望双高。邻里都说：有你断案，心里踏实。';
+  } else if(warn>=4 && warn>=bad){
+    persona='高压判官';
+    desc='你倾向直接处罚、少见调解，虽守住规则，却少了几分温度。部分纠纷被“压”下去，关系却更僵。';
+  } else if(bad>=4){
+    persona='和稀泥判官';
+    desc='你常漏查要件或处置不足，纠纷看似了结却埋下隐患。下次记得先问“受没受影响”，再查超标与防控。';
+  } else {
+    persona='稳健判官';
+    desc='你大体公正，偶有偏差。继续打磨取证与话术，向“模范判官”迈进。';
+  }
+  document.getElementById('main').innerHTML=`<div class="ending"><div class="step">通关结算</div>
+    <div class="persona">${persona}</div>
+    <div class="desc">${desc}</div>
+    <div class="cat">结案 ${total}/${scenes.length} ｜ 正确 ${ok} ｜ 过当 ${warn} ｜ 误判/不足 ${bad} ｜ 最终和谐度 ${harm} ｜ 声望 ${rep}</div>
+    <button class="nxt" onclick="goHome()">返回首页</button>
+    <button class="nxt" style="background:none;border:1px solid var(--acc);color:var(--acc)" onclick="resetProgress()">重置进度</button></div>`;
+}
+function goHome(){
+  document.getElementById('main').innerHTML=`<div class="center"><h2>噪音判官 · 上线版 v7</h2>
+    <p>依据《生态环境法典》第547条：噪声污染 =（超标∧干扰）∨（未防控∧干扰）。<br>
+    从左侧选择案件，依次完成 接案→咨询(取证三问)→研判→宣判→结算。<br>
+    全部 ${scenes.length} 个场景均带分支：先「执行排查/核实」再选「沟通方式」可解锁最佳结局。<br>
+    其中 S12–S16 专攻电梯 / 水泵 / 风机 / 配电房 / 冷却塔等公共区域与设备低频案，重点练「达标不免责 + 减振防控」。<br>
+    顶部「判官学院」可学习考核体系并做自测 / 模拟考。<br>
+    当前声望 ${rep} ｜ 和谐度 ${harm}</p>
+    <button class="nxt" onclick="startScene(scenes[0].id)">从 ${esc(scenes[0].id)} 开始体验</button></div>`;
+}
+
+/* ===== 分支对话树总览 ===== */
+function openTree(){
+  const body=document.getElementById('treeBody');
+  let h='';
+  scenes.forEach(s=>{
+    h+=`<div class="tree-scene"><h4>${esc(s.id)} ${esc(s.title)}</h4>`;
+    if(!s.branch){ h+=`<div class="tree-node">（本场景为标准取证三问流程，无分支对话）</div></div>`; return; }
+    const b=s.branch;
+    h+=`<div class="tree-node"><b>入口</b>：接案 → 咨询</div>`;
+    h+=`<div class="tree-node">├─ <b>执行排查/核实</b>：${esc(b.troubleAction)}</div>`;
+    h+=`<div class="tree-node">│   └─ 结果：${esc(b.troubleLine)}</div>`;
+    h+=`<div class="tree-node">└─ <b>沟通方式</b>（二选一）</div>`;
+    b.empathyOptions.forEach(o=>{
+      const isEmp=o.flag==='empathy';
+      h+=`<div class="tree-node">&nbsp;&nbsp;&nbsp;├─ ${esc(o.t)} → ${esc(isEmp?b.empathyLine:b.coldLine)}</div>`;
+    });
+    if(b.extra){
+      h+=`<div class="tree-node">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（附加反应）</div>`;
+      b.extra.forEach(ex=>{ h+=`<div class="tree-node">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;· [${esc(ex.need)}] ${esc(ex.speaker)}：${esc(ex.text)}</div>`; });
+    }
+    h+=`<div class="tree-node" style="color:var(--ok)">★ 最佳结局解锁条件：共情 + 已排查 → ${esc(b.bonusSentence.t)}（和谐度+${esc(b.bonusSentence.h)}、声望+${esc(b.bonusSentence.r)}）</div>`;
+    h+=`</div>`;
+  });
+  body.innerHTML=h;
+  openModal('tree');
+}
+
+/* ===== 判官学院（学习 + 考核） ===== */
+/* 统一分类标准（全站共用）：案件 cat、官方判决案例 type、题库 cat、法条库 cat 均用此 taxonomy，
+   保证分类清晰、层级一致、可跨板块检索。 */
+const NOISE_CATS = [
+  {key:'life',    name:'社会生活噪声', icon:'🏠', scope:'生活活动、商铺经营、公共活动、宠物、乐器、直播等',
+   law:'《生态环境法典》第547条；《治安管理处罚法》第88条、第89条', dept:'公安(110)＋社区/业委会/物业', hot:'110'},
+  {key:'public',  name:'小区公用设备', icon:'🏢', scope:'电梯、水泵、风机、配电房、冷却塔、地库广播、轿厢广告等',
+   law:'《生态环境法典》第547条路径B；《民法典》第286条（业主共用部分）', dept:'物业(首)→住建/生态环境部门', hot:'12345'},
+  {key:'build',   name:'建筑施工噪声', icon:'🏗️', scope:'装修、装修锤击、工地打桩、混凝土浇筑、夜间施工',
+   law:'《生态环境法典》噪声编；地方夜间施工管理规定', dept:'生态环境部门；涉住建/城管', hot:'12345'},
+  {key:'indus',   name:'工业噪声', icon:'🏭', scope:'厂界设备、石材切割、机械加工、生产车间',
+   law:'《生态环境法典》第547条（厂界达标不免责）', dept:'生态环境部门（12345 转生态环境；部分地方 12369 已并入）', hot:'12345'},
+  {key:'traffic', name:'交通运输噪声', icon:'🚚', scope:'机动车鸣笛、高架桥、轨道列车、航空与无人机',
+   law:'《生态环境法典》交通运输噪声规则；禁鸣禁飞管理规定', dept:'公安交管(122)；交通运输/民航主管部门', hot:'122'}
+];
+const CAT_MAP = {};
+NOISE_CATS.forEach(c=>{ CAT_MAP[c.key]=c; });
+/* 由案件分类字符串反查 taxonomy key：先精确匹配 name，再按关键词兜底 */
+function catKey(catStr){
+  const s=String(catStr||'');
+  for(const c of NOISE_CATS){ if(s.indexOf(c.name)>=0) return c.key; }
+  if(/小区|公用|电梯|水泵|风机|配电|冷却塔|地库|轿厢/.test(s)) return 'public';
+  if(/工业|厂|石材|车间/.test(s)) return 'indus';
+  if(/施工|装修/.test(s)) return 'build';
+  if(/交通|鸣笛|道路|机动车|轨道|高架|航空|无人机/.test(s)) return 'traffic';
+  return 'life';
+}
+const ACADEMY_CASES = [
+ {id:'J1',cat:'life',type:'社会生活噪声·家庭场所',title:'楼上装修电钻致楼下无法午休',tags:['路径B','未减震','调解优先'],
+  brief:'楼下业主午间休息期间持续受楼上装修电钻声干扰，经多次协商与物业协调仍未消除，双方成讼。',
+  holdings:['相邻不动产权利人应当按照有利生产、方便生活、团结互助、公平合理原则处理相邻关系。','声源方未采取减震等污染防治措施，致使相邻权利人正常生活受到干扰，应承担停止侵害、排除妨碍的民事责任。','是否承担赔偿责任，应结合干扰程度、持续时间、过错程度与举证情况认定。'],
+  basis:['《民法典》第288条','《民法典》第1167条','《生态环境法典》第547条（未依法采取防控措施∧干扰）'],
+  result:'判令声源方停止侵害、采取减震措施并限期整改；赔偿数额依实际损失与举证认定。',
+  takeaway:'分贝未超同样可构成侵权——判定的落点是「未采取防控措施」与「实际干扰」，而非仅仅看读数。'},
+ {id:'J2',cat:'life',type:'社会生活噪声·家庭场所',title:'作息差异型邻里噪声',tags:['无过错','协调解决','合理忍受'],
+  brief:'一方长期在深夜活动（敲击、走动、交谈），另一方主张休息权受侵害。噪声强度本身未显著超标。',
+  holdings:['法律不保护任何一方绝对的安静安宁，权利行使应不妨碍相邻关系人正常生活。','对强度轻微、持续时间不长的作息噪声，一般以协调、约定与相互体谅为主，不宜认定为环境污染。','但一方在明确提出异议并经多次协调仍不加约束、导致他人健康受到实质影响的，可支持部分诉求。'],
+  basis:['《民法典》第288条','《民法典》第294条'],
+  result:'以调解结案，双方约定作息时段与室内降噪措施。',
+  takeaway:'不是所有"吵"都构成噪声污染。判官要先区分「污染型」（有超标或防控缺失）与「摩擦型」（强度轻微），后者优先调解。'},
+ {id:'J3',cat:'life',type:'社会生活噪声·饲养动物',title:'犬只夜间吠叫致邻居失眠',tags:['第89条','警告前置','举证'],
+  brief:'邻居多次投诉犬只深夜吠叫，犬主辩称已关闭门窗。提交了吠叫录音与作息时间表。',
+  holdings:['饲养动物干扰他人正常生活的，先予警告；警告后不改正的，方可处罚。','认定「干扰」需有具体事实支撑，包括吠叫频次、时段、持续时间与对他人睡眠的实际影响。','关窗不能当然免责：声音经开放空间、楼板传导仍可能构成干扰。'],
+  basis:['《治安管理处罚法》第89条','《生态环境法典》第547条'],
+  result:'责令警告并限期整改；复查后吠叫频次显著下降，未进入处罚程序。',
+  takeaway:'第89条与第88条前置逻辑不同：动物类是「警告前置」，社会生活类是「劝阻调解前置」，勿混用。'},
+ {id:'J4',cat:'life',type:'社会生活噪声·公共活动',title:'广场舞音响与居民公约',tags:['调解','公约','音量时段'],
+  brief:'居民委员会组织多次协调，广场舞队伍与周边居民就场地、音量、时段达成一致并形成书面公约。',
+  holdings:['对具有健身与社交功能的社会生活噪声，优先通过协商、疏导与公约方式化解。','公约的核心是量化标准：音量上限、结束时间、固定场地，而非笼统的「文明一点」。','一方违反已生效公约的，可作为后续认定干扰与违反约定的证据。'],
+  basis:['《生态环境法典》第547条','《治安管理处罚法》第88条','《民法典》第288条'],
+  result:'达成书面公约并执行，纠纷平息，未进入行政处罚。',
+  takeaway:'公约要写「数字」：几点结束、多少分贝、哪个位置。把「文明」写成可执行的条款，才不会反复。'},
+ {id:'J5',cat:'life',type:'社会生活噪声·商业经营',title:'商铺高音喇叭促销',tags:['第88条','未能制止','商业经营'],
+  brief:'沿街商铺外置喇叭循环促销，居民多次投诉，经社区、物业劝阻调解后仍持续播放。',
+  holdings:['社会生活噪声经劝阻、调解和处理未能制止，继续干扰他人正常生活、工作的，适用第88条处罚。','「未能制止」需要证据支撑：投诉记录、调解记录、承诺书、复查照片等。','处罚应与实际危害后果相匹配，可先责令改正并限期。'],
+  basis:['《治安管理处罚法》第88条','《生态环境法典》第547条'],
+  result:'责令立即停止外放并限期整改；逾期未改的，另行依法处理。',
+  takeaway:'未经劝阻调解直接处罚，会被认定为程序违法而「过当」。调解留痕是处罚的前置条件，也是你的胜诉筹码。'},
+ {id:'J6',cat:'life',type:'社会生活噪声·商业经营',title:'KTV营业噪声与相邻权',tags:['商业固定','营业时间','隔音'],
+  brief:'居民楼内 KTV 营业至深夜，歌声与低频穿透墙体，住户反映可辨识对话内容。',
+  holdings:['商业经营场所的营业自由受相邻关系限制，不得以经营需要对抗相邻权利人的安宁利益。','娱乐场所的营业时间与隔音条件应同时符合规定要求。','经营者负有采取隔声、控制音量的义务，达标检测不能替代其防控义务。'],
+  basis:['《生态环境法典》第547条','《治安管理处罚法》第88条','《娱乐场所管理条例》营业时间规定'],
+  result:'责令限时营业、加装隔音并限制作出音量。',
+  takeaway:'对商业高频声源，处置顺序是「先改后罚」：限时→隔音→限音量→拒不改正再依第88条。'},
+ {id:'J7',cat:'life',type:'社会生活噪声·新兴业态',title:'网络主播外放与噪声纠纷',tags:['新兴业态','举证','公约'],
+  brief:'住宅楼内直播间外放背景音乐与喊麦，多间同时开播形成叠加噪声。',
+  holdings:['新型业态不因形式新颖而豁免相邻安宁义务。','多声源叠加情形，应分源测量后合并评价，并逐源落实防控措施。','在无明确禁止性规定时，优先以行业自治、物业规约与书面公约明确标准。'],
+  basis:['《生态环境法典》第547条','《民法典》第288条'],
+  result:'要求直播间加装隔音、限时至22点、限制同时开播数量。',
+  takeaway:'遇到"新业态"不要直接说"没法管"。正确姿势是：分源取证 + 找同类抓手（公约/物业规约/行业规范）。'},
+ {id:'J8',cat:'life',type:'社会生活噪声·教育培训',title:'培训机构上课噪声',tags:['租赁用途','相邻权','教学秩序'],
+  brief:'居民楼内培训机构开设声乐、舞蹈课程，学员声乐练习声穿墙传出，物业提醒后仍在晚间开课。',
+  holdings:['将住宅改变为经营性场所的，应对相邻权利人的安宁利益承担更高注意义务。','课程表、隔音现状等属可查证事实，应以现场核查与记录固定。','在责任划分上，可通过约定营业时段与场所条件的方式兼顾经营与安宁。'],
+  basis:['《民法典》第288条','《民法典》第286条','《生态环境法典》第547条'],
+  result:'责令声乐课移至白天、教室加装吸音隔音。',
+  takeaway:'住改商案件的关键抓手是「注意义务更高」＋「约定条件」，而非单纯禁止经营。'},
+ {id:'J9',cat:'public',type:'小区公用设备·电梯',title:'电梯运行低频振动致相邻住户不适',tags:['共用设备','物业责任','结构传声'],
+  brief:'高层住宅电梯井道紧邻卧室，电梯运行产生低频嗡鸣与井道振动，住户反映心悸失眠；物业称设备年检合格。',
+  holdings:['业主共有部分的经营与管理方负有维护与污染防治义务。','设备安全检验合格仅解决安全问题，不能替代噪声污染防治义务。','低频与振动应通过结构传声路径单独评价，不能仅凭常规分贝读数否定干扰。'],
+  basis:['《生态环境法典》第547条','《民法典》第286条'],
+  result:'判令物业加装导轨减振与机房隔振并限期整改。',
+  takeaway:'「年检合格」「监测达标」都不是免死金牌。本案是典型的「达标不免责」低频设备案。'},
+ {id:'J10',cat:'public',type:'小区公用设备·水泵',title:'二次供水泵房共振扰民',tags:['共用设备','减振','12345'],
+  brief:'泵房紧邻卧室，夜间启停产生低频撞击声并引发墙体共振，物业长期未整改。',
+  holdings:['共用设备运行应采取减振措施，避免对相邻部分业主造成影响。','经投诉、督办仍未整改的，可通过12345转住建、生态环境等部门督促。','认定干扰需结合启停时段规律与居民健康影响的具体描述。'],
+  basis:['《生态环境法典》第547条','《民法典》第286条'],
+  result:'物业限期完成减振基础与管道软连接改造。',
+  takeaway:'水泵类投诉的主管顺序：先物业（共用设备首责）→ 12345督办 → 住建/生态环境。别一上来就找错部门。'},
+ {id:'J11',cat:'public',type:'小区公用设备·配电房',title:'变压器工频嗡鸣与电磁噪声之辨',tags:['电磁与噪声','部门协同','隔声减振'],
+  brief:'配电房与住宅仅一墙之隔，居民反映夜间嗡鸣；供电部门以电磁场检测合格为由否认问题。',
+  holdings:['电磁场达标与噪声达标是两项不同评价，不可相互替代。','工频嗡鸣属低频噪声，应按噪声污染防治要求评价与处置。','涉及供电设施的处置需供电企业与住建、生态环境等部门协同。'],
+  basis:['《生态环境法典》第547条','《民法典》第286条'],
+  result:'由供电企业与物业共同实施隔声屏障与设备减振，并委托第三方复测。',
+  takeaway:'遇到"我们电磁检测合格"的挡箭牌，直接追问"噪声测了吗"。这是常见的认知混淆考点。'},
+ {id:'J12',cat:'public',type:'商业固定设备·冷却塔',title:'冷却塔低频噪声与达标抗辩',tags:['达标不免责','室内影响','夜间负荷'],
+  brief:'商场屋顶冷却塔夜间运行，厂界监测达标，但相邻居民反映室内低频轰鸣、影响睡眠。',
+  holdings:['厂界达标不免除污染防治义务，仍应审查是否采取了有效的防控措施。','室内实际受影响程度可作为判断「干扰」的重要依据。','夜间高负荷运行本身即为可改进的防控事项，可通过降负荷与隔声解决。'],
+  basis:['《生态环境法典》第547条'],
+  result:'责令加装隔声屏障与减振设施，夜间降低运行负荷。',
+  takeaway:'「达标不免责」的两大标杆案：工业厂界案与商业固定设备案。达标只说明A不成立，B仍须单独审查。'},
+ {id:'J13',cat:'build',type:'建筑施工·装修',title:'装修噪音与物业管理规约',tags:['管理规约','作业时段','违约责任'],
+  brief:'业主装修使用电锤锤击，楼下住户投诉。物业规约对装修作业时段与防震垫铺设均有约定。',
+  holdings:['业主装修应当遵守法律、法规与物业管理规约。','违反管理规约造成他人损害的，应承担相应责任；物业负有督促与制止义务。','禁止锤击承重墙、限定作业时段、铺设减震措施，均属可查证的具体义务。'],
+  basis:['《民法典》第288条','《民法典》第286条','物业管理规约与地方装修管理规定'],
+  result:'责令按规约整改、铺设防震垫、限定作业时段。',
+  takeaway:'装修案最有效的抓手是「管理规约」——先让声源方看到白纸黑字的义务，比讲道理管用。'},
+ {id:'J14',cat:'build',type:'建筑施工·夜间施工',title:'无证夜间施工与集中投诉',tags:['夜间许可','责令停止','群体投诉'],
+  brief:'工地凌晨施工无夜间施工许可，噪声致整栋楼集体失眠，投诉多次无果。',
+  holdings:['夜间施工应当依法取得许可并采取降低噪声的措施。','无许可且无措施持续侵害的，应先责令停止侵害，再依法处理。','群体性投诉可作为集中证据链，亦可推动主管部门联合执法。'],
+  basis:['《生态环境法典》噪声污染防治相关规定','地方夜间施工管理规定'],
+  result:'责令立即停止夜间施工、补办许可并落实减噪措施后复工。',
+  takeaway:'施工案的正确处置顺序是「先停止 → 再补手续 → 后复工」，罚款不能替代停止侵害。'},
+ {id:'J15',cat:'indus',type:'工业噪声·达标抗辩',title:'厂界达标但居民长期受扰',tags:['路径B','达标不免责','责令治理'],
+  brief:'工业企业夜间设备运转，厂界噪声监测达标，但持续低频嗡鸣致周边居民失眠误工，企业以此抗辩。',
+  holdings:['噪声污染的构成包含「超标」与「未依法采取防控措施」两条并列路径，达标仅使前者不成立。','企业负有按标准采取污染防治措施、并在敏感时段控制运行的义务。','未采取夜间限产、减振不足等情形，构成未依法防控，应责令限期治理。'],
+  basis:['《生态环境法典》第547条'],
+  result:'责令补足减振措施、实施夜间限产并限期整改，由主管部门监测验收。',
+  takeaway:'企业最常见的抗辩是「我们达标」。正确回应是：达标排除了路径A，但路径B仍然成立，请出示你的夜间防控措施。'},
+ {id:'J16',cat:'indus',type:'工业噪声·相邻权',title:'工业噪声与利益衡量',tags:['利益衡量','举证','救济衔接'],
+  brief:'工业企业与居民小区相邻，长期低频干扰引发争议，双方均提交监测与健康影响材料。',
+  holdings:['相邻关系纠纷应遵循公平合理原则，综合考虑生产需要、影响程度、区域规划与救济成本。','工业企业已履行环评与达标排放义务的，不当然免除民事上的相邻妨害责任，两种责任可以并行。','行政救济与民事救济并行不悖：生态环境部门管达标，民法典管相邻妨害。'],
+  basis:['《生态环境法典》第547条','《民法典》第288条','《民法典》第1167条'],
+  result:'行政上要求限期治理，民事上判令采取减振措施并部分支持健康损害主张。',
+  takeaway:'记住「双轨制」：达标是行政法的门槛，不影响相邻权在民法典下的独立适用。'},
+ {id:'J17',cat:'traffic',type:'交通运输·公路',title:'高速公路噪声与隔声屏障',tags:['公路管理','设施改进','噪声区划'],
+  brief:'居民小区紧邻高速公路，夜间车辆噪声严重影响休息，未设隔声屏障。',
+  holdings:['公路管理与经营单位负有降低噪声污染的义务，包括设置隔声屏障、控制交通组织等。','噪声敏感建筑物集中区域宜通过规划与交通管理手段降低影响。','个人车主并非设施责任主体，救济对象应是公路管理方与交通主管部门。'],
+  basis:['《生态环境法典》交通运输噪声相关规定','《民法典》第288条'],
+  result:'公路管理部门增设隔声屏障并对夜间货车实施限行。',
+  takeaway:'交通噪声的主管是交通/生态环境部门，不是物业；治理靠「工程措施＋管理措施」，不是罚车主。'},
+ {id:'J18',cat:'traffic',type:'交通运输·轨道交通',title:'城市轨道交通噪声',tags:['环评义务','减振降噪','规划'],
+  brief:'地铁线路穿越居民区，运行时振动与风噪影响临近楼层居民。',
+  holdings:['轨道交通建设运营单位应依法履行环境影响评价义务并落实降噪减振措施。','环评文件与批复中的噪声控制措施具有约束力，可作为主张依据。','既有设施的改造责任可结合运营状况与规划条件合理确定。'],
+  basis:['《生态环境法典》交通运输噪声相关规定','《环境影响评价法》相关规定'],
+  result:'运营单位增设减振垫与隔声屏障，并优化运行时段。',
+  takeaway:'交通类案子的强力证据是环评文件与批复——把「承诺过什么」变成「必须做到什么」。'},
+ {id:'J19',cat:'traffic',type:'交通运输·航空',title:'航空噪声与权益平衡',tags:['空域管理','机型航线','成本分担'],
+  brief:'航线经过居民区上空，飞行器噪声引起投诉，机场与部门答复受空域与安全限制难以调整。',
+  holdings:['航空噪声管理需统筹空域安全、飞行效率与居民权益，个案诉求须纳入整体航线与机型优化方案。','对已发生的噪声侵权，可通过协商、补偿与参与环境影响评价等途径救济。','居民个人诉求难以单独改变航线时，更有效的路径是推动集体意见与区域性方案。'],
+  basis:['《生态环境法典》交通运输噪声相关规定','《民法典》第288条'],
+  result:'推动优化航线并建立常态化噪声监测与投诉响应机制。',
+  takeaway:'航空噪声案不宜承诺"个案必改"。正确做法是：讲清权责层级 → 推集体与区域性方案 → 留监测记录。'}
+];
+
+const ACADEMY_QA = [
+ ["噪声污染定义出自哪条？","《生态环境法典》第547条。"],
+ ["构成噪声污染的两路径是？","超标∧干扰；未防控∧干扰（干扰为共同必备件）。"],
+ ["噪音源分类目录分几类？","工业 / 建筑施工 / 交通运输 / 社会生活（另补小区公用设备）。"],
+ ["“干扰”含学习受扰吗？","含。干扰工作、生活、学习均算。"],
+ ["仅超标但无人受扰，构成吗？","不构成。"],
+ ["业主可请求侵权人承担什么？","停止侵害、排除妨碍、赔偿损失（民法典286/1167）。"],
+ ["相邻关系原则条款？","民法典第288条（有利生产、方便生活、团结互助、公平合理）。"],
+ ["治安管理处罚法第88条适用与罚则？","社会生活噪声，经劝阻、调解、处理未能制止，继续干扰他人正常生活、工作和学习的，处五日以下拘留或一千元以下罚款；情节严重处五日以上十日以下拘留，可并一千元以下罚款。"],
+ ["饲养动物干扰他人依？","治安管理处罚法第89条：饲养动物干扰他人正常生活，处警告；警告后不改正处一千元以下罚款。"],
+ ["生态环境法典噪声编提供？","定义 / 限值 / 防控 / 监管等规则。"],
+ ["民法典294禁止？","违反国家规定排放噪声等有害物质。"],
+ ["路径A需满足？","超标 ∧ 干扰。"],
+ ["路径B“未防控”举例？","没减震 / 没限时段 / 没隔音。"],
+ ["未减震但未受扰 →？","不构成（缺干扰）。"],
+ ["分贝未超、夜间施工没限时段且扰民 →？","构成，路径B。"],
+ ["仅“未防控”但无干扰 →？","不构成。"],
+ ["两路径关系是？","并列∨，干扰为共同必备件。"],
+ ["取证三问顺序？","受扰 → 超标 → 未防控。"],
+ ["S1测得超标走哪条？","路径A（超标∧干扰）。"],
+ ["生活噪声处置优先？","协商 → 社区/部门处理 → 未能制止则拘留或罚款 → 赔偿。"],
+ ["商铺喇叭拒改依？","治安管理处罚法第88条。"],
+ ["宠物警告不改依？","治安管理处罚法第89条。"],
+ ["工业噪声首要动作？","查防控缺失 + 责令整改。"],
+ ["调解优先适用？","社会生活轻度摩擦（如S5）。"],
+ ["老旧楼板属建筑缺陷，未铺地垫？","可认定未防控（路径B）。"],
+ ["低频分贝不高？","走路径B（未减振∧干扰）。"],
+ ["直播/练琴适用吗？","适用，属社会生活噪声。"],
+ ["禁鸣区鸣笛属？","交通运输；违禁=未依法防控。"],
+ ["分贝仪数据能作法定依据吗？","不能，仅参考。"],
+ ["处罚前置原则？","调解/处理优先，拒不改正方处罚（社会生活噪声经调解处理未能制止处拘留或罚款）。"],
+ ["小区水泵先找谁？","先物业，再生态环境/住建，热线12345。"],
+ ["判定首问？","是否受扰；否 → 不构成。"],
+ ["日志连续记录几日？","≥3–7日。"],
+ ["电梯井低频振动，A计权达标怎么办？","看结构传声与减振措施；达标不免责，未减振+受扰走路径B。"],
+ ["小区水泵房低频共振先找谁？","先找物业（共用设备首责），再转生态环境/住建，热线12345。"],
+ ["地下车库风机低频，消防要开怎么处？","消防需要不免防控义务：加消声减振+错峰运行，兼顾消防安全。"],
+ ["变压器50Hz嗡鸣，电磁检测合格能驳回吗？","不能。电磁合格≠噪声合格，低频嗡鸣仍须隔声减振，走路径B。"],
+ ["商场冷却塔厂界达标但室内低频，构成吗？","构成。达标不免责，查防控缺失（隔声/减振/夜间负荷），路径B。"],
+ ["低频设备案的核心判断点？","分贝不高不等于不违规；关键看有无减振隔振与结构传声。"],
+ ["高架桥噪声主管是谁？","交通/生态环境部门，非物业；治理靠声屏障+夜间限行。"],
+ ["酒吧低音炮已调解两次未果，可否处罚？","可。已有‘未能制止’证据，符合第88条处罚前置要件。"],
+ ["婚庆清晨放炮如何处置？","先劝导并依地方禁放规定由公安/城管处理，社区协调改时段，兼顾民俗。"],
+ ["凌晨打桩无许可归谁管？","生态环境部门（涉住建/城管）；须立即停止、补许可、落实减噪后复工。"]
+];
+/* 多题型题库：s=单选 m=多选 j=判断 c=案例应用 o=流程排序
+   每题含 cat（归入统一 taxonomy）与 e（解析），支持分类筛选与检索 */
+const ACADEMY_BANK = [
+ /* ===== 单选 ===== */
+ {t:'s',cat:'life',q:'音乐酒吧低音炮扰民，已由社区调解两次仍未制止，现依第88条处置。正确做法是？',o:['直接上门罚款','再次劝导并记录','认定调解处理未能制止后报警，由公安机关依法处理','由业主自行与酒吧协商'],a:2,e:'第88条要求「经劝阻、调解和处理未能制止」为前置条件。已有两次调解记录即已满足前置，可进入处罚环节；反之直接罚款属程序违法。'},
+ {t:'s',cat:'life',q:'居民楼内 KTV 声称包厢隔音检测合格，要求驳回投诉。判官最应抓住的是？',o:['对方态度是否恶劣','是否采取了隔音、限时、限音量等防控措施','噪声分贝的具体数值','KTV 的营业利润水平'],a:1,e:'达标只排除路径A，路径B（未依法防控）独立成立。隔音检测合格不能替代防控措施的实质审查。'},
+ {t:'s',cat:'life',q:'培训机构声乐课学员高声练歌穿墙。下列哪项属于本类案件的正确处置起点？',o:['立即取缔机构','联合居委物业责令限时并加装隔音，拒不改正再依第88条','要求学员签署承诺书即可结案','向法院起诉'],a:1,e:'经营性场所噪声应「先责令改正＋调解留痕」，拒改后依第88条处罚；直接取缔或起诉均属越位。'},
+ {t:'s',cat:'life',q:'广场舞队伍将音响功率由200W换为800W并移至架空层下方。原处置结论是否仍然适用？',o:['完全适用，不必再管','不适用，须重新取证并重新协商','应立即取缔舞队','应由业主投票决定'],a:1,e:'声源功率与位置均已改变，构成新的侵扰，须重新实测、重新协商，避免机械沿用旧结论。'},
+ {t:'s',cat:'life',q:'农贸市场剁肉声与电子叫卖声叠加。取证的关键动作是？',o:['只在市场门口测一次','分别对撞击声与叫卖声分源测量后合并评价','只测电子喇叭','以居民主观感受直接定性'],a:1,e:'复合声源必须分源测量。分源定性后，处置也须分源：撞击声→隔振台面，叫卖声→限时限量。'},
+ {t:'s',cat:'life',q:'小区内非机动车擅自加装高分贝气喇叭并在电梯厅试鸣。车辆改装问题的主管部门是？',o:['生态环境部门','公安交管','城市管理','住建部门'],a:1,e:'车辆改装属公安交管依车辆管理规定处理；噪声扰民部分则按社会生活噪声依第88条走，务必分开处理。'},
+ {t:'s',cat:'public',q:'地库寻车机全日循环播报、倒车蜂鸣彻夜。分贝未必超标，但属未防控，原因是？',o:['噪声源在地下','未设音量上限、未设夜间静音或降噪策略','业主未投诉','设备是厂家安装'],a:1,e:'共用设备声源的防控义务包含音量上限、时段控制、夜间静音等；未做即构成未防控，受扰成立即走路径B。'},
+ {t:'s',cat:'public',q:'电梯轿厢广告开启有声播放，物业称「广告免费补贴物业开支」。正确回应是？',o:['同意保留','要求加装静音开关与音量上限，必要时夜间静音','要求业主分摊广告收益','建议业主自行佩戴耳机'],a:1,e:'商业收益不构成对安宁权的豁免。措施应指向声源控制（静音键、音量上限、夜间静音），不可转嫁乘客。'},
+ {t:'s',cat:'public',q:'物业在业主不知情下将楼顶水泵房改为夜间加压泵房，噪声扰民。物业的主要过错在于？',o:['设备选型不当','未经业主共同决定擅自改变共有部分的使用与运行方式，且未采取防控措施','水泵房位置不当','水泵功率太大'],a:1,e:'业主共有部分的使用与变更应依法共同决定；擅自改变运行方式又未采取防控措施，是本案的过错核心。'},
+ {t:'s',cat:'public',q:'配电房变压器夜间嗡鸣，供电部门称「电磁检测合格」。判官应追问的是？',o:['电磁强度是否超标','噪声声压级与隔声减振措施是否到位','变压器容量是否足够','电价是否合理'],a:1,e:'电磁环境与噪声是两个法律维度，不可互相替代。追问应直接指向噪声实测与减振隔声措施。'},
+ {t:'s',cat:'public',q:'商场冷却塔厂界监测达标，但居民反映室内低频轰鸣。依法应？',o:['因达标直接驳回','查隔声、减振与夜间负荷等防控措施，缺失即责令限期整改','立即责令商场停业','由商场自行处理'],a:1,e:'这是「达标不免责」的标杆情形。达标仅使路径A不成立，路径B仍须单独审查；停业属过当。'},
+ {t:'s',cat:'build',q:'楼上装修用电锤锤击承重墙。下列不属于其应尽的防控义务的是？',o:['约定作业时段','禁止锤击承重墙','铺设移动隔震垫','要求楼下住户更换隔音门窗'],a:3,e:'防控措施应指向声源；要求他人更换门窗属转嫁责任，不构成声源方的防控义务。'},
+ {t:'s',cat:'build',q:'凌晨2点打桩，无夜间施工许可。最恰当的第一处置是？',o:['处以罚款后允许继续施工','责令立即停止夜间打桩，补办许可并落实减噪后复工','要求业主集体投诉','由公安直接带离设备'],a:1,e:'顺序是「先停止侵害→再补手续→落实减噪→复工」。罚款不能替代停止侵害，且施工噪声主管为生态环境部门。'},
+ {t:'s',cat:'build',q:'施工噪声投诉中，生态环境部门与住建、城管分工的常见边界是？',o:['都由物业处理','生态环境部门管噪声防治与查处，夜间无证施工与违建等涉住建/城管','都由公安处理','由居委会直接处罚'],a:1,e:'噪声防治与查处属生态环境部门职责；建设行为管理（许可、违建、占道）涉住建与城管，需联合推进。'},
+ {t:'s',cat:'indus',q:'工业企业厂界达标，主张「法律上没有问题」。判官最有力的回应是？',o:['要求其提高产量降低能耗','噪声污染有两条并列路径，达标只排除路径A，未依法防控仍可成立','直接吊销排污许可证','组织业主向企业募捐'],a:1,e:'第547条为「超标∧干扰」∨「未防控∧干扰」两条并列路径。达标仅使前者不成立，后者仍需独立审查。'},
+ {t:'s',cat:'indus',q:'石材作坊夜间切割，厂界明显超标。对工业噪声案的处置首选是？',o:['责令限期治理、停用高噪设备并禁止夜间作业','当场查封全部设备','由业主委员会直接罚款','建议作坊迁至居民区'],a:0,e:'工业噪声以厂界监测为准，超标且干扰即成立。处置以责令限期治理为先，处罚为后手。'},
+ {t:'s',cat:'traffic',q:'高架桥距居民楼不足10米，夜间货车轰鸣。首要救济对象是？',o:['过往货车车主','交通与生态环境部门（加装隔声屏障、夜间限行）','小区物业','保险公司'],a:1,e:'高架属市政交通设施，物业无管辖权；个体车主非设施责任主体。应推动设施改进与交通管理措施。'},
+ {t:'s',cat:'traffic',q:'禁鸣区机动车长按喇叭惊醒婴儿。构成噪声污染的关键要件是？',o:['分贝必须超过限值','违反禁鸣规定即属未依法防控，且受扰成立','车速超过60公里','车辆未年检'],a:1,e:'违反禁鸣规定本身即属「未依法防控」，与声压级读数无关；受扰成立即构成路径B。'},
+ {t:'s',cat:'traffic',q:'物流园夜间货车频繁进出并鸣笛。交管与园区管理方的分工是？',o:['交管只管车辆，园区无责','交管负责禁鸣与限行执法，园区负责调整进出与装卸时段','园区全责','业委会全责'],a:1,e:'噪声治理需「执法＋管理」双管：交管管禁鸣限行，园区管自身经营安排（时段、装卸区位置）。'},
+ {t:'s',cat:'traffic',q:'无人机在居民区上空低空盘旋训练。物业是否有权禁止其飞行？',o:['有权直接扣留','物业无此管辖权，应向公安与民航主管部门反映','有权只要业主同意即可禁止','有权处以罚款'],a:1,e:'飞行活动与航空安全属公安与民航主管部门职权，物业仅能协助反映并组织材料。'},
+ {t:'s',cat:'traffic',q:'城市轨道交通穿越居民区，运行噪声与振动影响居民。强力证据是？',o:['业主联名信','环评文件与批复中承诺的噪声控制措施','新闻报道','网络投票结果'],a:1,e:'环评文件与批复中的噪声控制承诺具有约束力，可直接作为要求落实降噪减振措施的依据。'},
+ {t:'s',cat:'life',q:'居民与邻居因作息差异产生摩擦，强度轻微且持续时间短。最优先的处置是？',o:['直接报警处罚','优先协调、约定作息时段与室内降噪','申请行政处罚','提起诉讼索赔'],a:1,e:'此属「摩擦型」而非「污染型」纠纷，优先调解约定；只有明确提出异议并经多次协调仍不加约束，才支持部分诉求。'},
+ {t:'s',cat:'life',q:'宠物犬夜间吠叫，主人辩称已关窗。判官应如何回应？',o:['关窗即免责','声音可经开放空间与楼板传导，应查吠叫频次、时段与实际影响','犬只必须没收','必须处以罚款'],a:1,e:'第89条为警告前置，须先认定干扰事实。关窗不当然免责，但也不当然成立，要靠记录固定。'},
+ {t:'s',cat:'life',q:'商场中庭网红直播多团队外放音响揽客。管理方应承担何种责任？',o:['无责，属商户个人行为','负首接与规范管理责任，划区、限时、限音量','只对噪声最大的商户追责','由居民自行协商'],a:1,e:'经营场所引入业态造成噪声，管理方负首接与规范责任，应将限制条款写入招商合同以防反弹。'},
+ {t:'s',cat:'life',q:'售楼处夜间扩音促销称「楼市困难需要营销」。判官立场应是？',o:['商业困难可豁免','商业理由不能凌驾休息权，先责令停止与限时限量，并提供替代宣传方案','直接吊销开发资质','由业主自行忍受'],a:1,e:'商业经营自由受相邻安宁限制。处置要做到「源头控制＋替代方案」，才不至于激化矛盾。'},
+ {t:'s',cat:'life',q:'直播间多支团队同址开播叠加噪声。处置中最容易被忽视但最关键的一项是？',o:['关闭全部直播间','限制同时开播数量并分源落实隔音','要求主播佩戴口罩','提高网络带宽'],a:1,e:'叠加声源须逐源治理：隔音、时段、并发数量三者缺一不可，只做其一仍会超标。'},
+ {t:'s',cat:'life',q:'婚庆清晨6点放礼炮。对这类民俗噪声的正确处置是？',o:['直接对主家重罚','先劝导，并依地方烟花爆竹管理规定由公安或城管处理，社区协助协调改时段','以喜庆为由不管','强制没收全部音响'],a:1,e:'尊重民俗与保护安宁并重：先劝导调解，再依地方禁放规定处理，兼顾关系修复。'},
+ {t:'s',cat:'indus',q:'工业噪声与相邻住宅的纠纷中，「双轨制」指的是？',o:['行政与民事救济并行','白天查、夜间查','企业与政府分别处理','先调解后诉讼'],a:0,e:'达标是行政法的门槛，不影响相邻权在民法典下的独立适用；生态环境部门管达标，民法典管相邻妨害。'},
+ {t:'s',cat:'public',q:'对楼栋共用设备噪声，最先应找的主体是？',o:['生态环境部门直接处罚','物业（共用部分管理与维护的首责方），再经12345转住建/生态环境','公安直接出警','法院起诉'],a:1,e:'共用设备首接为物业；物业不作为再通过12345督办转住建/生态环境。找错投诉口会白白消耗维权周期。'},
+ {t:'s',cat:'life',q:'取证三问中，「有没有人受影响」若答「没有」，应如何处理？',o:['继续调查设备参数','直接不构成噪声污染，结案','转为民事纠纷处理','等待对方主动'],a:1,e:'干扰是两条路径的共同必备件。无干扰即不构成噪声污染，可提示转为协商或物业规约处理。'},
+/* ===== 多选 ===== */
+ {t:'m',cat:'life',q:'依《治安管理处罚法》第88条，社会生活噪声处罚的前置条件包括？',o:['经基层群众性自治组织劝阻','经业主委员会劝阻','经物业服务人劝阻','经有关部门依法劝阻、调解和处理'],a:[0,1,2,3],e:'第88条原文列举「基层群众性自治组织、业主委员会、物业服务人、有关部门」依法劝阻、调解和处理，且须「未能制止」才可处罚。'},
+ {t:'m',cat:'life',q:'应对情绪激动投诉人的有效做法有？',o:['先确认其具体诉求与影响事实','复述其感受以示理解','立即指责对方不理性','给出可执行的时间表与下一步'],a:[0,1,3],e:'情绪降级依赖命名情绪、复述理解与给出确定的下一步；指责只会升级对抗，且程序上也易被认定为态度不当。'},
+ {t:'m',cat:'public',q:'电梯低频振动案的排查手段包括？',o:['手触井道壁感受振动','电梯运行与停运对比','仅在室内用分贝仪测一次','记录运行时段与频次'],a:[0,1,3],e:'低频与结构传声须靠对比测试（开/停、贴壁感知、时段记录）定位，单次分贝仪读数无法识别传声路径。'},
+ {t:'m',cat:'indus',q:'判断工业噪声是否「未依法防控」，应审查的要素有？',o:['是否采取减振措施','是否在敏感时段限产或降负荷','是否设置隔声设施','厂界是否达标'],a:[0,1,2],e:'厂界达标是路径A的要素，不是防控措施本身。防控审查对象是减振、隔声、时段控制等实际措施。'},
+ {t:'m',cat:'build',q:'装修噪声的处置措施通常包括？',o:['约定作业时段','铺设防震垫与移动隔震毯','禁止锤击承重墙','要求全楼统一停电施工'],a:[0,1,2],e:'前三项为声源端的可行措施；全楼停电既无必要也涉他人权益，不属适当措施。'},
+ {t:'m',cat:'traffic',q:'对高架桥噪声，可行的治理与救济路径包括？',o:['加装隔声屏障','夜间货车限行','要求过往车主承担全部责任','向交通与生态环境部门反映并持续记录声环境'],a:[0,1,3],e:'治理须落在设施改进与交通管理上；要求个体车主担责既无依据也不对症。'},
+ {t:'m',cat:'life',q:'第89条饲养动物噪声与第88条社会生活噪声的差异包括？',o:['第89条为警告前置','第89条罚款上限为一千元','第88条要求劝阻调解未能制止方可处罚','第88条可处五日以下拘留'],a:[0,1,2,3],e:'这是常考对比点：动物类是警告前置，社会生活类是劝阻调解前置；罚则力度也不同。'},
+ {t:'m',cat:'public',q:'判断某噪声是否属于「未依法防控」，可考察的维度有？',o:['是否有限时段运行','是否有音量上限或降噪装置','是否在敏感区域采取避让','设备是否通过年检'],a:[0,1,2],e:'年检针对安全合格，不等于噪声防控到位；防控看的是音量、时段、避让、隔声等实质措施。'},
+ {t:'m',cat:'life',q:'构成「未能制止」可留存的证据有？',o:['多次投诉记录','居委或物业的调解记录','双方签署的承诺书与整改期限','复查时的影像与声级记录'],a:[0,1,2,3],e:'这四类证据共同形成「已劝阻调解但仍持续」的闭环，是第88条处罚能否成立的关键，也是避免被判「过当」的安全垫。'},
+ {t:'m',cat:'indus',q:'涉及达标与不达标的工业噪声案中，下列哪些是正确的？',o:['厂界达标仍可因未依法防控而构成污染','厂界超标且干扰即构成','达标后可驳回全部投诉','行政达标不影响民法典相邻权独立适用'],a:[0,1,3],e:'「达标不免责」是核心考点：达标不构成驳回理由，行政与民事双轨并行。'},
+ {t:'m',cat:'life',q:'对易激化冲突的投诉，可作为降温手段的有？',o:['把争议聚焦在具体行为与可核实事实上','提出可选择的两种解决方案','明确说明后续程序与时限','当众比较双方过错以分是非'],a:[0,1,2],e:'当众论过错会激化对立、破坏后续调解关系；降温应聚焦事实、提供选项、给出确定的下一步。'},
+ {t:'m',cat:'traffic',q:'禁鸣区鸣笛案中，判官应注意的主体区分包括？',o:['鸣笛行为的违法主体是驾驶人','禁鸣规定的执法主体是公安交管','高架等设施噪声的责任主体是公路管理方','所有噪声投诉都归物业处理'],a:[0,1,2],e:'主体区分是交通噪声案的关键：行为人、执法部门、设施责任方各归其位，物业通常不在其中。'},
+/* ===== 判断 ===== */
+ {t:'j',cat:'life',q:'只要噪声分贝超标，就一定构成噪声污染。',a:false,e:'错误。干扰（对正常生活、工作、学习的影响）为两路径共同必备件，超标但无人受扰不构成。'},
+ {t:'j',cat:'indus',q:'企业厂界监测达标，说明其不可能构成噪声污染。',a:false,e:'错误。达标仅使路径A不成立；未依法采取防控措施且造成干扰的，仍构成噪声污染。'},
+ {t:'j',cat:'public',q:'电梯通过年度安全检验，即可排除其噪声方面的责任。',a:false,e:'错误。安全检验与噪声污染防治是两个维度，设备合格不等于已尽防控义务。'},
+ {t:'j',cat:'life',q:'社会生活噪声未经劝阻调解直接处罚，程序上存在瑕疵。',a:true,e:'正确。第88条明确以「劝阻、调解和处理未能制止」为前置条件。'},
+ {t:'j',cat:'life',q:'饲养动物噪声的处理，同样需要先经调解未能制止才可处罚。',a:false,e:'错误。第89条为警告前置，与第88条的调解前置逻辑不同。'},
+ {t:'j',cat:'build',q:'夜间施工只要有噪声扰民事实，物业即可直接处罚施工方。',a:false,e:'错误。施工噪声的行政主管为生态环境部门（涉住建/城管），物业无处罚权。'},
+ {t:'j',cat:'traffic',q:'禁鸣区鸣笛即使声压级不高，也可能构成噪声污染。',a:true,e:'正确。违反禁鸣规定本身即属未依法防控，与读数无关。'},
+ {t:'j',cat:'indus',q:'环境污染案件中达标与达标不免责可以并存，行政达标不影响相邻权独立适用。',a:true,e:'正确。行政法上的达标门槛不豁免民法典上的相邻妨害责任。'},
+ {t:'j',cat:'public',q:'共用设备噪声投诉应先找物业，因为物业是共有部分的管理者。',a:true,e:'正确。物业首责；不作为再经12345转住建/生态环境部门。'},
+ {t:'j',cat:'life',q:'调解时应尽量避免在居民面前比较双方过错。',a:true,e:'正确。当众论过错会激化对立，破坏调解关系与后续配合。'},
+ {t:'j',cat:'life',q:'投诉人情绪激动时，应当立即终止调解以避免激化。',a:false,e:'错误。情绪激动多为诉求未被看见的信号，应先命名情绪、复述理解并给出确定的下一步。'},
+ {t:'j',cat:'life',q:'判官可以同时代理投诉方与被投诉方进行调解。',a:true,e:'正确。判官居中中立，聚焦行为与规则，不得偏向任何一方。'},
+/* ===== 案例应用 ===== */
+ {t:'c',cat:'public',q:'某小区水泵房夜间启停致相邻住户墙体共振失眠。分贝仪显示 48dB 未超，但水泵无减振基础、管道无软连接，且住户作息明显受扰。本案应认定为？',o:['不构成','构成，路径A','构成，路径B','仅作民事赔偿不作行政认定'],a:2,e:'超标不成立，路径A不成立；但未采取减振等防控措施且造成干扰，路径B成立，物业为责任主体。'},
+ {t:'c',cat:'life',q:'居民投诉楼上 22:00 后练歌。现场发现声级 58dB 未超，窗户关闭后基本听不到，邻居仅有轻微不适且持续时间短。最恰当的处理是？',o:['认定路径B并责令整改','认定为摩擦型，以协调作息与约定降噪为主','直接依第88条处罚','不予受理且不作任何说明'],a:1,e:'强度轻微、持续时间短的作息噪声属摩擦型纠纷，优先协调约定；无实质干扰不构成噪声污染。'},
+ {t:'c',cat:'build',q:'工地 23:00 浇筑混凝土，居民多次投诉后已无施工许可但正在作业。最优先的处置是？',o:['按噪声罚款标准当场处罚','责令立即停止夜间施工，补办许可并落实减噪后复工','要求居民提高投诉次数','由社区自行组织夜间施工'],a:1,e:'夜间施工须有许可并采取减噪措施，无证持续侵害应先停止侵害，处罚为后手。'},
+ {t:'c',cat:'indus',q:'化工厂厂界监测达标，但夜间检修时频闪设备产生尖锐脉冲声，周边居民反映睡眠中断且检修未设降噪措施。正确判断是？',o:['达标即不构成','超标成立，构成路径A','超标不成立，但未依法防控成立，构成路径B','需重新测量才能判断'],a:2,e:'厂界达标使路径A不成立；但检修未设降噪属未依法防控，叠加干扰则路径B成立——这正是「达标不免责」的适用。'},
+ {t:'c',cat:'traffic',q:'业主投诉高速路噪声，物业称「我们管不了」。判官应当？',o:['告知业主找错部门了事','指导业主向交通与生态环境部门反映，要求隔声屏障与夜间限行，并持续记录声环境','由物业向高速收费','组织业主在高速上设卡'],a:1,e:'交通噪声主管为交通/生态环境部门，物业无管辖权；救济路径是设施改进＋交通管理＋持续记录。'},
+ {t:'c',cat:'life',q:'业主家中两台空调外机对着楼下邻居卧室外墙，夜间共振致其失眠，外机未装减振垫。归属与处置应为？',o:['属于楼栋共用设备，归物业','属业主自用设备，责令加装减振垫或移位','属工业噪声，交生态环境部门','属交通噪声'],a:1,e:'归属判断是关键：自用外机即社会生活噪声下的设施设备噪声，处置指向加装减振垫或移位。'},
+ {t:'c',cat:'life',q:'酒吧低音炮扰民，已由社区两次调解并有书面记录，对方承诺整改后仍持续播放至凌晨。判官现在最恰当的动作是？',o:['再次口头提醒','认定第88条前置条件已具备，引导报警由公安机关依法处理','直接代公安机关罚款','组织双方每日现场蹲守'],a:1,e:'有两次调解记录且承诺后仍持续，「未能制止」证据闭环，处罚前置条件具备，应引导报警由公安机关依法处理。'},
+ {t:'c',cat:'public',q:'物业在业主不知情下将原自行车棚改为垃圾暂存点，夜间清运产生倒车提示音与装卸声。物业的核心过错是？',o:['垃圾车太旧','擅自改变共有部分使用方式且未采取防控措施','清运时间安排在白天','没有收费'],a:1,e:'共有部分的使用与变更应依法共同决定；擅自改变使用方式又未采取防控措施，是本案的责任核心。'},
+ {t:'c',cat:'life',q:'投诉人反复讲述其病史与经济困难，判官几次追问案情都被打断。最合适的做法是？',o:['严厉制止其叙述','先接纳其处境，再温和引导回到具体事实、时间与影响','立即驳回投诉','转交心理医生处理'],a:1,e:'情绪背后常是未被看见的诉求。先接纳处境再引导事实，既降低对抗又不偏离取证目标。'},
+ {t:'c',cat:'build',q:'楼上住户白天用冲击钻装修，物业已两次要求停工，装修方称「白天装修不违法」。判官应？',o:['白天装修一律合法，不予处理','装修还须遵守管理规约与相邻安宁，责令限时、减震并禁止锤击承重墙','要求楼下住户白天外出','由居委会罚款'],a:1,e:'合法时段不等于无限时段。管理规约对作业时段、防震措施、禁锤承重墙均有具体义务，须逐项落实。'},
+/* ===== 流程排序 ===== */
+ {t:'o',cat:'life',q:'将社会生活噪声投诉的正确处理步骤排序。',steps:['确认是否影响正常生活、工作、学习','记录时间、类型、持续时长与具体影响','告知对方并劝阻、调解或请有关部门处理，保留记录','仍未制止的，向公安机关反映','视情形依法主张停止侵害与赔偿'],e:'顺序要点：先确认干扰（共同必备件）→ 固定证据 → 劝阻调解留痕 → 未能制止才反映 → 民事救济并行。'},
+ {t:'o',cat:'public',q:'将共用设备低频噪声的处理步骤排序。',steps:['排查确认声源与传声路径（手触、开关对比、时段记录）','判定归属：业主自用 or 楼栋共用设备','核对是否采取减振、隔声与时段限制措施','受扰与未防控均成立时责令物业限期整改','物业不作为则经12345转住建/生态环境部门'],e:'顺序要点：先定位声源 → 再定归属 → 再查防控 → 责令整改 → 督办升级，归属判断错则后续全错。'},
+ {t:'o',cat:'indus',q:'将工业噪声投诉的处理步骤排序。',steps:['现场监测厂界噪声并区分昼夜','查明企业已采取的防控措施','判断干扰事实是否成立','属未依法防控的，责令限期治理并跟踪监测','造成损害的，另行主张相邻权与赔偿'],e:'顺序要点：先量化（厂界+昼夜）→ 再查防控（路径B）→ 再定干扰 → 责令治理 → 民事救济并行。'},
+ {t:'o',cat:'build',q:'将夜间施工噪声投诉的处理步骤排序。',steps:['核查是否办理夜间施工许可','核查是否采取减噪措施（围挡、减振）','确认受影响居民范围与时段','无许可无措施的，责令立即停止并补办手续','拒不改正的，向生态环境部门与住建部门反映'],e:'顺序要点：许可与措施是两项独立要件 → 确认影响 → 先停止后补手续 → 拒不改正再上报。'},
+ {t:'o',cat:'traffic',q:'将交通噪声投诉的处理步骤排序。',steps:['确认声源类型：机动车、轨道、航空或设施','固定证据：录音、录像、位置与时段记录','确认禁鸣等禁止性规定是否被违反','向公安交管或交通、生态环境部门反映','推动设施与交通组织改进（隔声屏障、限行）'],e:'顺序要点：先定声源类型（决定主管部门）→ 固定证据 → 查禁止性规定 → 找对部门 → 推动制度性改进。'},
+ {t:'o',cat:'life',q:'将一次高冲突调解的降温步骤排序。',steps:['分别单独听取双方，控制在场人数','复述并确认各方感受与核心诉求','把争议收敛到具体可核实的事实与规则','提供两个以上可选择的解决方案','约定时限与后续复核方式，形成书面记录'],e:'顺序要点：先降温与分流 → 再命名情绪 → 收敛到事实规则 → 给选项 → 书面固化，防反复。'}
+];
+
+/* 法条库：生态环境法典 + 民法典 + 治安管理处罚法，统一以 cat 归入 taxonomy。
+   要点为办案归纳，具体表述以官方公布文本为准。 */
+const ACADEMY_LAWS = [
+ {id:'L1',cat:'indus',title:'生态环境法典 · 噪声污染防治',summary:'判定噪声污染、处理达标不免责、明确各主体防治义务的核心依据。',items:[
+  {art:'第547条（判定核心）',text:'噪声污染的构成采两条并列路径：（超标∧干扰）∨（未依法采取防控措施∧干扰）。"干扰"即对他人正常生活、工作、学习的影响，为两条路径的共同必备件。',note:'判定起点永远是「有没有人受影响」。超标只解决A，防控措施解决B；两者互不替代。'},
+  {art:'防治措施义务',text:'噪声排放单位与个人应当依法采取控制措施；在敏感区域、敏感时段采取限制运行、隔声减振、错峰作业等必要措施。',note:'「未依法防控」不是空话——要能指出缺了哪一项：减振垫、软连接、消声器、隔声屏障、音量上限、限时运行、避让。'},
+  {art:'敏感区域与时段',text:'居民住宅、医疗卫生、教育等区域及夜间等敏感时段，噪声排放应采取更严格的控制措施。',note:'同样是"夜里"，居民楼内的热水器与工业厂区的高频设备，法律要求不同。'},
+  {art:'监测与达标',text:'监测应按规定的监测方法和评价标准执行；达标是排放是否合规的判断，不等于对相邻关系无影响。',note:'这是「达标不免责」的法理落点：达标解决行政合规，不消灭民事相邻妨害。'},
+  {art:'投诉举报与处理',text:'公民对噪声污染有投诉举报权，主管部门应依法处理并将处理结果告知举报人。',note:'投诉后不回复，本身就是可主张「不作为」的证据。'},
+  {art:'法律责任与分工',text:'工业、施工等按行业分工监管；社会生活噪声与饲养动物干扰另有治安管理处罚法规定。',note:'找对主管是效率的第一杠杆：工业/施工/固定设备→生态环境；生活噪声/动物→公安；交通→交管。'}
+ ]},
+ {id:'L2',cat:'life',title:'民法典 · 相邻关系',summary:'噪声纠纷中最常用的实体依据，用于支撑停止侵害、排除妨碍与损害赔偿。',items:[
+  {art:'第288条（基本原则）',text:'不动产的相邻权利人应当按照有利生产、方便生活、团结互助、公平合理原则，正确处理相邻关系。',note:'这是"公平合理"四个字的来源。调解书里引用它，比只讲"你太吵了"更有说服力。'},
+  {art:'第286条（业主共有部分）',text:'业主对专有部分享有所有权，对共有部分享有共有和共同管理的权利；共有部分的经营、管理方负有维护与污染防治义务。',note:'共用设备噪声（电梯、水泵、风机、配电房）责任落点。物业不是"无责"，而是"有管理义务"。'},
+  {art:'第287条（禁止妨碍）',text:'不动产权利人应当遵守法律和国家有关规定，不得妨碍相邻权利人依法享有的采光、通行、通风、用水等权利。',note:'通风权、通行权与安宁权互为支撑，引用时注意与第288条搭配使用。'},
+  {art:'第294条（禁止排放）',text:'不动产权利人不得违反国家规定排放大气污染物、水污染物、土壤污染物、固体废物和噪声等有害物质。',note:'违反国家规定是前提。题干中若"违反规定"要件不成立，就要回到第547条的路径B去论证。'}
+ ]},
+ {id:'L3',cat:'life',title:'民法典 · 侵权责任',summary:'停止侵害、排除妨碍、消除危险与损害赔偿（含精神损害）的请求权基础。',items:[
+  {art:'第1165条（过错责任）',text:'行为人因过错侵害他人民事权益造成损害的，应当承担侵权责任。',note:'过错要件在噪声案中体现为：明知并经劝阻仍不改正。调解记录与承诺书正是过错的证据。'},
+  {art:'第1167条（停止侵害等）',text:'行为人侵害他人民事权益造成损害的，被侵权人有权请求停止侵害、排除妨碍、消除危险。',note:'最实用的一条。噪声持续存在时，"责令停止"比"赔偿"更贴近诉求，也更容易达成。'},
+  {art:'第1168条（连带责任）',text:'二人以上共同实施侵权行为造成他人损害的，应当承担连带责任。',note:'物业未尽管理义务与实际声源方共同造成损害时，可考虑按各自过错与原因力分担责任。'},
+  {art:'第1183条（精神损害赔偿）',text:'侵害自然人人身权益造成严重精神损害的，被侵权人有权请求精神损害赔偿。',note:'长期失眠、焦虑就医等需有医嘱、诊断与费用票据支持；无医疗证据时慎提。'}
+ ]},
+ {id:'L4',cat:'life',title:'治安管理处罚法 · 噪声条款',summary:'社会生活噪声（第88条）与饲养动物（第89条），程序逻辑与罚则完全不同。',items:[
+  {art:'第88条（社会生活噪声）',text:'违反社会生活噪声污染防治规定，产生社会生活噪声，经基层群众性自治组织、业主委员会、物业服务人、有关部门依法劝阻、调解和处理未能制止，继续干扰他人正常生活、工作和学习的，处五日以下拘留或者一千元以下罚款；情节严重的，处五日以上十日以下拘留，可以并处一千元以下罚款。',note:'关键词：劝阻、调解、处理未能制止。前置程序没走完就处罚，程序违法。'},
+  {art:'第89条（饲养动物）',text:'饲养动物干扰他人正常生活的，处警告；警告后不改正，或者放任动物恐吓他人的，处一千元以下罚款。',note:'保留警告前置。与第88条混淆是高频考点，也是玩家最容易判错的地方。'},
+  {art:'程序要点',text:'现场检查应制作现场笔录、必要时拍照录像；调解记录、告知书、复查记录均应留档。',note:'留痕就是留证据。没有记录的调解，在处罚环节等于没做过。'}
+ ]},
+ {id:'L5',cat:'public',title:'配套制度与程序工具',summary:'投诉渠道、物业管理规约、行业管理与特殊制度的适用要点。',items:[
+  {art:'12345 政务服务便民热线',text:'统一受理群众诉求、督促部门履职，是"部门不作为"时的第一顺位工具。',note:'打12345时要说清三件事：谁在制造、造成什么影响、你已经找过谁并有记录。'},
+  {art:'12345（含原 12369 环保举报）',text:'全国政务服务便民热线统一受理各类诉求。原环保举报专线 12369 在多数地区已并入 12345，由 12345 转生态环境部门办理；少数地区 12369 仍保留，但常会转接 12345 并记录工单。',note:'工业噪声优先拨 12345，并明确说"转生态环境部门"；若当地 12369 仍可用，亦可拨打，但两条渠道本质上是同一办理体系，不要重复投诉造成工单冲突。'},
+  {art:'110 公安接报警 / 122 交通违法',text:'110 用于社会生活噪声、饲养动物等治安事项；122 用于禁鸣、车辆改装等交通违法。',note:'打错号码会耽误处置时效，先想清楚噪声属于哪一类。'},
+  {art:'物业管理规约与业主大会',text:'业主大会与业主委员会决定共有部分的管理与使用；物业服务人按约定提供服务并履行管理义务。',note:'装修时段、防震垫、电梯广告静音等，写进规约就具有约束力，比口头劝说有效得多。'},
+  {art:'特殊管理制度',text:'夜间施工许可、娱乐场所营业时间、无人机飞行管理与禁飞区、房地产广告与夜间扰民管理等各有专门规则。',note:'遇到"新场景"先查有没有专门规定，通常比套用通例更有效，也更显专业。'}
+ ]},
+ {id:'L6',cat:'build',title:'建筑施工与装修噪声 · 专项依据',summary:'夜间施工许可、场界标准与装修管理规约，处理打桩、浇筑、电锤锤击等投诉的直接依据。',items:[
+  {art:'生态环境法典噪声编（原噪声污染防治法第43条）',text:'在噪声敏感建筑物集中区域，禁止夜间进行产生噪声的建筑施工作业；但因抢修、抢险，或因生产工艺要求、特殊需要必须连续施工作业的除外。因特殊需要连续施工作业的，应取得主管部门证明，并在施工现场显著位置公示或以其他方式公告附近居民。',note:'夜间＝22:00 至次日 6:00。无证＋未公告即属未依法防控，先责令停止，再谈补办手续与复工。'},
+  {art:'建筑施工场界环境噪声排放标准（GB 12523）',text:'建筑施工场界环境噪声排放限值：昼间 70 dB(A)，夜间 55 dB(A)；夜间最大声级超过限值的幅度不得高于 10 dB(A)。',note:'注意"场界"二字——测的是施工场界，不是居民室内。超标且干扰走路径A；无许可无措施走路径B。'},
+  {art:'声环境功能区与敏感建筑物',text:'住宅、学校、医院等属噪声敏感建筑物集中区域，周边施工须采取更严格的降噪、限时、围挡与隔声措施。',note:'区域属性决定注意义务高低：同样的施工，在居民区旁与工业区旁的处理强度不同。'},
+  {art:'装修作业与管理规约',text:'业主装修应遵守法律、法规及物业管理规约；规约可约定作业时段、禁止锤击承重墙、铺设防震垫等具体义务。物业负有督促与制止义务。',note:'装修案最有效的抓手是"白纸黑字的管理规约"，比空讲道理有效；违反了还可依规约主张违约责任。'},
+  {art:'夜间施工的复工条件',text:'责令停止后，须补办许可、落实减噪措施（低噪设备、围挡、减振）、公告居民，方可复工；拒不改正的由主管部门依法处理。',note:'处置顺序不能颠倒：先停止侵害 → 再补手续 → 落实措施 → 最后复工。罚款不能替代停止侵害。'}
+ ]},
+ {id:'L7',cat:'traffic',title:'交通运输噪声 · 专项依据',summary:'机动车鸣笛、高架道路、轨道交通与航空/无人机噪声的主管分工与治理措施。',items:[
+  {art:'生态环境法典交通运输噪声规则',text:'交通运输噪声污染防治应遵循源头控制、规划避让与传播途径治理相结合的原则；道路、轨道交通、机场等建设运营单位负有降低噪声影响的义务。',note:'交通类案先定"谁是责任主体"：设施责任方是建设/运营单位，不是个体驾驶人。'},
+  {art:'机动车禁鸣与通行管理',text:'禁鸣区域、禁鸣时段由公安机关交通管理部门依法设置并公告；在禁鸣区鸣笛属违反通行规定，可由交管依法处理。',note:'禁鸣区鸣笛本身即"未依法防控"，与声压级读数无关；受扰成立即走路径B。主管是交管122，不是物业。'},
+  {art:'道路隔声屏障与交通组织',text:'噪声敏感建筑物集中区域邻近道路的，应设置声屏障或采取其他降噪措施；可通过限制重型车辆夜间通行、优化路面材料等降低影响。',note:'高架噪声的治理是"工程措施＋管理措施"：声屏障、夜间限行、低噪路面，三者组合才有效。'},
+  {art:'城市轨道交通噪声',text:'轨道交通建设运营单位应依法开展环境影响评价，落实减振降噪措施；环评文件及批复中的噪声控制要求具有约束力。',note:'环评文件与批复是最好的证据——把"承诺过什么"变成"必须做到什么"。'},
+  {art:'航空与无人驾驶航空器',text:'飞行活动应遵守空域管理与飞行活动申报要求；民用无人驾驶航空器依《民用无人驾驶航空器飞行管理暂行条例》实行实名登记与分类管理，不得危害公共安全与扰乱居民正常生活。',note:'低空无人机噪声归公安与民航主管部门，物业只能协助反映。切勿承诺"个案必改航线"，应推动禁飞区划定与训练时段避让。'}
+ ]}
+];
+
+/* 心理疏导学习板块：角色边界、情绪识别、冲突降级、沟通模型、话术库、
+   特殊人群、风险识别与转介、调解员自我照护。 */
+const ACADEMY_PSY = [
+ {sec:'一、角色定位：你不是心理医生',items:[
+  {t:'居中而不偏袒',d:'判官是规则与事实的代言人，不是任何一方的代理人。避免使用"你错了""你应该"这类评判句式，改用"我们按什么规则看这件事"。'},
+  {t:'对行为不对人',d:'只讨论可观察的行为（几点开始、持续多久、分贝多少、有没有做减振），不评价人格（"你太自私""你素质差"）。'},
+  {t:'不诊断、不承诺治愈',d:'可以说"我听到你很久没睡好了"，但不能说"你有焦虑症"。涉及精神疾病的判断与治疗，超出判官职责。'},
+  {t:'明确边界与转介',d:'遇到需要专业心理干预的情形，按第九章转介；你的职责是识别、承接情绪并连接到专业资源。'}
+ ]},
+ {sec:'二、常见情绪识别与第一反应',items:[
+  {t:'愤怒（"必须给我个说法"）',d:'愤怒背后常是"我的诉求被忽视"。回应：先承认其正当性，再把话题从情绪转向事实——"您生气是应当的，我们把它落到具体时段和证据上"。'},
+  {t:'委屈（"我忍了很久了"）',d:'委屈来自长期单向付出。回应：复述其经历并给予肯定"您记录了这么多天，付出的努力是有效的"。'},
+  {t:'焦虑（"这日子没法过了"）',d:'焦虑指向未来不可控。回应：给确定性与时间表——"下一步做什么、什么时候有结果、谁来负责"。'},
+  {t:'疲惫麻木（"说了也没用"）',d:'这是"放弃型"情绪，最危险，容易导致举报流失或极端行为。回应：把承诺做到最小但一定做到，用一次兑现重建信任。'},
+  {t:'亢奋对抗（"我就要闹到底"）',d:'常见于围观起哄或与他人串通。回应：分离当事人、缩小参与面，避免当众比较过错。'},
+  {t:'冷漠旁观（"随便你们"）',d:'可能是配合度低或已放弃。回应：不施压，改为书面留痕与时限告知，让"不参与"也有明确后果预期。'}
+ ]},
+ {sec:'三、冲突降级四步法',items:[
+  {t:'第1步 分离',d:'把围观者与情绪激动者分开；一方情绪失控时先中止当场沟通，改约单独时间。一对一是降级的首要条件。'},
+  {t:'第2步 命名',d:'把情绪说出来并说准："您现在是觉得忍了很久、没人管，对吗？"——被准确命名会显著降低对抗强度。'},
+  {t:'第3步 共情',d:'用"我理解""换成我也一样"表达理解，而不是"我完全同意"。理解其处境 ≠ 认可其主张。'},
+  {t:'第4步 协商',d:'把冲突转成可选择的技术问题：音量多少、几点结束、加什么材料、谁来维护。用选择题代替立场对抗。'}
+ ]},
+ {sec:'四、沟通模型：观察—感受—需要—请求',items:[
+  {t:'观察',d:'只描述可核实的事实："昨天晚上十一点二十到十二点，客厅音响的鼓点声在我这边清晰可辨。"'},
+  {t:'感受',d:'说明自己的感受及其影响："连续这样几晚，我入睡要一个多小时。"'},
+  {t:'需要',d:'说出背后的需要："我需要夜里能正常休息，也希望楼上锻炼能继续。"'},
+  {t:'请求',d:'提出具体、可执行、可拒绝的请求："能不能把音响挪到北侧，或者音量调到关窗听不见？"'},
+  {t:'避免的表达',d:'"你总是""你从来不"（标签化）、"你要是再这样我就……"（威胁）、"我早就说过"（追责）。'}
+ ]},
+ {sec:'五、高频场景话术库',items:[
+  {t:'深夜施工方',d:'共情："我理解工期压力，白天我们一起商量能不能改成机器停、人工作业？"请求要具体：时段、部位、材料。'},
+  {t:'音响与广场舞',d:'共情："锻炼是好事，居民休息也是正当需求。"给选项：换场地／限时／限音量／分时段，并当场写成公约。'},
+  {t:'宠物主人',d:'共情："看得出来您很爱这个宠物，它可能只是夜里孤单。"请求：牵引、止吠器、白天遛狗、夜间安置。'},
+  {t:'物业与共用设备',d:'共情："物业也不容易。"请求：给具体时限与验收标准，并抄送业委会，形成外部约束。'},
+  {t:'屡次沟通无果的一方',d:'共情："您已经找了很多次 understandably 累了。"请求：确认下一步的书面记录与复查日期。'},
+  {t:'对方拒绝沟通',d:'不追问、不争论，转为书面送达与留痕，并告知法定程序后果，让"不回应"也有成本。'}
+ ]},
+ {sec:'六、特殊人群与特殊情形',items:[
+  {t:'老人',d:'常伴随听力下降，对高频噪声更敏感但常被低估。取证需其具体描述（"像指甲刮黑板"），并注意其对程序的时间承受力，宜减少往返。'},
+  {t:'婴幼儿与孕产妇',d:'睡眠剥夺影响显著，是最有说服力的受扰证据类型之一，宜固定作息记录与就医记录。'},
+  {t:'精神疾病患者',d:'可能出现妄想被害、幻听等导致其投诉内容与噪声无关。应对：平稳回应、避免争辩事实真伪、优先转介专业机构，必要时联系家属。'},
+  {t:'听障人士',d:'以振动、灯光等感知方式受影响，取证应记录其具体感知方式而非仅靠分贝。'},
+  {t:'租户与业主',d:'租赁关系不改变相邻义务，但维权路径不同：租户可依租赁合同与物业管理规约主张，业主可依相邻权主张。调解时注意谁是实际使用人。'},
+  {t:'商户与流动摊贩',d:'生计敏感，易产生"你们欺负人"的对抗。应明确规范边界而非禁止其生计，同时给可行的替代方案（定点、定时、定音量）。'}
+ ]},
+ {sec:'七、风险识别与转介',items:[
+  {t:'暴力与威胁信号',d:'出现具体威胁、持械、堵门、破坏设施等，立即终止单独会见、报警（110）、拉开物理距离、通知现场安保并留存证据。'},
+  {t:'自伤与伤人倾向',d:'出现绝望表达、告别式言语、自伤工具时，按最高优先级处置：陪伴、移除危险物、联系家属与紧急救助，必要时报警。'},
+  {t:'急性精神障碍发作',d:'出现明显妄想、极度兴奋或自伤行为时，优先人身安全与专业处置，暂停案件议程，联系专业机构或急救。'},
+  {t:'酗酒与意识不清',d:'不进行实质协商，仅做安全确认与记录，避免在其状态下形成任何协议。'},
+  {t:'网络与舆论风险',d:'不代客户写攻击性材料；对煽动性传播应保持中立并提示法律后果，必要时保留证据。'},
+  {t:'转介资源',d:'心理援助热线 12356；紧急医疗 120；治安警情 110；涉及家庭暴力与人身安全可联系妇联与法律援助渠道。'}
+ ]},
+ {sec:'八、判官自我照护',items:[
+  {t:'情绪劳动耗竭',d:'长期承接他人负面情绪会产生耗竭。每处理若干起高冲突案件，做一次情绪清空（散步、运动、倾诉），不要把情绪留在值班状态里。'},
+  {t:'避免过度卷入',d:'对反复纠缠、试图建立私人依赖的对象，适度保持专业距离；你的价值在于规则的一致性，而非个人化的解决。'},
+  {t:'区分事实与情绪',d:'写记录时把"他说他很愤怒"与"22:30 分贝 63"分列。前者是情绪信息，后者是可采信事实。'},
+  {t:'事后复盘',d:'每次结案后用三问复盘：我是否先确认了受扰？我是否留了书面记录？我的处置强度与证据是否匹配？'},
+  {t:'承认不确定',d:'可以坦率说明"这一点还需要核实"。判官的专业不等于永远正确，而是分得清哪些已确定、哪些待查。'}
+ ]},
+ {sec:'九、心理疏导的边界（红线）',items:[
+  {t:'不做诊断与治疗',d:'不判断他人是否患有精神疾病，不提供治疗方案，不承诺"帮你解决焦虑"。'},
+  {t:'不替代专业干预',d:'需要心理治疗、危机干预时，应连接专业机构或12356，而非自行处理。'},
+  {t:'不触碰当事人隐私细节',d:'纠纷处理只取与噪声事实相关的信息，不追问病史细节、家庭矛盾与经济状况。'},
+  {t:'不承诺结果',d:'可以承诺流程与时限，不承诺"我保证他被罚"或"我保证你今晚能睡着"。'},
+  {t:'保密与记录',d:'对当事人信息按最小必要原则记录与使用；涉及未成年人、老年人等 vulnerable 群体时，通知适当家属或社区。'},
+  {t:'与法律程序的边界',d:'心理疏导服务于"让沟通能够进行"，不改变法定认定标准，也不能作为调解协议中的对价。'}
+ ]}
+];
+
+
+
+/* 学院统一状态：分类筛选 + 关键词检索（跨板块共用） */
+const ACAD_STATE={cat:'all',kw:''};
+const ACAD_TABS=[
+  {id:'sys',  name:'学习与考核体系'},
+  {id:'qa',   name:'自测题库'},
+  {id:'quiz', name:'模拟考'},
+  {id:'cases',name:'官方判决案例'},
+  {id:'laws', name:'法条库'},
+  {id:'psy',  name:'心理疏导'},
+  {id:'news', name:'新规速递'}
+];
+function openAcademy(){
+  const m=document.getElementById('main');
+  const qaCount=ACADEMY_QA.length+ACADEMY_BANK.length;
+  m.innerHTML=`<div class="acad">
+    <div class="step">判官学院</div>
+    <div class="tabs">
+      ${ACAD_TABS.map((t,i)=>`<div class="tab${i===0?' active':''}${t.id==='news'?' news':''}" onclick="showAcadTab('${t.id}',event)">${t.name}${t.id==='qa'?'（'+qaCount+'题）':t.id==='cases'?'（'+ACADEMY_CASES.length+'例）':''}</div>`).join('')}
+    </div>
+    <div class="toolbar-row">
+      <input type="search" id="acadKw" placeholder="全院检索：案件 / 案例 / 法条 / 心理疏导关键词…" value="${esc(ACAD_STATE.kw)}" oninput="acadSearch(this.value)">
+      <button class="fbtn${ACAD_STATE.cat==='all'?' on':''}" data-cat="all" onclick="acadFilter('all')">全部分类</button>
+      ${NOISE_CATS.map(c=>`<button class="fbtn${ACAD_STATE.cat===c.key?' on':''}" data-cat="${c.key}" onclick="acadFilter('${c.key}')">${c.icon} ${esc(c.name)}</button>`).join('')}
+    </div>
+    <div class="panel active" id="tab-sys">${acadSysHTML()}</div>
+    <div class="panel" id="tab-qa">${acadQAHTML()}</div>
+    <div class="panel" id="tab-quiz">${acadQuizHTML()}</div>
+    <div class="panel" id="tab-cases">${acadCasesHTML()}</div>
+    <div class="panel" id="tab-laws">${acadLawsHTML()}</div>
+    <div class="panel" id="tab-psy">${acadPsyHTML()}</div>
+    <div class="panel" id="tab-news">${acadNewsHTML()}</div>
+  </div>`;
+}
+function acadFilter(cat){
+  ACAD_STATE.cat=cat;
+  document.querySelectorAll('.toolbar-row .fbtn').forEach(b=>{
+    b.classList.toggle('on', b.getAttribute('data-cat')===cat);
+  });
+  refreshAcadPanels();
+}
+function acadSearch(kw){
+  ACAD_STATE.kw=kw||'';
+  refreshAcadPanels();
+}
+function refreshAcadPanels(){
+  const map={qa:'acadQAHTML',cases:'acadCasesHTML',laws:'acadLawsHTML',psy:'acadPsyHTML',news:'acadNewsHTML',sys:'acadSysHTML'};
+  Object.keys(map).forEach(id=>{
+    const el=document.getElementById('tab-'+id);
+    const fn=window[map[id]];
+    if(el && typeof fn==='function') el.innerHTML=fn();
+  });
+  /* 模拟考面板不随检索重绘，避免打断作答 */
+}
+/* 关键词匹配：把若干文本拼成一条可检索串 */
+function hit(...parts){
+  const kw=ACAD_STATE.kw.trim().toLowerCase();
+  if(!kw) return true;
+  return parts.join(' ').toLowerCase().indexOf(kw)>=0;
+}
+function catOK(cat){ return ACAD_STATE.cat==='all' || ACAD_STATE.cat===cat; }
+function showAcadTab(id,evt){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  if(evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+  const panel=document.getElementById('tab-'+id);
+  if(panel) panel.classList.add('active');
+}
+function acadSysHTML(){
+  return `
+  <h3>一、学习内容（七大模块）</h3>
+  <table><tr><th>模块</th><th>核心内容</th></tr>
+  <tr><td>① 法理基础</td><td>第547条双路径、治安管理处罚法第88/89条、民法典相邻权(288/286)与制止权(1167)、分类目录四类+公用设备</td></tr>
+  <tr><td>② 取证技能</td><td>取证三问、日志规范(≥3–7日)、分贝仪“仅参考”、排查七步、证据链</td></tr>
+  <tr><td>③ 研判判定</td><td>路径A/B；边界情形——达标不免责、固体传声、低频、宠物、未成年、商户、公用设备</td></tr>
+  <tr><td>④ 沟通与调解</td><td>共情 vs 生硬话术、冲突降温、多方协调、公约签订</td></tr>
+  <tr><td>⑤ 维权路径与救济</td><td>主管部门分工、12345流程、不作为五步救济</td></tr>
+  <tr><td>⑥ 心理疏导（新增）</td><td>角色边界、情绪识别与降级、沟通模型、话术库、特殊人群、风险识别转介(12356)、判官自我照护</td></tr>
+  <tr><td>⑦ 判决案例研习（新增）</td><td>${ACADEMY_CASES.length} 例典型情形与裁判要旨，按五大类归档，附判官启示</td></tr></table>
+
+  <h3>二、学习方式</h3>
+  <ul>
+    <li>新手引导：接案五步（接案→咨询→研判→宣判→结算）。</li>
+    <li>情景模拟：${scenes.length} 案件交互演练（S1–S${String(scenes.length).padStart(2,'0')}），其中 S12–S16 公共区域设备低频专项、S25–S37 高频噪声专项。</li>
+    <li>分支对话训练：每案“共情/生硬” + “排查核实”，练话术温度与证据意识。</li>
+    <li>复盘系统：每案“真相卡 + 处置反馈”即时纠偏。</li>
+    <li>案例研习：C1–C${scenes.length} 评分卡对照最佳实践。</li>
+    <li>随身查：维权手册、排查七步、日志模板随时调取。</li>
+    <li>题库滚动：${ACADEMY_QA.length} 题简答速查 ＋ ${ACADEMY_BANK.length} 题多题型（单选/多选/判断/案例/排序）分类自测。</li>
+    <li>全院检索：顶部搜索框跨「案例/题库/法条/判决案例/心理疏导」检索，分类按钮可快速定位。</li>
+  </ul>
+
+  <h3>三、考核标准</h3>
+  <table><tr><th>维度</th><th>说明</th><th>权重</th></tr>
+  <tr><td>法理准确度</td><td>路径A/B 判定、法条引用正确</td><td>30%</td></tr>
+  <tr><td>取证完整度</td><td>三问齐备、证据链闭环</td><td>25%</td></tr>
+  <tr><td>处置适当性</td><td>调解优先、阶梯得当</td><td>25%</td></tr>
+  <tr><td>沟通温度</td><td>共情选择、对方配合度</td><td>10%</td></tr>
+  <tr><td>程序合规</td><td>投诉路径、不作为救济正确</td><td>10%</td></tr></table>
+  <p>单案三档：<b style="color:var(--ok)">正确</b> / <b style="color:var(--warn)">过当</b> / <b style="color:var(--bad)">误判不足</b>。量化指标：和谐度（始60，结案±h）、声望（始0，正确+，过当/误判−）。</p>
+
+  <h3>四、考核流程</h3>
+  <ul>
+    <li>日常办案：每案结算给出档位与数值，自动累积。</li>
+    <li>模块考（周）：六模块抽题（${ACADEMY_QA.length+ACADEMY_BANK.length} 题滚动）自测。</li>
+    <li>综合考（月）：抽 3–5 真实场景（必含 S5/S9/S11），完整走五步并出具判定书。</li>
+    <li>通关考（季/资格）：${scenes.length} 案全通关 + 综合考达标 → 资格认定。</li>
+  </ul>
+
+  <h3>五、考核周期与评估指标</h3>
+  <table><tr><th>周期</th><th>形式</th><th>合格阈值</th></tr>
+  <tr><td>日</td><td>每案结算</td><td>单案档位；和谐度波动监测</td></tr>
+  <tr><td>周</td><td>模块小考</td><td>正确率 ≥ 80%</td></tr>
+  <tr><td>月</td><td>综合评定</td><td>正确率≥85%、过当率≤10%、误判率≤5%、平均和谐度≥70</td></tr>
+  <tr><td>季</td><td>等级复核+资格</td><td>声望累计、回退率≤8%</td></tr></table>
+
+  <h3>六、结果应用</h3>
+  <p><b>资格认定</b>：通关考合格 → 获“持证判官”，可独立办案。</p>
+  <p><b>等级评定</b>：见习 → 助理（通关≥25%、正确率≥70%）→ 判官（≥50%、≥80%）→ 资深（全通关、≥90%、误判≤5%）→ <b style="color:var(--ok)">模范判官</b>（全通关、正确≥80% 且和谐度≥75、声望高）。注：“高压/和稀泥”为风险画像，触发回炉，不直接授高等级。</p>
+  <p><b>激励</b>：声望兑换优先派单、导师资格、专属徽章。</p>
+  <p><b>退出/回炉</b>：月误判>10%或过当>20% → 降级补训；连续两月误判>15% → 暂停办案重修；严重违规（程序违法/滥用职权/利益输送）→ 取消资格；整改1月复评达标恢复。</p>`;
+}
+function acadNewsHTML(){
+  const html=`
+  <div class="newsbox">
+    <b>⚠ 新规要点（《中华人民共和国治安管理处罚法》2025-06-27 修订，2026-01-01 施行，现已生效）</b>
+    <p>本次修订将噪声相关条文由旧<b>第58条、第75条</b>调整为新<b>第88条、第89条</b>，罚则与处置逻辑有重大变化，办案务必以新规为准。</p>
+  </div>
+
+  <h3>要点一 · 社会生活噪声 → 第88条（原第58条）</h3>
+  <p><b>旧规</b>：警告；拒不改正 → 200–500 元罚款。</p>
+  <p><b>新规</b>：违反社会生活噪声污染防治规定，产生社会生活噪声，<u>经基层群众性自治组织、业主委员会、物业服务人、有关部门依法劝阻、调解和处理未能制止</u>，继续干扰他人正常生活、工作和学习的，处<b>五日以下拘留或者一千元以下罚款</b>；情节严重的，处<b>五日以上十日以下拘留，可以并处一千元以下罚款</b>。</p>
+  <ul>
+    <li><b>调解/处理前置</b>：不再"直接警告后罚款"，须先经劝阻、调解、处理且<b>未能制止</b>，方才处罚。</li>
+    <li><b>罚则升级</b>：可由"罚款"升为"拘留"，并可与罚款并处（情节严重时）。</li>
+    <li><b>保护扩围</b>：明确保护"正常生活、工作、学习"三类安宁，备考、办公受扰均算。</li>
+  </ul>
+
+  <h3>要点二 · 饲养动物干扰 → 第89条（原第75条）</h3>
+  <p><b>旧规</b>：警告；拒不改正 → 200–500 元罚款。</p>
+  <p><b>新规</b>：饲养动物，干扰他人正常生活的，处<b>警告</b>；警告后不改正，或者<b>放任动物恐吓他人</b>的，处<b>一千元以下罚款</b>。同条另新增：违规出售、饲养烈性犬等危险动物，以及未采取安全措施致动物伤人的，可处<b>拘留或罚款</b>。</p>
+  <ul>
+    <li><b>罚款上限提至 1000 元</b>；并新增"放任动物恐吓他人"即罚。</li>
+    <li>危险动物、未采取安全措施致伤等情形规制更严（可拘可罚）。</li>
+    <li>动物类仍保留<b>警告前置</b>，与社会生活噪声不同。</li>
+  </ul>
+
+  <h3>要点三 · 处置原则更新（判官/维权必记）</h3>
+  <p><b>社会生活噪声</b>：协商 → 社区/部门调解处理 → <u>未能制止</u> → 报警处拘留或罚款。<b>切勿"直接罚款/警告前置"</b>（旧思维已失效）。</p>
+  <p><b>饲养动物</b>：仍须<b>先警告</b>，拒不改正方处一千元以下罚款。</p>
+  <p class="tip">判官提示：原型中 S1/S3/S5/S6/S10 等社会生活噪声案，凡"直接罚款/未先调解"均判<b>过当</b>；判定与处置须严格对应第88条"调解未能制止"要件。</p>
+
+  <h3>要点四 · 生态环境法典噪声编（现行核心依据）</h3>
+  <p>原《噪声污染防治法》的制度已整体纳入<b>《生态环境法典》</b>噪声污染防治编，办案援引请改用法典条款，勿再引已废止的旧法。</p>
+  <ul>
+    <li><b>第547条判定公式</b>：噪声污染＝（超标∧干扰）∨（未依法采取防控措施∧干扰）。<b>"干扰"是两条路径的共同必备件</b>——对正常生活、工作、学习的影响。超标但无人受扰，不构成；未防控但无人受扰，也不构成。</li>
+    <li><b>达标不免责</b>：监测达标只解决路径A；路径B（未依法采取防控措施）独立成立。工业厂界达标、商业固定设备厂界达标而室内仍受扰的，均属典型情形。</li>
+    <li><b>防治措施义务</b>：减排、控制运行、隔声减振、错峰作业等属法定义务，"我不知道会被投诉"不是抗辩。</li>
+    <li><b>敏感区域与敏感时段</b>：居民住宅区、医疗卫生机构、学校等周边及夜间，噪声排放须采取更严格控制措施。</li>
+    <li><b>投诉举报权</b>：公民有权投诉举报，主管部门应依法处理并告知结果；未告知本身即构成"不作为"的证据。</li>
+  </ul>
+
+  <h3>要点五 · 民法典相邻关系与侵权责任</h3>
+  <table>
+    <tr><th>条款</th><th>要点</th><th>办案用途</th></tr>
+    <tr><td>第288条</td><td>相邻关系应按有利生产、方便生活、团结互助、公平合理原则处理</td><td>调解话术的权威依据，比"你太吵了"有效</td></tr>
+    <tr><td>第286条</td><td>业主对共有部分享有共有和共同管理权，共有部分管理方负维护与污染防治义务</td><td>电梯/水泵/风机等共用设备噪声，物业首责依据</td></tr>
+    <tr><td>第287条</td><td>不得妨碍相邻权利人依法享有的通风、采光、通行、用水等权利</td><td>通风权与安宁权互为支撑</td></tr>
+    <tr><td>第294条</td><td>不得违反国家规定排放噪声等有害物质</td><td>注意"违反国家规定"这一前提要件</td></tr>
+    <tr><td>第1165条</td><td>过错责任</td><td>明知并经劝阻仍不改正＝过错证据</td></tr>
+    <tr><td>第1167条</td><td>停止侵害、排除妨碍、消除危险</td><td>最实用：噪声持续时"责令停止"比索赔更贴近诉求</td></tr>
+    <tr><td>第1183条</td><td>严重精神损害的赔偿请求</td><td>需医嘱、诊断与费用票据支持</td></tr>
+  </table>
+  <p class="tip">双轨制提醒：<b>行政达标不豁免民事相邻妨害</b>。生态环境部门管"达标"，民法典管"相邻妨害"，两条救济线并行不悖。</p>
+
+  <h3>要点六 · 配套制度与程序工具</h3>
+  <table>
+    <tr><th>渠道</th><th>适用</th><th>用法要点</th></tr>
+    <tr><td>12345</td><td>部门不作为、跨部门推诿</td><td>说清"谁制造、什么影响、找过谁并有记录"三件事</td></tr>
+    <tr><td>12345（含原 12369）</td><td>工业噪声等生态环境违法线索</td><td>原 12369 环保举报热线多数地区已并入 12345，拨打后说明「转生态环境部门」；个别地区仍可直拨 12369，但通常会转接 12345 并生成同一工单，不必重复投诉</td></tr>
+    <tr><td>110</td><td>社会生活噪声、饲养动物</td><td>须已完成劝阻调解且未能制止</td></tr>
+    <tr><td>122</td><td>禁鸣、车辆改装等交通违法</td><td>交通噪声先分清行为人与设施责任方</td></tr>
+    <tr><td>12356</td><td>心理援助热线</td><td>涉及心理危机时的转介渠道</td></tr>
+  </table>
+
+  <h3>要点七 · 建筑施工噪声（专项法条）</h3>
+  <table>
+    <tr><th>依据</th><th>要点</th><th>办案用途</th></tr>
+    <tr><td>生态环境法典噪声编（原噪声污染防治法第43条）</td><td>噪声敏感建筑物集中区域禁止夜间（22:00–6:00）施工；抢修抢险或连续作业须有证明并公告附近居民</td><td>无许可、无公告即属未依法防控；先责令停止再补手续</td></tr>
+    <tr><td>GB 12523 建筑施工场界排放标准</td><td>场界昼间 70 dB(A)、夜间 55 dB(A)，夜间最大值超限幅度≤10 dB(A)</td><td>测的是「场界」而非室内，超标＋干扰走路径A</td></tr>
+    <tr><td>物业管理规约</td><td>约定作业时段、禁锤承重墙、铺设防震垫；物业负督促制止义务</td><td>装修案最有力的抓手是白纸黑字的规约</td></tr>
+  </table>
+
+  <h3>要点八 · 交通运输噪声（专项法条）</h3>
+  <table>
+    <tr><th>依据</th><th>要点</th><th>办案用途</th></tr>
+    <tr><td>生态环境法典交通运输噪声规则</td><td>源头控制＋规划避让＋传播途径治理；道路、轨道、机场建设运营单位负降噪义务</td><td>定责任主体：找设施方，不是找个体车主</td></tr>
+    <tr><td>禁鸣规定（道路交通安全法及实施条例）</td><td>禁鸣区、禁鸣时段由公安交管设置公告，违者由交管处理</td><td>禁鸣区鸣笛本身即未依法防控，与分贝读数无关</td></tr>
+    <tr><td>环评文件与批复</td><td>轨道交通、道路等建设项目的噪声控制措施要求具有约束力</td><td>把「承诺过什么」变成「必须做到什么」的强力证据</td></tr>
+    <tr><td>无人驾驶航空器飞行管理暂行条例</td><td>实名登记、分类管理、飞行活动申报，不得危害公共安全与扰乱居民生活</td><td>无人机噪声归公安与民航，物业无管辖权</td></tr>
+  </table>`;
+  const kw=ACAD_STATE.kw.trim().toLowerCase();
+  if(!kw) return html;
+  return html.toLowerCase().indexOf(kw)>=0 ? html :
+    `<div class="empty">新规速递中没有匹配「${esc(ACAD_STATE.kw)}」的内容。可到「法条库」「判决案例」「心理疏导」板块检索。</div>`;
+}
+function acadCasesHTML(){
+  let h=`<p style="color:var(--sub);margin-bottom:8px">按统一分类标准归入五大类；每例含案情、裁判要旨、法律依据、处理结果与判官启示。要点为裁判规则归纳，不指向具体个案。</p>`;
+  let n=0;
+  NOISE_CATS.forEach(c=>{
+    const list=ACADEMY_CASES.filter(x=>x.cat===c.key && catOK(x.cat) && hit(x.id,x.title,x.type,x.brief,x.holdings.join(' '),x.basis.join(' '),x.takeaway,x.tags.join(' ')));
+    if(!list.length) return;
+    h+=`<div class="grp-h"><span class="ic">${c.icon}</span><span class="nm">${esc(c.name)}</span><span class="sc">${list.length} 例 · 主管部门：${esc(c.dept)}</span></div><div class="cards">`;
+    list.forEach(x=>{
+      n++;
+      h+=`<div class="kcard"><div class="kid">${esc(x.id)} · ${esc(x.type)}</div>
+        <div class="kt">${esc(x.title)}</div>
+        <div class="kb"><b>案情</b>：${esc(x.brief)}</div>
+        <div class="kb" style="margin-top:6px"><b>裁判要旨</b>：${x.holdings.map(t=>`<br>· ${esc(t)}`).join('')}</div>
+        <div class="kb" style="margin-top:6px"><b>法律依据</b>：${x.basis.map(t=>esc(t)).join('；')}</div>
+        <div class="kb" style="margin-top:6px"><b>处理结果</b>：${esc(x.result)}</div>
+        <div class="kb" style="margin-top:6px;color:var(--warn)"><b>判官启示</b>：${esc(x.takeaway)}</div>
+        <div class="ktags">${x.tags.map(t=>`<span class="ktag">${esc(t)}</span>`).join('')}</div></div>`;
+    });
+    h+='</div>';
+  });
+  if(!n) h+='<div class="empty">没有匹配的判决案例，换个关键词或分类试试。</div>';
+  return h;
+}
+function acadLawsHTML(){
+  let h=`<p style="color:var(--sub);margin-bottom:8px">生态环境法典、民法典与治安管理处罚法的办案要点归纳。具体表述以官方公布文本为准。</p>`;
+  let n=0;
+  NOISE_CATS.forEach(c=>{
+    const list=ACADEMY_LAWS.filter(x=>x.cat===c.key && catOK(x.cat) && hit(x.title,x.summary,x.items.map(i=>i.art+i.text+i.note).join(' ')));
+    if(!list.length) return;
+    h+=`<div class="grp-h"><span class="ic">${c.icon}</span><span class="nm">${esc(c.name)}</span><span class="sc">${list.length} 组 · ${esc(c.law)}</span></div>`;
+    list.forEach(x=>{
+      n++;
+      h+=`<div class="kcard" style="border-left-color:#34d399;margin-bottom:10px">
+        <div class="kid">${esc(x.id)}</div><div class="kt">${esc(x.title)}</div>
+        <div class="kb" style="margin-bottom:6px">${esc(x.summary)}</div>`;
+      x.items.forEach(i=>{
+        h+=`<div class="lawart"><div class="an">${esc(i.art)}</div><div class="at">${esc(i.text)}</div><div class="anote">⚠ 办案要点：${esc(i.note)}</div></div>`;
+      });
+      h+='</div>';
+    });
+  });
+  if(!n) h+='<div class="empty">没有匹配的法条内容，换个关键词或分类试试。</div>';
+  return h;
+}
+function acadPsyHTML(){
+  let h=`<p style="color:var(--sub);margin-bottom:8px">调解中的情绪处理与沟通技术，共 ${ACADEMY_PSY.length} 节。点击标题展开。心理疏导服务于沟通，<b>不替代专业心理干预</b>。</p>`;
+  let n=0;
+  ACADEMY_PSY.forEach((sec,i)=>{
+    const all=sec.items.map(it=>it.t+it.d).join(' ');
+    if(!hit(sec.sec,all)) return;
+    n++;
+    h+=`<div class="accordion" id="psy-${i}"><div class="ahead" onclick="togglePsy(${i})"><span class="ar">›</span>${esc(sec.sec)}</div><div class="abody">`;
+    sec.items.forEach(it=>{ h+=`<div class="ptitle">${esc(it.t)}</div><div class="pdesc">${esc(it.d)}</div>`; });
+    h+='</div></div>';
+  });
+  if(!n) h+='<div class="empty">没有匹配的心理疏导内容，换个关键词试试。</div>';
+  return h;
+}
+function togglePsy(i){
+  const el=document.getElementById('psy-'+i);
+  if(el) el.classList.toggle('open');
+}
+function acadQAHTML(){
+  const TYPES={s:['单选','s'],m:['多选','m'],j:['判断','j'],c:['案例应用','c'],o:['流程排序','o'],q:['简答速查','q']};
+  let h=`<p style="color:var(--sub);margin-bottom:8px">共 ${ACADEMY_QA.length+ACADEMY_BANK.length} 题：简答速查 ${ACADEMY_QA.length} 题 ＋ 单选 ${countType('s')} ＋ 多选 ${countType('m')} ＋ 判断 ${countType('j')} ＋ 案例应用 ${countType('c')} ＋ 流程排序 ${countType('o')}。可按上方分类与关键词筛选。</p>`;
+  /* ① 简答速查 */
+  const qaList=ACADEMY_QA.filter((it,i)=>catOK(catKeyOfQA(it)) && hit(it[0],it[1]));
+  h+=`<div class="grp-h"><span class="ic">📘</span><span class="nm">简答速查</span><span class="sc">${qaList.length} 题 · 点击展开答案</span></div>`;
+  if(!qaList.length) h+='<div class="empty">无匹配题目</div>';
+  qaList.forEach(it=>{
+    const idx=ACADEMY_QA.indexOf(it);
+    h+=`<div class="qa"><div class="q" onclick="toggleQA(${idx})"><span class="qtype q">简答</span>${esc(it[0])}</div><div class="a" id="qa-${idx}">答：${esc(it[1])}</div></div>`;
+  });
+  /* ② 多题型 */
+  ['s','m','j','c','o'].forEach(t=>{
+    const list=ACADEMY_BANK.map((q,i)=>({q,i})).filter(o=>o.q.t===t && catOK(o.q.cat) && hit(o.q.q,o.q.o?o.q.o.join(' '):'',o.q.steps?o.q.steps.join(' '):'',o.q.e));
+    if(!list.length) return;
+    h+=`<div class="grp-h"><span class="ic">${t==='s'?'🎯':t==='m'?'🧩':t==='j'?'⚖️':t==='c'?'🗂️':'🔀'}</span><span class="nm">${TYPES[t][0]}</span><span class="sc">${list.length} 题</span></div>`;
+    list.forEach(o=>{ h+=renderBankItem(o.q,o.i); });
+  });
+  return h;
+}
+function countType(t){ return ACADEMY_BANK.filter(q=>q.t===t).length; }
+function catKeyOfQA(it){
+  const s=(it[0]+' '+it[1]);
+  if(/物业|小区|电梯|水泵|风机|配电|冷却塔|共用/.test(s)) return 'public';
+  if(/工业|厂界|工厂/.test(s)) return 'indus';
+  if(/施工|装修|打桩/.test(s)) return 'build';
+  if(/交通|鸣笛|高架|航空|无人机/.test(s)) return 'traffic';
+  return 'life';
+}
+function renderBankItem(q,idx){
+  const tag='<span class="qtype '+q.t+'">'+({s:'单选',m:'多选',j:'判断',c:'案例',o:'排序'}[q.t])+'</span>';
+  const cat=CAT_MAP[q.cat];
+  let h=`<div class="qa" id="bk-${q.t}-${idx}"><div class="q">${tag}${esc(q.q)}</div>`;
+  if(q.t==='s'||q.t==='c'){
+    h+='<div class="opts">';
+    q.o.forEach((o,i)=>{ h+=`<div class="opt" onclick="bankPick('${q.t}',${idx},${i})">${String.fromCharCode(65+i)}. ${esc(o)}</div>`; });
+    h+=`</div><div class="a" id="bka-${idx}" style="display:none;margin-top:6px"></div>`;
+  } else if(q.t==='m'){
+    h+=`<div class="opts">`;
+    q.o.forEach((o,i)=>{ h+=`<div class="opt multi" onclick="bankPick('m',${idx},${i},this)">${String.fromCharCode(65+i)}. ${esc(o)}</div>`; });
+    h+=`</div><div class="a" id="bka-${idx}" style="display:none;margin-top:6px"></div>`;
+  } else if(q.t==='j'){
+    h+=`<div class="tfbox"><div class="opt tf" onclick="bankPick('j',${idx},1,this)">✔ 正确</div><div class="opt tf" onclick="bankPick('j',${idx},0,this)">✘ 错误</div></div>`;
+    h+=`<div class="a" id="bka-${idx}" style="display:none;margin-top:6px"></div>`;
+  } else if(q.t==='o'){
+    const sh=shuffleSteps(q.steps, idx);
+    h+=`<div class="ordlist" id="ord-${idx}">`;
+    sh.forEach(o=>{
+      h+=`<div class="ordrow" data-orig="${o.orig}" onclick="ordPick(${idx},${o.orig})"><span class="no">+</span><span>${esc(o.text)}</span></div>`;
+    });
+    h+=`</div><div class="a" id="bka-${idx}" style="display:none;margin-top:6px"></div>`;
+    h+=`<div class="hint" style="margin-top:6px">按你判断的正确顺序依次点击上方步骤，序号即为你的排序。</div>`;
+  }
+  h+='</div>';
+  return h;
+}
+/* 题目作答交互 */
+function bankPick(type,idx,opt,el){
+  const q=ACADEMY_BANK[idx];
+  const box=document.getElementById('bk-'+type+'-'+idx);
+  const ansEl=document.getElementById('bka-'+idx);
+  if(!box||!ansEl) return;
+  if(box.getAttribute('data-done')) return;
+  if(type==='s'||type==='c'){
+    box.setAttribute('data-done','1');
+    const opts=box.querySelectorAll('.opt');
+    opts.forEach(o=>o.onclick=null);
+    opts[opt].classList.add(opt===q.a?'correct':'wrong');
+    if(opt!==q.a && opts[q.a]) opts[q.a].classList.add('correct');
+    ansEl.style.display='block';
+    ansEl.innerHTML=(opt===q.a?'<b style="color:var(--ok)">✔ 答对</b>':'<b style="color:var(--bad)">✘ 答错</b>')+
+      ` 正确答案：${String.fromCharCode(65+q.a)}. ${esc(q.o[q.a])}<br><span style="color:var(--sub)">${esc(q.e)}</span>`;
+  } else if(type==='m'){
+    const sel=JSON.parse(box.getAttribute('data-sel')||'[]');
+    const i=sel.indexOf(opt);
+    if(i>=0) sel.splice(i,1); else sel.push(opt);
+    sel.sort((a,b)=>a-b);
+    box.setAttribute('data-sel',JSON.stringify(sel));
+    el.classList.toggle('sel',sel.indexOf(opt)>=0);
+    const ok=sel.length===q.a.length && sel.every((v,i)=>v===q.a[i]);
+    if(ok){
+      box.setAttribute('data-done','1');
+      const opts=box.querySelectorAll('.opt');
+      opts.forEach(o=>o.onclick=null);
+      q.a.forEach(i=>opts[i]&&opts[i].classList.add('correct'));
+      ansEl.style.display='block';
+      ansEl.innerHTML='<b style="color:var(--ok)">✔ 答对</b> 正确答案：'+q.a.map(i=>String.fromCharCode(65+i)).join('、')+
+        `<br><span style="color:var(--sub)">${esc(q.e)}</span>`;
+    }
+  } else if(type==='j'){
+    box.setAttribute('data-done','1');
+    const opts=box.querySelectorAll('.opt');
+    opts.forEach(o=>o.onclick=null);
+    const correct=(q.a?1:0)===opt;
+    opts[opt].classList.add(correct?'correct':'wrong');
+    ansEl.style.display='block';
+    ansEl.innerHTML=(correct?'<b style="color:var(--ok)">✔ 答对</b>':'<b style="color:var(--bad)">✘ 答错</b>')+
+      ` 正确答案：${q.a?'✔ 正确':'✘ 错误'}<br><span style="color:var(--sub)">${esc(q.e)}</span>`;
+  }
+}
+let ORD_STATE={};
+function shuffleSteps(steps,seed){
+  const arr=steps.map((text,i)=>({text,orig:i}));
+  let s=(seed*9301+49297)%233280;
+  for(let i=arr.length-1;i>0;i--){
+    s=(s*9301+49297)%233280;
+    const j=s%(i+1);
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+function ordPick(idx,origIdx){
+  const q=ACADEMY_BANK[idx];
+  const box=document.getElementById('bk-o-'+idx);
+  if(box&&box.getAttribute('data-done')) return;
+  if(!ORD_STATE[idx]) ORD_STATE[idx]=[];
+  const st=ORD_STATE[idx];
+  if(st.indexOf(origIdx)>=0) return;
+  st.push(origIdx);
+  const list=document.getElementById('ord-'+idx);
+  if(list){
+    const rows=list.querySelectorAll('.ordrow');
+    rows.forEach((r,ri)=>{
+      const oi=parseInt(r.getAttribute('data-orig'),10);
+      const pos=st.indexOf(oi);
+      r.classList.toggle('done',pos>=0);
+      r.querySelector('.no').textContent=pos>=0?(pos+1):'+';
+    });
+  }
+  if(st.length===q.steps.length){
+    const ok=st.every((v,i)=>v===i);
+    const ansEl=document.getElementById('bka-'+idx);
+    if(ansEl){
+      ansEl.style.display='block';
+      ansEl.innerHTML=(ok?'<b style="color:var(--ok)">✔ 顺序正确</b>':'<b style="color:var(--bad)">✘ 顺序有误</b>')+
+        `<br><b>正确顺序：</b>${q.steps.map((s,i)=>`${i+1}. ${esc(s)}`).join(' → ')}<br><span style="color:var(--sub)">${esc(q.e)}</span>`;
+    }
+    if(box) box.setAttribute('data-done','1');
+  }
+}
+function toggleQA(i){ document.getElementById('qa-'+i).classList.toggle('show'); }
+
+let quizState=null;
+function acadQuizHTML(){
+  /* 模拟考：从统一题库 ACADEMY_BANK 随机抽题，保证五种题型均有覆盖 */
+  const pool=ACADEMY_BANK.slice();
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const picked=[],used=new Set();
+  ['s','m','j','c','o'].forEach(t=>{
+    const one=pool.find((q,k)=>q.t===t&&!used.has(k));
+    if(one){ used.add(pool.indexOf(one)); picked.push(one); }
+  });
+  for(let k=0;k<pool.length&&picked.length<10;k++){ if(!picked.includes(pool[k])) picked.push(pool[k]); }
+  const qs=picked.slice(0,10);
+  quizState={qs,ans:[],done:false};
+  let h=`<p style="color:var(--sub)">随机 ${qs.length} 题（单选／多选／判断／案例／排序混合），全部作答后点击「交卷计分」。</p><div id="quizBox">`;
+  qs.forEach((q,idx)=>{
+    const tag='<span class="qtype '+q.t+'">'+({s:'单选',m:'多选',j:'判断',c:'案例',o:'排序'}[q.t])+'</span>';
+    h+=`<div class="quiz-q" id="qq-${idx}"><div class="q">${idx+1}. ${tag}${esc(q.q)}</div>`;
+    if(q.t==='s'||q.t==='c'){
+      h+='<div class="opts">';
+      q.o.forEach((opt,oi)=>{ h+=`<div class="opt" onclick="quizPick(${idx},${oi},this)">${String.fromCharCode(65+oi)}. ${esc(opt)}</div>`; });
+      h+='</div>';
+    } else if(q.t==='m'){
+      h+='<div class="opts">';
+      q.o.forEach((opt,oi)=>{ h+=`<div class="opt multi" onclick="quizPickM(${idx},${oi},this)">${String.fromCharCode(65+oi)}. ${esc(opt)}</div>`; });
+      h+='</div>';
+    } else if(q.t==='j'){
+      h+=`<div class="tfbox"><div class="opt tf" onclick="quizPickJ(${idx},1,this)">✔ 正确</div><div class="opt tf" onclick="quizPickJ(${idx},0,this)">✘ 错误</div></div>`;
+    } else if(q.t==='o'){
+      const sh=shuffleSteps(q.steps, idx+7);
+      h+=`<div class="ordlist" id="qord-${idx}">`;
+      sh.forEach(o=>{ h+=`<div class="ordrow" data-orig="${o.orig}" onclick="quizOrd(${idx},${o.orig})"><span class="no">+</span><span>${esc(o.text)}</span></div>`; });
+      h+='</div>';
+    }
+    h+=`<div class="a" id="qans-${idx}" style="display:none;margin-top:6px"></div></div>`;
+  });
+  h+=`</div><div style="margin-top:12px"><button class="nxt" id="quizSubmit" onclick="submitQuiz()">交卷计分 →</button></div><div id="quizResult"></div>`;
+  return h;
+}
+function quizPick(idx,oi,el){
+  if(quizState.done) return;
+  quizState.ans[idx]=oi;
+  const box=document.getElementById('qq-'+idx);
+  if(box) box.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+}
+function quizPickM(idx,oi,el){
+  if(quizState.done) return;
+  const arr=quizState.ans[idx]||[];
+  const i=arr.indexOf(oi);
+  if(i>=0) arr.splice(i,1); else arr.push(oi);
+  arr.sort((a,b)=>a-b);
+  quizState.ans[idx]=arr;
+  if(el) el.classList.toggle('sel',arr.indexOf(oi)>=0);
+}
+function quizPickJ(idx,v,el){
+  if(quizState.done) return;
+  quizState.ans[idx]=v;
+  const box=document.getElementById('qq-'+idx);
+  if(box) box.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+}
+let QORD={};
+function quizOrd(idx,origIdx){
+  if(quizState.done) return;
+  if(!QORD[idx]) QORD[idx]=[];
+  const st=QORD[idx];
+  if(st.indexOf(origIdx)>=0) return;
+  st.push(origIdx);
+  quizState.ans[idx]=st.slice();
+  const list=document.getElementById('qord-'+idx);
+  if(list) list.querySelectorAll('.ordrow').forEach(r=>{
+    const oi=parseInt(r.getAttribute('data-orig'),10);
+    const pos=st.indexOf(oi);
+    r.classList.toggle('done',pos>=0);
+    r.querySelector('.no').textContent=pos>=0?(pos+1):'+';
+  });
+}
+function submitQuiz(){
+  if(!quizState||quizState.done) return;
+  quizState.done=true;
+  let right=0;
+  quizState.qs.forEach((q,idx)=>{
+    const a=quizState.ans[idx];
+    const ansEl=document.getElementById('qans-'+idx);
+    let ok=false,txt='';
+    if(q.t==='s'||q.t==='c'){ ok=(a===q.a); txt=`正确答案：${String.fromCharCode(65+q.a)}. ${esc(q.o[q.a])}`; }
+    else if(q.t==='m'){ ok=Array.isArray(a)&&a.length===q.a.length&&a.every((v,i)=>v===q.a[i]);
+      txt=`正确答案：${q.a.map(i=>String.fromCharCode(65+i)).join('、')}`; }
+    else if(q.t==='j'){ ok=((q.a?1:0)===a); txt=`正确答案：${q.a?'✔ 正确':'✘ 错误'}`; }
+    else if(q.t==='o'){ ok=Array.isArray(a)&&a.length===q.steps.length&&a.every((v,i)=>v===i);
+      txt=`正确顺序：${q.steps.map((s,i)=>`${i+1}. ${esc(s)}`).join(' → ')}`; }
+    if(ok) right++;
+    const box=document.getElementById('qq-'+idx);
+    if(box){
+      box.querySelectorAll('.opt').forEach(o=>{ o.onclick=null; o.style.pointerEvents='none'; });
+      if(q.t==='s'||q.t==='c'){
+        const opts=box.querySelectorAll('.opt');
+        if(opts[a]) opts[a].classList.add('correct');
+        if(a!==q.a&&opts[q.a]) opts[q.a].classList.add('correct');
+      }
+    }
+    if(ansEl){
+      ansEl.style.display='block';
+      ansEl.innerHTML=(ok?'<b style="color:var(--ok)">✔ 答对</b>':'<b style="color:var(--bad)">✘ 答错</b>')+` ${txt}<br><span style="color:var(--sub)">${esc(q.e)}</span>`;
+    }
+  });
+  const total=quizState.qs.length;
+  const pct=Math.round(right/total*100);
+  const grade = pct>=90?'优秀（可授判官资格）':pct>=70?'合格':pct>=50?'待加强':'不合格（建议回炉）';
+  const btn=document.getElementById('quizSubmit');
+  if(btn){ btn.disabled=true; btn.textContent='已交卷'; }
+  document.getElementById('quizResult').innerHTML=`<div class="verdict" style="margin-top:12px">模拟考成绩：<b>${right}/${total}（${pct}%）</b> ｜ 评定：<b style="color:var(--acc)">${grade}</b><br><span style="color:var(--sub)">提示：错题已在上方标红并附正确答案与解析，回到案件多练取证三问与路径判定。</span></div>`;
+}
+
+/* ===== 弹窗与诊断 ===== */
+function showErr(msg){
+  const m=document.getElementById('main');
+  m.innerHTML=`<div class="err"><b>出错了：</b>${esc(msg)}<br>本页双击即可运行（内置全部案件）；若通过 http 打开伴随 game-data.json，请确保该文件与本页同目录且格式正确。</div>`;
+}
+function openManual(){ openModal('manual'); }
+
+/* 本案维权路径：按案件类别动态生成，与通用《维权手册》互补而非重复 */
+const ROUTE_RULES = [
+  { test:c=>/工业|工厂|厂界/.test(c), dept:'生态环境部门（12345 统一受理；部分地区仍可直拨 12369）',
+    steps:['现场监测厂界噪声 + 查防控措施证据','边界达标不免责：查夜间限产、减振、隔声是否到位','责令限期整改，逾期/严重由生态环境部门处罚','造成损害的，可依民法典主张停止侵害与赔偿'],
+    law:'《生态环境法典》第547条 路径B（未防控∧干扰）；民法典第286/1167条', hot:'12345',
+    tip:'工业案重点记住"达标≠免责"——分贝达标但缺防控措施、仍干扰，依然构成。' },
+  { test:c=>/建筑施工|施工|夜间施工/.test(c), dept:'生态环境部门；夜间无证施工加住建/城管',
+    steps:['核查夜间施工许可与减噪围挡措施','无许可无措施 → 责令停工整改 + 补办许可','夜间（22:00–6:00）施工须有证明，否则可举报','居民集体投诉可要求街道协调限时'],
+    law:'《生态环境法典》噪声编；建筑法/地方夜间施工规定', hot:'12345',
+    tip:'夜间施工"许可+防控"缺一不可，先责令停止再谈处罚。' },
+  { test:c=>/装修/.test(c), dept:'物业（首）→ 社区/居委会；必要时公安(110)',
+    steps:['确认装修时段是否违反小区装修管理规定','查是否铺设防震垫、限时使用电钻','物业责令改正 + 错峰施工约定','拒不改正、持续干扰的，报公安依第88条处理'],
+    law:'《生态环境法典》第547条路径B；《治安管理处罚法》第88条', hot:'110',
+    tip:'装修多走调解与物业约束，分贝未超但无防震垫仍属"未防控"。' },
+  { test:c=>/交通|鸣笛|道路|机动车|地铁|铁路/.test(c), dept:'公安交管（122）；轨道交通向运营单位/交通部门',
+    steps:['核实禁鸣标志、鸣笛事实或振动来源','固定证据：录音录像 + 位置时段','禁鸣区鸣笛由交管依法处理','轨道/高架振动向交通部门与运营单位反映，要求减振'],
+    law:'《生态环境法典》交通运输噪声规则；道路交通安全法', hot:'122',
+    tip:'鸣笛归交管，不是物业；属交通运输噪声，勿当生活噪声处理。' },
+  { test:c=>/宠物|犬|动物|吠/.test(c), dept:'公安（110）+ 社区/物业；训导与文明养犬协同',
+    steps:['先警告：饲养动物干扰他人正常生活','警告后不改正 → 处一千元以下罚款','固定证据：吠叫录音、时段记录、沟通留痕','协助训导、加装隔音、签文明养犬承诺'],
+    law:'《治安管理处罚法》第89条（警告前置）', hot:'110',
+    tip:'动物类仍保留"警告前置"，与社会生活噪声的第88条调解前置不同，勿混用。' },
+  { test:c=>/公用|公共区域|设备|电梯|水泵|风机|冷却塔|变压器|外机|设施/.test(c), dept:'物业（首）→ 住建/生态环境部门；热线12345',
+    steps:['先判定归属：业主自用 or 楼栋共用设备','共用设备（电梯/水泵/风机）→ 首找物业检修与减振','查是否加装减振垫、软连接、隔声罩、限运行时段','物业不作为 → 12345督办，转住建/生态环境部门'],
+    law:'《生态环境法典》第547条路径B；民法典第286条（业主共用部分）', hot:'12345',
+    tip:'低频设备案：分贝不高不代表不违规，关键看有无减振隔振措施。' },
+  { test:c=>/广播|喇叭|促销|商铺|直播|乐器|广场舞|商业|生活/.test(c), dept:'公安（110）+ 社区/业委会；商业经营涉城管',
+    steps:['先经社区/业委会/物业劝阻、调解、处理并留痕','形成"未能制止"的证据（多次沟通、调解记录）','继续干扰正常生活、工作、学习的 → 报警','依第88条处拘留或罚款；情节严重加重'],
+    law:'《治安管理处罚法》第88条（调解/处理未制止后方处罚）', hot:'110',
+    tip:'第88条新规核心：不再"直接警告后罚款"，须先调解处理且未能制止。' }
+];
+function openPathway(){
+  if(!cur){ showErr('请先选择一个案件，再查看本案维权路径。'); return; }
+  const c=cur.cat||'';
+  const r=ROUTE_RULES.find(x=>x.test(c)) || { dept:'公安（110）+ 社区/物业',
+    steps:['先经社区/业委会/物业劝阻、调解、处理并留痕','调解处理未能制止、继续干扰的，报警处理','固定证据：录音、日志、沟通记录','必要时依民法典主张停止侵害与赔偿'],
+    law:'《生态环境法典》第547条；《治安管理处罚法》第88条', hot:'110',
+    tip:'社会生活噪声以调解处理为先，处罚为后手。' };
+  document.getElementById('pathwayBody').innerHTML=`
+    <div class="card" style="margin-bottom:10px"><b>案件：</b>${esc(cur.id+' '+cur.title)}<br><b>类别：</b>${esc(c)}</div>
+    <p><b>主管/首接部门：</b><span style="color:var(--acc)">${esc(r.dept)}</span>　<b>热线：</b>${esc(r.hot)}</p>
+    <p><b>本案处置步骤：</b></p><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+    <p><b>法律依据：</b>${esc(r.law)}</p>
+    <p style="color:var(--warn)">⚠ ${esc(r.tip)}</p>
+    <p style="color:var(--sub);margin-top:8px">需要完整的通用流程（分类→取证→处罚→救济）？点顶部「维权手册」。</p>`;
+  openModal('pathway');
+}
+function openModal(id){const el=document.getElementById(id); if(el) el.classList.add('show');}
+function closeModal(id){const el=document.getElementById(id); if(el) el.classList.remove('show');}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
+window.addEventListener('error', e=>{ console.warn('页面运行告警：', e && e.message); });
+window.addEventListener('unhandledrejection', e=>{ console.warn('未处理的异步异常：', e && e.reason); });
+
+(async function(){
+  try{
+    await initData();
+    if(!scenes.length){ showErr('场景数据为空，加载失败。'); return; }
+    load(); updateStats(); renderList(); goHome();
+  }catch(e){
+    showErr('初始化异常：'+(e&&e.message?e.message:e));
+  }
+})();
+</script>
+</body>
+</html>
