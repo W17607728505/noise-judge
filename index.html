@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="噪音判官：基于生态环境法典第547条与2026版治安管理处罚法的噪声维权互动判案游戏，24起案件，随身维权手册与判官学院。">
+<meta name="description" content="噪音判官：基于生态环境法典第547条与2026版治安管理处罚法的噪声维权互动判案游戏，37起案件，随身维权手册与判官学院。">
 <title>噪音判官 · 上线版 v7</title>
 <style>
   :root{--bg:#0f172a;--card:#1e293b;--card2:#273449;--line:#334155;--txt:#e2e8f0;--sub:#94a3b8;--acc:#38bdf8;--ok:#34d399;--warn:#fbbf24;--bad:#f87171}
@@ -50,6 +50,21 @@
   .tbtn{background:transparent;border:1px solid var(--acc);color:var(--acc);padding:7px 13px;border-radius:8px;cursor:pointer;font-size:13px}
   .tbtn:hover{background:var(--acc);color:#0f172a}
   .tbtn.used{background:var(--acc);color:#0f172a}
+  .tbtn.support{border-color:var(--warn);color:var(--warn)}
+  .tbtn.support:hover{background:var(--warn);color:#0f172a}
+  .mbox .support-grid{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .mbox .support-grid .scard{flex:1;min-width:150px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+  .mbox .support-grid .scard b{display:block;color:var(--warn);margin-bottom:6px}
+  .mbox .support-grid .scard img{width:100%;max-width:160px;border-radius:8px}
+  .doc-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+  .doc-form label{font-size:12px;color:var(--sub);display:flex;flex-direction:column;gap:4px}
+  .doc-form input,.doc-form textarea,.doc-form select{background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit}
+  .doc-out{width:100%;min-height:320px;margin-top:12px;background:#0b1220;border:1px solid var(--line);border-radius:9px;padding:14px;font-size:13px;line-height:1.7;color:var(--txt);font-family:inherit;resize:vertical;white-space:pre-wrap}
+  #docPrintArea{display:none}
+  @media print{
+    body>*:not(#docPrintArea){display:none!important}
+    #docPrintArea{display:block!important;white-space:pre-wrap;font:14px/1.75 "Microsoft YaHei",sans-serif;color:#000;background:#fff;padding:24px}
+  }
   .nxt{margin-top:16px;background:linear-gradient(90deg,#0ea5e9,#38bdf8);color:#0f172a;border:none;padding:10px 22px;border-radius:9px;font-weight:700;cursor:pointer;font-size:14px}
   .nxt:disabled{opacity:.4;cursor:not-allowed}
   .verdict{background:#0f172a;border-left:3px solid var(--acc);padding:12px 14px;border-radius:8px;margin:8px 0;font-size:14px;line-height:1.6}
@@ -231,6 +246,7 @@
     <div class="stat">数值 <b id="harmVal">60</b></div>
     <div class="stat">声望 <b id="repVal">0</b></div>
     <button class="tbtn" onclick="openManual()">维权手册</button>
+    <button class="tbtn support" onclick="openModal('support')">支持作者</button>
   </div>
 </header>
 
@@ -285,6 +301,20 @@
   <p style="color:var(--sub);margin-bottom:10px">带分支场景：先「执行排查/核实」→ 再选「沟通方式（共情/生硬）」→ 解锁最佳处置项。共情 + 排查双满足时，额外的最佳处置项出现。</p>
   <div id="treeBody"></div>
 </div></div>
+
+<div class="modal" id="support"><div class="mbox">
+  <button class="close" onclick="closeModal('support')">关闭</button>
+  <h3>支持作者 · 让维权工具走得更远</h3>
+  <p>「噪音判官」是一款<b>完全免费、无广告、无外部依赖</b>的公益维权科普工具。如果你在办案中学到了东西，或它帮你理清了维权思路，欢迎自愿支持，让案例库与法条持续更新。</p>
+  <div class="support-grid">
+    <div class="scard"><b>爱发电</b><div style="font-size:12px;color:var(--sub)">在爱发电搜索「噪音判官」</div></div>
+    <div class="scard"><b>微信赞赏</b><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="赞赏码（发布前替换）" style="opacity:.25"></div>
+  </div>
+  <p style="color:var(--warn);font-size:12px">⚠ 发布提示：上方为占位示例。请将其替换为你真实的爱发电主页链接 / 微信赞赏码图片（把 <code>img src</code> 换成你的图片地址或 base64）。<b>切勿</b>用此入口承诺任何"付费必胜/包赢"服务。</p>
+  <p style="color:var(--sub);font-size:12px">你的支持仅用于内容维护，不影响任何案件判定结果——本工具对所有用户一视同仁。</p>
+</div></div>
+
+<div id="docPrintArea"></div>
 
 <!-- 内置数据：以 JS 对象形式直接解析（file:// 双击也能用，无需 JSON.parse） -->
 <script>
@@ -1034,7 +1064,8 @@ const ACAD_TABS=[
   {id:'cases',name:'官方判决案例'},
   {id:'laws', name:'法条库'},
   {id:'psy',  name:'心理疏导'},
-  {id:'news', name:'新规速递'}
+  {id:'news', name:'新规速递'},
+  {id:'docs', name:'维权文书'}
 ];
 function openAcademy(){
   const m=document.getElementById('main');
@@ -1056,6 +1087,7 @@ function openAcademy(){
     <div class="panel" id="tab-laws">${acadLawsHTML()}</div>
     <div class="panel" id="tab-psy">${acadPsyHTML()}</div>
     <div class="panel" id="tab-news">${acadNewsHTML()}</div>
+    <div class="panel" id="tab-docs">${acadDocsHTML()}</div>
   </div>`;
 }
 function acadFilter(cat){
@@ -1094,7 +1126,7 @@ function showAcadTab(id,evt){
 }
 function acadSysHTML(){
   return `
-  <h3>一、学习内容（七大模块）</h3>
+  <h3>一、学习内容（八大模块）</h3>
   <table><tr><th>模块</th><th>核心内容</th></tr>
   <tr><td>① 法理基础</td><td>第547条双路径、治安管理处罚法第88/89条、民法典相邻权(288/286)与制止权(1167)、分类目录四类+公用设备</td></tr>
   <tr><td>② 取证技能</td><td>取证三问、日志规范(≥3–7日)、分贝仪“仅参考”、排查七步、证据链</td></tr>
@@ -1102,7 +1134,8 @@ function acadSysHTML(){
   <tr><td>④ 沟通与调解</td><td>共情 vs 生硬话术、冲突降温、多方协调、公约签订</td></tr>
   <tr><td>⑤ 维权路径与救济</td><td>主管部门分工、12345流程、不作为五步救济</td></tr>
   <tr><td>⑥ 心理疏导（新增）</td><td>角色边界、情绪识别与降级、沟通模型、话术库、特殊人群、风险识别转介(12356)、判官自我照护</td></tr>
-  <tr><td>⑦ 判决案例研习（新增）</td><td>${ACADEMY_CASES.length} 例典型情形与裁判要旨，按五大类归档，附判官启示</td></tr></table>
+  <tr><td>⑦ 判决案例研习（新增）</td><td>${ACADEMY_CASES.length} 例典型情形与裁判要旨，按五大类归档，附判官启示</td></tr>
+  <tr><td>⑧ 维权文书（新增）</td><td>投诉信 / 证据清单 / 研判报告一键生成，可复制、下载、打印为 PDF</td></tr></table>
 
   <h3>二、学习方式</h3>
   <ul>
@@ -1145,8 +1178,102 @@ function acadSysHTML(){
   <p><b>等级评定</b>：见习 → 助理（通关≥25%、正确率≥70%）→ 判官（≥50%、≥80%）→ 资深（全通关、≥90%、误判≤5%）→ <b style="color:var(--ok)">模范判官</b>（全通关、正确≥80% 且和谐度≥75、声望高）。注：“高压/和稀泥”为风险画像，触发回炉，不直接授高等级。</p>
   <p><b>激励</b>：声望兑换优先派单、导师资格、专属徽章。</p>
   <p><b>退出/回炉</b>：月误判>10%或过当>20% → 降级补训；连续两月误判>15% → 暂停办案重修；严重违规（程序违法/滥用职权/利益输送）→ 取消资格；整改1月复评达标恢复。</p>`;
-}
-function acadNewsHTML(){
+  }
+  /* ===== 维权文书模板（付费版基础模块） ===== */
+  const DOC_CATS=NOISE_CATS.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+  function acadDocsHTML(){
+  return `
+  <h3>维权文书模板 · 一键生成</h3>
+  <p style="color:var(--sub);font-size:13px;line-height:1.7;margin:6px 0 2px">填写案件要素，一键生成 <b style="color:var(--ok)">投诉信</b> / <b style="color:var(--warn)">证据清单</b> / <b style="color:var(--acc)">研判报告</b> 三类文书。可复制、下载 .txt，或打印另存为 PDF。生成内容基于第547条双路径与现行法规，<b>仅为维权辅助草稿，提交前请核对事实并补齐证据</b>。</p>
+  <div class="doc-form">
+  <label>投诉人 / 申请人<input id="docName" placeholder="你的姓名"></label>
+  <label>被投诉方 / 噪声源负责人<input id="docOpp" placeholder="如：302室住户 / XX物业 / XX施工方"></label>
+  <label>噪声类别<select id="docCat">${DOC_CATS}</select></label>
+  <label>发生地点<input id="docAddr" placeholder="如：XX小区3栋302室、楼顶风机房"></label>
+  <label>发生时段<input id="docTime" placeholder="如：每日22:30–次日1:00"></label>
+  <label>是否实测超标<select id="docOver"><option value="已委托有资质机构实测/待出具报告">已实测/待出报告</option><option value="分贝仪自测参考值（非法定依据）">分贝仪自测（仅参考）</option><option value="未实测，但干扰客观存在">未实测</option></select></label>
+  <label>是否已劝阻 / 调解<select id="docMed"><option value="已劝阻/调解，对方拒不改正">已劝阻调解·拒不改正</option><option value="已劝阻，对方愿意协商">已劝阻·愿协商</option><option value="尚未劝阻，拟直接投诉">尚未劝阻</option></select></label>
+  <label>核心诉求<input id="docAsk" placeholder="如：限期加装减振垫并限定夜间停机"></label>
+  <label style="grid-column:1/-1">事实经过（时间线 / 影响 / 已留证据）<textarea id="docFacts" rows="3" placeholder="如：自9月起每晚低频振动，卧室震感明显，已连续记录日志14天、录音8段、2户邻居可作证。"></textarea></label>
+  </div>
+  <div class="toolbar" style="margin-top:4px">
+  <button class="nxt" style="margin-top:0" onclick="genDoc('complaint')">生成投诉信</button>
+  <button class="tbtn" onclick="genDoc('evidence')">生成证据清单</button>
+  <button class="tbtn" onclick="genDoc('report')">生成研判报告</button>
+  <button class="tbtn" onclick="docCopy()">复制</button>
+  <button class="tbtn" onclick="docDownload()">下载 .txt</button>
+  <button class="tbtn" onclick="docPrint()">打印 / 存 PDF</button>
+  </div>
+  <textarea id="docOut" class="doc-out" placeholder="生成结果将显示在这里，可直接手动修改后再复制/下载…"></textarea>
+  <p style="color:var(--sub);font-size:12px;margin-top:8px">提示：正式投诉请通过 <b>12345</b> 统一受理（含原 12369），并提交原始证据；本工具不替代律师或行政机关的认定。</p>`;
+  }
+  function docFormData(){
+  const g=id=>{const e=document.getElementById(id);return e?(e.value||'').trim():'';};
+  return {name:g('docName')||'（投诉人）',opp:g('docOpp')||'（被投诉方）',cat:g('docCat')||'社会生活噪声',
+  addr:g('docAddr')||'（发生地点）',time:g('docTime')||'（发生时段）',over:g('docOver'),
+  med:g('docMed'),ask:g('docAsk')||'（请填写核心诉求）',facts:g('docFacts')||'（请补充事实经过）'};
+  }
+  function genDoc(type){
+  const d=docFormData(), today=new Date().toLocaleDateString('zh-CN');
+  const law='《中华人民共和国生态环境法典》第547条（超标或未尽防控且干扰他人即构成噪声污染）；《中华人民共和国治安管理处罚法》（2025修订·2026-01-01施行）第88/89条；《中华人民共和国民法典》相邻关系与制止权条款。';
+  const routeLine='第547条判定式：噪声污染 =（超标 ∧ 干扰）∨（未依法防控 ∧ 干扰）。';
+  let t='';
+  if(type==='complaint'){
+  t=`噪声污染投诉信（致 12345 统一受理平台）\n\n`+
+    `投诉人：${d.name}\n被投诉方：${d.opp}\n噪声类别：${d.cat}\n发生地点：${d.addr}\n发生时段：${d.time}\n日期：${today}\n\n`+
+    `一、事实与经过\n${d.facts}\n检测情况：${d.over}。前期沟通：${d.med}。\n\n`+
+    `二、投诉请求\n1. ${d.ask}；\n2. 请主管部门依法现场核查、责令改正并反馈处理结果；\n3. 如对处理结果不服，申请人保留依法申请行政复议或提起行政诉讼的权利。\n\n`+
+    `三、法律依据\n${law}\n${routeLine}\n\n`+
+    `四、随附证据\n见《证据清单》；分贝仪读数仅作参考，不作为法定取证依据。\n\n`+
+    `此致\n12345 政务服务便民热线 / 有管辖权的主管部门\n\n投诉人（签名）：${d.name}\n日期：${today}\n`;
+  }else if(type==='evidence'){
+  t=`噪声维权证据清单\n\n案件关联人：${d.name}　被投诉方：${d.opp}\n噪声类别：${d.cat}　地点：${d.addr}　时段：${d.time}\n\n`+
+    `① 噪声日志：连续记录日期、起止时间、频次、强度、影响（建议≥3–7日，低频/结构传声延长至14日）。\n`+
+    `② 录音/录像：保留原始文件，标注时间地点；分贝仪读数仅参考。\n`+
+    `③ 排查锁定：关停设备/离家/邻里同步听等排除验证记录。\n`+
+    `④ 证人证言：受影响邻居的书面说明或联系方式。\n`+
+    `⑤ 沟通留痕：劝阻/调解的时间、方式、对方答复（微信/录音均可）。\n`+
+    `⑥ 检测报告：${d.over}。\n\n`+
+    `本案已具备材料：${d.facts}\n前期沟通状态：${d.med}\n\n`+
+    `整理人：${d.name}　日期：${today}\n（提交时请附原始载体，勿仅提供剪辑件。）\n`;
+  }else{
+  const route=/超标|实测|自测/.test(d.over)?'路径A（超标∧干扰）线索较强':(/未实测/.test(d.over)?'路径B（未依法防控∧干扰）线索为主':'A/B 两路径均可能成立');
+  t=`噪声维权研判报告（判官辅助草稿）\n\n申请人：${d.name}　被投诉方：${d.opp}\n类别：${d.cat}　地点：${d.addr}　时段：${d.time}\n生成日期：${today}\n\n`+
+    `一、事实概要\n${d.facts}\n\n二、要件研判\n${routeLine}\n`+
+    `· 干扰要件：${/未实测/.test(d.over)?'干扰事实需结合日志与证言进一步固定':'已有干扰事实陈述，建议以日志佐证'}。\n`+
+    `· 超标要件：${d.over}。\n· 防控要件：${d.med}。\n· 初步倾向：${route}（最终以主管部门认定为准）。\n\n`+
+    `三、处置建议\n1. 首选调解/责令改正：${d.ask}；\n2. 拒不改正或情节严重时，依治安管理处罚法第88/89条或生态环境法典追究责任；\n3. 部门不作为可走五步救济：12345督办→行政复议/诉讼→检察公益监督→纪检监察。\n\n`+
+    `四、风险提示\n本报告为维权辅助草稿，不构成法律意见；请核对事实、补齐证据后使用。\n\n研判人：${d.name}　日期：${today}\n`;
+  }
+  const out=document.getElementById('docOut');
+  if(out){out.value=t;out.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  }
+  function docCopy(){
+  const out=document.getElementById('docOut');
+  const txt=out&&out.value?out.value:'';
+  if(!txt){alert('请先生成文书');return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+  navigator.clipboard.writeText(txt).then(()=>alert('已复制到剪贴板')).catch(()=>{out.select();document.execCommand('copy');});
+  }else{out.select();try{document.execCommand('copy');}catch(e){}}
+  }
+  function docDownload(){
+  const out=document.getElementById('docOut');
+  const txt=out&&out.value?out.value:'';
+  if(!txt){alert('请先生成文书');return;}
+  const blob=new Blob(['\ufeff'+txt],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='噪音判官_维权文书_'+new Date().toISOString().slice(0,10)+'.txt';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+  function docPrint(){
+  const out=document.getElementById('docOut');
+  const txt=out&&out.value?out.value:'';
+  if(!txt){alert('请先生成文书');return;}
+  const area=document.getElementById('docPrintArea');
+  if(area){area.textContent=txt;}
+  window.print();
+  }
+  function acadNewsHTML(){
   const html=`
   <div class="newsbox">
     <b>⚠ 新规要点（《中华人民共和国治安管理处罚法》2025-06-27 修订，2026-01-01 施行，现已生效）</b>
