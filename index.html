@@ -56,6 +56,9 @@
   .mbox .support-grid .scard{flex:1;min-width:150px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
   .mbox .support-grid .scard b{display:block;color:var(--warn);margin-bottom:6px}
   .mbox .support-grid .scard img{width:100%;max-width:160px;border-radius:8px}
+  .foot{max-width:1100px;margin:26px auto 34px;padding:14px 16px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;font-size:11.5px;line-height:1.8;color:var(--sub);text-align:center}
+  .foot a{color:var(--acc);text-decoration:none}
+  .foot a:hover{text-decoration:underline}
   .doc-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
   .doc-form label{font-size:12px;color:var(--sub);display:flex;flex-direction:column;gap:4px}
   .doc-form input,.doc-form textarea,.doc-form select{background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit}
@@ -264,6 +267,11 @@
   <main id="main"></main>
 </div>
 
+<footer class="foot">
+  <span>噪音判官 · 上线版 v7　|　内容仅供学习参考，不构成法律意见，不承诺办案结果</span>
+  <span>采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a> 授权：允许转发与改编（须署名），禁止商业用途　|　<a href="https://github.com/W17607728505/noise-judge" target="_blank" rel="noopener noreferrer">GitHub</a>　·　<a href="https://afdian.com/a/noisejudge" target="_blank" rel="noopener noreferrer">支持作者</a></span>
+</footer>
+
 <div class="modal" id="manual"><div class="mbox">
   <button class="close" onclick="closeModal('manual')">关闭</button>
   <h3>维权手册（随身查）</h3>
@@ -312,6 +320,9 @@
     <div class="scard"><b>支持档位</b><div style="font-size:12px;color:var(--sub);text-align:left;line-height:1.8">5 元/月 · 鸣谢与优先体验<br>15 元/月 · 额外可提交噪声场景收录进案例库</div></div>
   </div>
   <p style="color:var(--sub);font-size:12px">赞助属于自愿支持，所有功能对所有人免费开放，与赞助金额无关；支持仅用于内容维护，<b>不影响任何案件判定结果</b>。本工具不提供任何"付费必胜/包赢"承诺。</p>
+  <p style="color:var(--sub);font-size:11.5px;border-top:1px solid var(--line);padding-top:10px;margin-top:14px">
+    本作品采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank" rel="noopener noreferrer" style="color:var(--acc)">CC BY-NC-SA 4.0</a> 授权：<b>允许</b>转发分享与修改改编（须署名），<b>禁止</b>任何商业用途。请注明出处「噪音判官 · W17607728505 · https://github.com/W17607728505/noise-judge 」。法律条文本身属公有领域，不受此限。
+  </p>
 </div></div>
 
 <div id="docPrintArea"></div>

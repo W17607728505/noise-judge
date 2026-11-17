@@ -1,21 +1,54 @@
-MIT License
+﻿Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
 
-Copyright (c) 2026 W17607728505
+SPDX-License-Identifier: CC-BY-NC-SA-4.0
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2026 W17607728505 (Noise Judge / 噪音判官)
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+本作品采用「知识共享 署名-非商业性使用-相同方式共享 4.0 国际」许可协议。
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+完整协议全文：
+  中文：https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans
+  英文：https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+------------------------------------------------------------------------
+条款摘要（以协议全文为准）
+------------------------------------------------------------------------
+你被允许：
+  * 分享  —— 在任何媒介上复制、转发本作品
+  * 改编  —— 基于本作品进行修改、转换
+  * 商用以外的任何用途（个人学习、社区普法、公益宣传、课堂使用等）
+
+条件：
+  * 署名 —— 必须以适当方式标注作者姓名与作品名称，并注明来源链接
+  * 非商业性使用 —— 不得将本作品或其改编版本用于任何商业目的
+  * 相同方式共享 —— 改编版本必须以本协议相同条款发布
+  * 不得附加额外限制条款
+
+你被禁止：
+  * 商业使用本作品或其改编版本，包括但不限于付费售卖、付费订阅、
+    付费培训/课程/咨询、广告变现分成后去除署名、作为付费产品的一部分提供
+  * 去除或遮挡作者署名、来源链接后再次发布
+  * 以原作者名义进行推广、募资或招揽商业合作
+  * 歪曲、篡改内容后以原作者名义发布
+
+提示：
+  * 本项目为公益科普工具，不提供任何「付费必胜」「保证赔偿」类商业服务，
+    任何收费包装均违反本授权。
+  * 确需商业使用（企业培训、机构内部使用、正式产品集成等），请事先联系作者
+    取得书面授权。
+
+------------------------------------------------------------------------
+法律法规文本说明
+------------------------------------------------------------------------
+本项目中引用的法律法规条文（如《中华人民共和国生态环境法典》第547条、
+《中华人民共和国治安管理处罚法》第88/89条、《中华人民共和国民法典》相关条款）
+属于公有领域的法律文本，不受本授权约束。
+本授权仅约束本项目原创编写的案例、解析、文案、界面与代码。
+
+------------------------------------------------------------------------
+免责声明
+------------------------------------------------------------------------
+本项目内容仅供学习参考，不构成法律意见，不承诺任何办案结果。
+具体案件请以主管部门或司法机关的认定为准；涉及纠纷可咨询执业律师。
+使用本项目内容造成的任何后果，作者不承担责任。
